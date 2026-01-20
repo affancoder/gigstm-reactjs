@@ -16,44 +16,61 @@ function togglePasswordVisibility(inputId) {
 document.addEventListener("DOMContentLoaded", function () {
   console.log("DOM fully loaded");
 
-  // Function to calculate and update progress bar
   function updateProgressBar() {
-    const form = document.getElementById("user-profile");
-    if (!form) return;
-
-    // Define sections and their panels
     const sections = [
       { name: "Personal Details", panelId: "step1-panel" },
       { name: "Experience", panelId: "step2-panel" },
       { name: "KYC Details", panelId: "kyc-panel" },
     ];
 
-    let totalFields = 0;
-    let totalFilledFields = 0;
+    let totalRequiredFields = 0;
+    let completedRequiredFields = 0;
 
-    // Calculate progress for each section
     sections.forEach((section) => {
       const panel = document.getElementById(section.panelId);
       if (!panel) return;
 
-      // Get all input and select fields in this panel (excluding hidden fields and buttons)
-      const fields = panel.querySelectorAll(
-        'input:not([type="hidden"]):not([type="button"]):not([type="submit"]), select, textarea'
-      );
+      const fields = panel.querySelectorAll("input, select, textarea");
 
       fields.forEach((field) => {
-        totalFields++;
-        if (field.value && field.value.trim() !== "") {
-          totalFilledFields++;
+        if (!field.required) return;
+        if (field.disabled) return;
+        if (field.type !== "file" && field.offsetParent === null) return;
+
+        totalRequiredFields++;
+
+        let isFilled = false;
+
+        if (field.type === "file") {
+          if (field.files && field.files.length > 0) {
+            isFilled = true;
+          } else {
+            const statusElement = document.getElementById(
+              field.id + "-status"
+            );
+            if (
+              statusElement &&
+              statusElement.textContent &&
+              statusElement.textContent.trim() !== "No file chosen"
+            ) {
+              isFilled = true;
+            }
+          }
+        } else if (field.value && field.value.trim() !== "") {
+          isFilled = true;
+        }
+
+        if (isFilled) {
+          completedRequiredFields++;
         }
       });
     });
 
-    // Calculate percentage
     const percentage =
-      totalFields > 0 ? Math.round((totalFilledFields / totalFields) * 100) : 0;
+      totalRequiredFields > 0
+        ? Math.round((completedRequiredFields / totalRequiredFields) * 100)
+        : 0;
 
-    // Update progress bar
     const progressBar = document.getElementById("progress-bar");
     const progressPercentage = document.getElementById("progress-percentage");
     if (progressBar) {
@@ -79,7 +96,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-    // If progress reaches 100%, save data
     if (percentage === 100) {
       saveProfileData();
     }
@@ -111,11 +127,13 @@ document.addEventListener("DOMContentLoaded", function () {
     window.location.href = "/job-categories.html";
   }
 
-  // Call populateForm to pre-fill data
-  populateForm();
-
-  // Update progress bar after form is populated
-  setTimeout(updateProgressBar, 100);
+  populateForm()
+    .then(() => {
+      updateProgressBar();
+    })
+    .catch(() => {
+      updateProgressBar();
+    });
 
   // Add click event listeners for all password toggle buttons
   document.addEventListener("click", function (e) {
@@ -217,65 +235,266 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  const FIELD_INFO = {
+    name: {
+      section: "Personal Details",
+      label: "Your name",
+      requirement: "Enter your full name.",
+    },
+    email: {
+      section: "Personal Details",
+      label: "Email address",
+      requirement: "Enter your email address.",
+    },
+    mobile: {
+      section: "Personal Details",
+      label: "Mobile number",
+      requirement: "Enter your mobile number.",
+    },
+    "job-role": {
+      section: "Personal Details",
+      label: "Job role",
+      requirement: "Enter the role you are interested in.",
+    },
+    gender: {
+      section: "Personal Details",
+      label: "Gender",
+      requirement: "Choose your gender from the list.",
+    },
+    dob: {
+      section: "Personal Details",
+      label: "Date of birth",
+      requirement: "Select your date of birth.",
+    },
+    aadhaar: {
+      section: "Documents",
+      label: "Aadhaar number",
+      requirement: "Enter your Aadhaar card number.",
+    },
+    pan: {
+      section: "Documents",
+      label: "PAN number",
+      requirement: "Enter your PAN card number.",
+    },
+    "profile-image": {
+      section: "Documents",
+      label: "Profile photo",
+      requirement: "Upload a clear profile photo.",
+    },
+    "aadhaar-file": {
+      section: "Documents",
+      label: "Aadhaar card file",
+      requirement: "Upload a clear Aadhaar card file.",
+    },
+    "pan-file": {
+      section: "Documents",
+      label: "PAN card file",
+      requirement: "Upload a clear PAN card file.",
+    },
+    "resume-file": {
+      section: "Documents",
+      label: "Resume",
+      requirement: "Upload your latest resume.",
+    },
+    country: {
+      section: "Address",
+      label: "Country",
+      requirement: "Select your country.",
+    },
+    state: {
+      section: "Address",
+      label: "State",
+      requirement: "Select your state.",
+    },
+    city: {
+      section: "Address",
+      label: "City",
+      requirement: "Select your city.",
+    },
+    address1: {
+      section: "Address",
+      label: "Address line 1",
+      requirement: "Enter your primary address line.",
+    },
+    address2: {
+      section: "Address",
+      label: "Address line 2",
+      requirement: "Enter your additional address details.",
+    },
+    pincode: {
+      section: "Address",
+      label: "Pincode",
+      requirement: "Enter your area pincode.",
+    },
+    about: {
+      section: "Personal Details",
+      label: "About you",
+      requirement: "Write a short summary about yourself.",
+    },
+    experienceYears: {
+      section: "Experience",
+      label: "Experience years",
+      requirement: "Select how many years of experience you have.",
+    },
+    experienceMonths: {
+      section: "Experience",
+      label: "Experience months",
+      requirement: "Select additional months of experience.",
+    },
+    employmentType: {
+      section: "Experience",
+      label: "Employment type",
+      requirement: "Enter your employment type.",
+    },
+    occupation: {
+      section: "Experience",
+      label: "Occupation",
+      requirement: "Enter your current or last occupation.",
+    },
+    jobRequirement: {
+      section: "Experience",
+      label: "Job requirement",
+      requirement: "Describe the type of work you are looking for.",
+    },
+    heardAbout: {
+      section: "Experience",
+      label: "How you heard about GigsTm",
+      requirement: "Select how you heard about GigsTm.",
+    },
+    interestType: {
+      section: "Experience",
+      label: "Interest type",
+      requirement: "Enter the type of work you are interested in.",
+    },
+    bankName: {
+      section: "Account Info",
+      label: "Bank name",
+      requirement: "Enter the name of your bank.",
+    },
+    accountNumber: {
+      section: "Account Info",
+      label: "Account number",
+      requirement: "Enter your bank account number.",
+    },
+    ifscCode: {
+      section: "Account Info",
+      label: "IFSC code",
+      requirement: "Enter the IFSC code of your bank branch.",
+    },
+    aadhaarFront: {
+      section: "KYC Documents",
+      label: "Aadhaar card front",
+      requirement: "Upload the front side of your Aadhaar card.",
+    },
+    aadhaarBack: {
+      section: "KYC Documents",
+      label: "Aadhaar card back",
+      requirement: "Upload the back side of your Aadhaar card.",
+    },
+    panCardUpload: {
+      section: "KYC Documents",
+      label: "PAN card",
+      requirement: "Upload a clear PAN card image or PDF.",
+    },
+    passbookUpload: {
+      section: "KYC Documents",
+      label: "Passbook or cheque",
+      requirement: "Upload a passbook or cancelled cheque.",
+    },
+  };
+
+  function getFieldMeta(formId, field) {
+    const key = field.id || field.name || "";
+    const info = FIELD_INFO[key] || {};
+    let section = info.section;
+    if (!section) {
+      if (formId === "user-profile") {
+        section = "Personal Details";
+      } else if (formId === "user-experience") {
+        section = "Experience";
+      } else if (formId === "user-kyc") {
+        section = "Account Info";
+      } else {
+        section = "Form";
+      }
+    }
+    const label =
+      info.label ||
+      (field.labels?.[0]?.textContent?.replace("*", "").trim() ||
+        field.name ||
+        "This field");
+    const requirement = info.requirement || "Please fill in this field.";
+    return { section, label, requirement };
+  }
+
   // Function to validate form fields
   function validateForm(formId) {
     const form = document.getElementById(formId);
+    if (!form) return false;
     const requiredFields = form.querySelectorAll("[required]");
-    const errors = [];
+    const fieldErrors = [];
 
     requiredFields.forEach((field) => {
-      // Skip hidden fields and disabled fields
       if (field.offsetParent === null || field.disabled) return;
 
-      // Check if field is empty
       if (!field.value.trim()) {
-        const fieldName =
-          field.labels?.[0]?.textContent?.replace("*", "").trim() ||
-          field.name ||
-          "This field";
-        errors.push(`- ${fieldName} is required`);
+        const meta = getFieldMeta(formId, field);
+        fieldErrors.push({
+          section: meta.section,
+          label: meta.label,
+          message: meta.requirement,
+        });
       }
 
-      // Special validation for email fields
       if (
         field.type === "email" &&
         field.value.trim() &&
         !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value)
       ) {
-        errors.push(`- Please enter a valid email address`);
+        const meta = getFieldMeta(formId, field);
+        fieldErrors.push({
+          section: meta.section,
+          label: meta.label,
+          message: "Enter a valid email address, like name@example.com.",
+        });
       }
 
-      // Special validation for phone numbers
       if (
         field.type === "tel" &&
         field.value.trim() &&
         !/^[0-9]{10,15}$/.test(field.value)
       ) {
-        errors.push(`- Please enter a valid phone number`);
+        const meta = getFieldMeta(formId, field);
+        fieldErrors.push({
+          section: meta.section,
+          label: meta.label,
+          message:
+            "Enter a valid mobile number using digits only (10–15 digits).",
+        });
       }
 
-      // Special validation for file inputs
       if (field.type === "file" && field.required && !field.files.length) {
-        const fieldName =
-          field.labels?.[0]?.textContent?.replace("*", "").trim() ||
-          field.name ||
-          "This file";
-        errors.push(`- ${fieldName} is required`);
+        const meta = getFieldMeta(formId, field);
+        fieldErrors.push({
+          section: meta.section,
+          label: meta.label,
+          message: meta.requirement,
+        });
       }
     });
 
-    // If there are errors, show them and return false
-    if (errors.length > 0) {
-      showError(errors.join("\n"));
+    if (fieldErrors.length > 0) {
+      showError(fieldErrors);
       return false;
     }
 
     return true;
   }
 
-  // Function to show error messages in a toast notification
-  function showError(message) {
-    // Create toast container if it doesn't exist
+  function showError(fieldErrors) {
+    if (!Array.isArray(fieldErrors) || fieldErrors.length === 0) {
+      return;
+    }
     let toastContainer = document.getElementById("toast-container");
     if (!toastContainer) {
       toastContainer = document.createElement("div");
@@ -289,12 +508,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const toast = document.createElement("div");
     toast.className = "error-toast";
     toast.style.cssText = `
-      background-color: #ffebee;
-      color: #c62828;
+      background-color: #fff8e1;
+      color: #4e342e;
       padding: 15px 20px;
       margin-bottom: 10px;
       border-radius: 4px;
-      border-left: 4px solid #c62828;
+      border-left: 4px solid #ffb300;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
       display: flex;
       flex-direction: column;
@@ -314,7 +533,7 @@ document.addEventListener("DOMContentLoaded", function () {
       border: none;
       font-size: 18px;
       cursor: pointer;
-      color: #c62828;
+      color: #6d4c41;
       padding: 0 5px;
     `;
     closeButton.onclick = function () {
@@ -322,15 +541,37 @@ document.addEventListener("DOMContentLoaded", function () {
       setTimeout(() => toast.remove(), 300);
     };
 
-    // Add message content
+    const groupedBySection = {};
+    fieldErrors.forEach((err) => {
+      const section = err.section || "Form";
+      if (!groupedBySection[section]) {
+        groupedBySection[section] = [];
+      }
+      groupedBySection[section].push(err);
+    });
+
+    let detailsHtml = "";
+    Object.keys(groupedBySection).forEach((sectionName) => {
+      const items = groupedBySection[sectionName];
+      detailsHtml += `<div style="margin-top: 6px;"><div style="font-weight: 600; margin-bottom: 2px;">${sectionName}</div><ul style="margin: 0 0 0 18px; padding: 0;">`;
+      items.forEach((item) => {
+        detailsHtml += `<li style="margin-bottom: 2px;"><span style="font-weight: 600;">${item.label}</span> – ${item.message}</li>`;
+      });
+      detailsHtml += "</ul></div>";
+    });
+
     const messageDiv = document.createElement("div");
     messageDiv.style.cssText = "padding-right: 20px;";
     messageDiv.innerHTML = `
       <div style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px;">
-        <i class="fas fa-exclamation-circle" style="font-size: 20px; margin-top: 2px;"></i>
+        <i class="fas fa-info-circle" style="font-size: 20px; margin-top: 2px;"></i>
         <div>
-          <h4 style="margin: 0 0 8px 0; font-size: 16px; color: #b71c1c;">Please fix the following errors:</h4>
-          <div style="margin-left: 0; font-size: 14px; line-height: 1.4;">${message}</div>
+          <h4 style="margin: 0 0 6px 0; font-size: 16px; color: #1b5e20;">Your form is almost complete</h4>
+          <p style="margin: 0 0 8px 0; font-size: 14px;">
+            Some required details are still missing or need a quick update.
+            Please review the sections below, fill in the highlighted fields, and try submitting again.
+          </p>
+          <div style="margin-left: 0; font-size: 14px; line-height: 1.4;">${detailsHtml}</div>
         </div>
       </div>
     `;
@@ -339,7 +580,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const progressBar = document.createElement("div");
     progressBar.style.cssText = `
       height: 4px;
-      background: rgba(198, 40, 40, 0.3);
+      background: rgba(255, 179, 0, 0.3);
       width: 100%;
       position: absolute;
       bottom: 0;
@@ -515,11 +756,13 @@ document.addEventListener("DOMContentLoaded", function () {
   const resumeInput = document.getElementById("resumeStep2");
   const resumeStatus = document.getElementById("resumeStep2-status");
 
-  resumeInput.addEventListener("change", () => {
-    resumeStatus.textContent = resumeInput.files.length
-      ? resumeInput.files[0].name
-      : "No file chosen";
-  });
+  if (resumeInput && resumeStatus) {
+    resumeInput.addEventListener("change", () => {
+      resumeStatus.textContent = resumeInput.files.length
+        ? resumeInput.files[0].name
+        : "No file chosen";
+    });
+  }
 
   // Handle STEP 3 - KYC FORM submission
   document
@@ -597,11 +840,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const input = document.getElementById(inputId);
     const status = document.getElementById(statusId);
 
-    input.addEventListener("change", () => {
-      status.textContent = input.files.length
-        ? input.files[0].name
-        : "No file chosen";
-    });
+    if (input && status) {
+      input.addEventListener("change", () => {
+        status.textContent = input.files.length
+          ? input.files[0].name
+          : "No file chosen";
+      });
+    }
   });
 
   // ------------------------------
@@ -847,7 +1092,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Add event listeners to all form fields in Personal Details, Experience, and KYC sections to update progress bar
   const form = document.getElementById("user-profile");
   if (form) {
     const sections = ["step1-panel", "step2-panel", "kyc-panel"];
