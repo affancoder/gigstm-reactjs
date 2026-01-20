@@ -208,13 +208,15 @@
 }
 #detailModal .kv {
   display: grid;
-  grid-template-columns: 220px 1fr;
-  gap: 10px 16px;
+  grid-template-columns: minmax(180px, 0.7fr) 1fr;
+  gap: 12px 16px;
   align-items: start;
+  grid-auto-rows: minmax(0, auto);
 }
 #detailModal .kv > div {
   padding: 0.35rem 0;
   border-bottom: 1px solid #eef2f7;
+  min-width: 0;
 }
 #detailModal .kv > div:nth-child(odd) {
   color: #1f3b70;
@@ -225,6 +227,7 @@
   color: #111827;
   font-weight: 500;
   font-size: 1rem;
+  word-break: break-word;
 }
 
  th.sortable {
@@ -385,6 +388,10 @@
    .admin-container {
      padding: 1rem;
    }
+
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
 
    .admin-header {
      flex-direction: column;
@@ -869,6 +876,9 @@
   #detailModal .modal-footer .btn {
     width: 100%;
   }
+  #detailModal .kv {
+    grid-template-columns: 1fr; /* stack labels/values to avoid overlap on small screens */
+  }
 }
 
 #detailModal .modal-dialog.modal-xl.admin-modal {
@@ -1190,6 +1200,7 @@
    font-size: 0.875rem;
    text-transform: uppercase;
    letter-spacing: 1em;
+  position: relative;
  }
 
  .section-header::after {
@@ -1215,8 +1226,9 @@
  /* Detail Grid */
  .detail-grid {
    display: grid;
-   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
    gap: 1.25rem;
+  grid-auto-rows: minmax(0, auto);
  }
 
  .detail-item {
@@ -1390,9 +1402,10 @@
 }
 #detailModal .kv {
   display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 8px 16px;
+  grid-template-columns: minmax(180px, 0.7fr) 1fr;
+  gap: 12px 16px;
   align-items: start;
+  grid-auto-rows: minmax(0, auto);
 }
 #detailModal .kv > div:nth-child(odd) {
   color: #2c5aa0;
@@ -1403,5 +1416,6 @@
   color: #1f2937;
   font-weight: 500;
   font-size: 1rem;
+  word-break: break-word;
 }
  
