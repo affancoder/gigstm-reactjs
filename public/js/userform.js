@@ -1038,12 +1038,20 @@ document.addEventListener("DOMContentLoaded", function () {
           setFileStatus("profile-status", profile.profileImage);
           const avatar = document.getElementById("user-photo");
           if (avatar) avatar.src = profile.profileImage;
+        initPreviewForInput("profile-image", profile.profileImage);
         }
-        if (profile.aadhaarFile)
+        if (profile.aadhaarFile) {
           setFileStatus("aadhaar-status", profile.aadhaarFile);
-        if (profile.panFile) setFileStatus("pan-status", profile.panFile);
-        if (profile.resumeFile)
+          initPreviewForInput("aadhaar-file", profile.aadhaarFile);
+        }
+        if (profile.panFile) {
+          setFileStatus("pan-status", profile.panFile);
+          initPreviewForInput("pan-file", profile.panFile);
+        }
+        if (profile.resumeFile) {
           setFileStatus("resume-status", profile.resumeFile);
+          initPreviewForInput("resume-file", profile.resumeFile);
+        }
 
         // Sidebar email
         const emailDisplay = document.getElementById("user-email");
@@ -1068,6 +1076,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (experience.resumeStep2)
           setFileStatus("resumeStep2-status", experience.resumeStep2);
+        initPreviewForInput("resumeStep2", experience.resumeStep2);
       }
 
       // 3. Populate KYC
@@ -1078,12 +1087,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (kyc.aadhaarFront)
           setFileStatus("aadhaarFront-status", kyc.aadhaarFront);
+        initPreviewForInput("aadhaarFront", kyc.aadhaarFront);
         if (kyc.aadhaarBack)
           setFileStatus("aadhaarBack-status", kyc.aadhaarBack);
+        initPreviewForInput("aadhaarBack", kyc.aadhaarBack);
         if (kyc.panCardUpload)
           setFileStatus("panCardUpload-status", kyc.panCardUpload);
+        initPreviewForInput("panCardUpload", kyc.panCardUpload);
         if (kyc.passbookUpload)
           setFileStatus("passbookUpload-status", kyc.passbookUpload);
+        initPreviewForInput("passbookUpload", kyc.passbookUpload);
       }
     } catch (error) {
       console.error("Error fetching user data for pre-fill:", error);
@@ -1108,4 +1121,202 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
+
+  function getExtensionFromUrl(url) {
+    try {
+      const clean = url.split("?")[0].split("#")[0];
+      const name = clean.split(/[\\/]/).pop() || "";
+      const ext = name.includes(".") ? name.split(".").pop().toLowerCase() : "";
+      return { name, ext };
+    } catch {
+      return { name: "", ext: "" };
+    }
+  }
+
+  function isSupportedImageExt(ext) {
+    return ["jpg", "jpeg", "png", "webp"].includes(ext);
+  }
+
+  function buildImagePreview(previewEl, src) {
+    previewEl.innerHTML = "";
+    const imgWrap = document.createElement("div");
+    imgWrap.className = "image-preview thumbnail";
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = "Preview";
+    imgWrap.appendChild(img);
+    previewEl.appendChild(imgWrap);
+    imgWrap.addEventListener("click", () =>
+      openPreviewModal("image", src, "Image")
+    );
+  }
+
+  function buildPdfCard(previewEl, url, filename) {
+    previewEl.innerHTML = "";
+    const card = document.createElement("div");
+    card.className = "pdf-card";
+    const icon = document.createElement("div");
+    icon.className = "pdf-icon";
+    icon.innerHTML = '<i class="far fa-file-pdf"></i>';
+    const nameEl = document.createElement("div");
+    nameEl.className = "pdf-filename";
+    nameEl.textContent = filename || "Document.pdf";
+    card.appendChild(icon);
+    card.appendChild(nameEl);
+    previewEl.appendChild(card);
+    card.addEventListener("click", () => openPreviewModal("pdf", url, filename));
+    const actions = document.createElement("div");
+    actions.className = "preview-actions";
+    const viewBtn = document.createElement("button");
+    viewBtn.className = "view-btn";
+    viewBtn.type = "button";
+    viewBtn.textContent = "View PDF";
+    viewBtn.addEventListener("click", () => window.open(url, "_blank"));
+    actions.appendChild(viewBtn);
+    previewEl.appendChild(actions);
+  }
+
+  function showPlaceholder(previewEl) {
+    previewEl.innerHTML = '<div class="preview-placeholder">No file uploaded yet</div>';
+  }
+
+  function showError(previewEl, message) {
+    const err = document.createElement("div");
+    err.className = "preview-error";
+    err.textContent = message;
+    previewEl.appendChild(err);
+  }
+
+  function clearPreview(previewEl) {
+    previewEl.innerHTML = "";
+    showPlaceholder(previewEl);
+  }
+
+  function openPreviewModal(type, src, filename) {
+    const overlay = document.getElementById("file-preview-overlay");
+    const content = document.getElementById("file-preview-content");
+    const closeBtn = document.getElementById("file-preview-close");
+    if (!overlay || !content || !closeBtn) return;
+    content.innerHTML = "";
+    if (type === "image") {
+      const img = document.createElement("img");
+      img.src = src;
+      img.alt = filename || "Preview";
+      content.appendChild(img);
+    } else if (type === "pdf") {
+      const iframe = document.createElement("iframe");
+      iframe.src = src;
+      content.appendChild(iframe);
+    }
+    overlay.classList.add("visible");
+    document.body.style.overflow = "hidden";
+    const close = () => {
+      overlay.classList.remove("visible");
+      document.body.style.overflow = "auto";
+      content.innerHTML = "";
+      overlay.removeEventListener("click", onOverlayClick);
+      document.removeEventListener("keydown", onEsc);
+      closeBtn.removeEventListener("click", close);
+    };
+    const onOverlayClick = (e) => {
+      if (e.target === overlay) close();
+    };
+    const onEsc = (e) => {
+      if (e.key === "Escape") close();
+    };
+    overlay.addEventListener("click", onOverlayClick);
+    document.addEventListener("keydown", onEsc);
+    closeBtn.addEventListener("click", close);
+  }
+
+  function initPreviewForInput(inputId, existingUrl) {
+    const input = document.getElementById(inputId);
+    const previewEl = document.getElementById(`${inputId}-preview`);
+    const statusEl = document.getElementById(
+      inputId.endsWith("-file") ? inputId.replace("-file", "-status") : `${inputId}-status`
+    );
+    if (!input || !previewEl) return;
+    if (input.hasAttribute("required")) {
+      input.setAttribute("data-was-required", "true");
+    }
+    previewEl.classList.add("visible");
+    clearPreview(previewEl);
+    if (existingUrl) {
+      const { name, ext } = getExtensionFromUrl(existingUrl);
+      if (ext === "pdf") {
+        buildPdfCard(previewEl, existingUrl, name);
+      } else if (isSupportedImageExt(ext)) {
+        buildImagePreview(previewEl, existingUrl);
+      } else {
+        clearPreview(previewEl);
+        showError(previewEl, "Unsupported existing file type");
+      }
+    } else {
+      clearPreview(previewEl);
+    }
+    let actions = previewEl.querySelector(".preview-actions");
+    if (!actions) {
+      actions = document.createElement("div");
+      actions.className = "preview-actions";
+      previewEl.appendChild(actions);
+    }
+    const changeBtn = document.createElement("button");
+    changeBtn.className = "change-btn";
+    changeBtn.type = "button";
+    changeBtn.textContent = "Change file";
+    changeBtn.addEventListener("click", () => input.click());
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "remove-btn";
+    removeBtn.type = "button";
+    removeBtn.textContent = "Remove file";
+    removeBtn.addEventListener("click", () => {
+      input.value = "";
+      clearPreview(previewEl);
+      if (statusEl) statusEl.textContent = "No file chosen";
+      if (input.hasAttribute("data-was-required")) {
+        input.setAttribute("required", "required");
+      }
+    });
+    actions.appendChild(changeBtn);
+    actions.appendChild(removeBtn);
+    input.addEventListener("change", () => {
+      clearPreview(previewEl);
+      const file = input.files?.[0];
+      if (!file) {
+        if (statusEl) statusEl.textContent = "No file chosen";
+        return;
+      }
+      const type = (file.type || "").toLowerCase();
+      const name = file.name || "";
+      const url = URL.createObjectURL(file);
+      if (type.includes("pdf") || name.toLowerCase().endsWith(".pdf")) {
+        buildPdfCard(previewEl, url, name);
+      } else if (
+        type.startsWith("image/") ||
+        isSupportedImageExt(name.split(".").pop()?.toLowerCase() || "")
+      ) {
+        buildImagePreview(previewEl, url);
+      } else {
+        showError(previewEl, "Unsupported file type. Use JPG, PNG, WEBP, or PDF.");
+        input.value = "";
+        if (statusEl) statusEl.textContent = "No file chosen";
+        return;
+      }
+      if (statusEl) statusEl.textContent = name;
+      input.removeAttribute("required");
+    });
+  }
+
+  const FILE_INPUT_IDS = [
+    "profile-image",
+    "aadhaar-file",
+    "pan-file",
+    "resume-file",
+    "aadhaarFront",
+    "aadhaarBack",
+    "panCardUpload",
+    "passbookUpload",
+  ];
+
+  FILE_INPUT_IDS.forEach((id) => initPreviewForInput(id, null));
 });
