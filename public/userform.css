@@ -901,6 +901,8 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   padding: 12px;
   margin-top: 10px;
+  max-height: 60vh; /* UI: scroll-safe for multiple previews */
+  overflow-y: auto;
 }
 
 .file-preview.visible {
@@ -923,9 +925,9 @@ body {
 }
 
 .image-preview img {
-  width: 100%;
+  width: 100%;              /* UI: use full container width */
   height: auto;
-  max-height: 220px;
+  max-height: 50vh;         /* UI: larger thumbnail, maintain aspect ratio */
   object-fit: contain;
   border-radius: 10px;
   display: block;
@@ -939,6 +941,7 @@ body {
   border-radius: 10px;
   background: #f8f9fa;
   border: 1px solid #e9ecef;
+  width: 100%; /* UI: responsive card width */
 }
 
 .pdf-card .pdf-icon {
@@ -967,7 +970,7 @@ body {
 }
 
 .preview-actions .view-btn {
-  background: #1e90ff;
+  background: #2c5aa0; /* match site footer background */
   color: #fff;
   padding: 0.5rem 0.75rem;
   border: none;
@@ -977,7 +980,7 @@ body {
 }
 
 .preview-actions .change-btn {
-  background: #3498db;
+  background: #2c5aa0; /* match site footer background */
   color: #fff;
   padding: 0.5rem 0.75rem;
   border: none;
@@ -996,6 +999,19 @@ body {
   font-size: 0.9rem;
 }
 
+.preview-actions .view-btn:hover,
+.preview-actions .change-btn:hover {
+  background: #336bb5;
+}
+.preview-actions .view-btn:active,
+.preview-actions .change-btn:active {
+  background: #295c99;
+}
+.preview-actions .view-btn:focus,
+.preview-actions .change-btn:focus {
+  box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.25);
+}
+
 .preview-error {
   color: #e74c3c;
   background-color: #fdecea;
@@ -1008,10 +1024,12 @@ body {
 
 /* Thumbnail */
 .thumbnail {
-  max-height: 110px;
+  width: 100%;        /* UI: scale to container width */
 }
 .thumbnail img {
-  max-height: 110px;
+  width: 100%;
+  height: auto;
+  max-height: 50vh;   /* UI: larger convenient thumbnail */
 }
 
 /* Modal Overlay */
@@ -1063,7 +1081,7 @@ body {
 }
 
 .modal-body iframe {
-  width: 90vw;
+  width: 100%;        /* UI: fill modal body horizontally */
   max-width: 900px;
   height: 80vh;
   border: none;
