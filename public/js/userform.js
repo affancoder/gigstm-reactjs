@@ -1146,6 +1146,7 @@ document.addEventListener("DOMContentLoaded", function () {
     img.alt = "Preview";
     imgWrap.appendChild(img);
     previewEl.appendChild(imgWrap);
+    previewEl.dataset.hasContent = "true";
     imgWrap.addEventListener("click", () =>
       openPreviewModal("image", src, "Image")
     );
@@ -1164,6 +1165,7 @@ document.addEventListener("DOMContentLoaded", function () {
     card.appendChild(icon);
     card.appendChild(nameEl);
     previewEl.appendChild(card);
+    previewEl.dataset.hasContent = "true";
     card.addEventListener("click", () => openPreviewModal("pdf", url, filename));
     const actions = document.createElement("div");
     actions.className = "preview-actions";
@@ -1190,6 +1192,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function clearPreview(previewEl) {
     previewEl.innerHTML = "";
     showPlaceholder(previewEl);
+    previewEl.dataset.hasContent = "false";
   }
 
   function openPreviewModal(type, src, filename) {
@@ -1240,7 +1243,11 @@ document.addEventListener("DOMContentLoaded", function () {
       input.setAttribute("data-was-required", "true");
     }
     previewEl.classList.add("visible");
-    clearPreview(previewEl);
+    if (!existingUrl && previewEl.dataset.hasContent === "true") {
+      // Keep current preview; avoid clearing if already populated
+    } else {
+      clearPreview(previewEl);
+    }
     if (existingUrl) {
       const { name, ext } = getExtensionFromUrl(existingUrl);
       if (ext === "pdf") {
