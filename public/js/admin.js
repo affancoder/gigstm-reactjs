@@ -148,25 +148,8 @@ fetchData();
 function field(label,value){return `<div>${label}</div><div>${value||""}</div>`}
 function linkOrImg(url,label){
   if(!url) return "";
-  const clean = String(url);
-  const name = clean.split("/").pop().split(/[?#]/)[0] || label || "Document";
-  const isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(clean);
-  const isPdf = /\.pdf($|[?#])/i.test(clean);
-  if (isImg) {
-    return `<a href="${clean}" target="_blank" class="image-thumb"><img src="${clean}" alt="${name}"/></a>`;
-  }
-  if (isPdf) {
-    return `
-      <div class="pdf-card" data-href="${clean}">
-        <div class="pdf-icon">PDF</div>
-        <div class="pdf-filename">${name}</div>
-        <div class="preview-actions">
-          <button class="view-btn" type="button">View PDF</button>
-        </div>
-      </div>
-    `;
-  }
-  return `<a href="${clean}" target="_blank">${name}</a>`;
+  const isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(url);
+  return isImg ? `<a href="${url}" target="_blank"><img src="${url}" alt="${label}"/></a>` : `<a href="${url}" target="_blank">${label}</a>`;
 }
 let bootstrapDetailModal = null;
 const detailModalEl = document.getElementById("detailModal");
@@ -298,81 +281,4 @@ function exportCSV(){
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-}
-
-function openAdminPreview(type, src) {
-  const overlay = document.getElementById("admin-preview-overlay");
-  const content = document.getElementById("admin-preview-content");
-  const closeBtn = document.getElementById("admin-preview-close");
-  if (!overlay || !content || !closeBtn) return;
-  content.innerHTML = "";
-  if (type === "image") {
-    const img = document.createElement("img");
-    img.src = src;
-    img.alt = "Preview";
-    content.appendChild(img);
-  } else if (type === "pdf") {
-    const iframe = document.createElement("iframe");
-    iframe.src = src;
-    content.appendChild(iframe);
-  }
-  overlay.classList.add("visible");
-  const close = () => {
-    overlay.classList.remove("visible");
-    content.innerHTML = "";
-    overlay.removeEventListener("click", onOverlayClick);
-    document.removeEventListener("keydown", onEsc);
-    closeBtn.removeEventListener("click", close);
-  };
-  const onOverlayClick = (e) => {
-    if (e.target === overlay) close();
-  };
-  const onEsc = (e) => {
-    if (e.key === "Escape") close();
-  };
-  overlay.addEventListener("click", onOverlayClick);
-  document.addEventListener("keydown", onEsc);
-  closeBtn.addEventListener("click", close);
-}
-
-if (detailModalEl) {
-  detailModalEl.addEventListener("click", (e) => {
-    const img = e.target.closest(".thumbs img");
-    if (img) {
-      e.preventDefault();
-      openAdminPreview("image", img.src);
-      return;
-    }
-    const link = e.target.closest(".thumbs a");
-    if (link) {
-      const href = link.getAttribute("href") || "";
-      const isPdf = /\.pdf($|[?#])/i.test(href);
-      const isImg = /\.(png|jpg|jpeg|gif|webp)($|[?#])/i.test(href);
-      if (isPdf) {
-        e.preventDefault();
-        openAdminPreview("pdf", href);
-        return;
-      }
-      if (isImg) {
-        e.preventDefault();
-        openAdminPreview("image", href);
-      }
-    }
-    const pdfCard = e.target.closest(".pdf-card");
-    if (pdfCard) {
-      const href = pdfCard.getAttribute("data-href") || "";
-      if (href) {
-        openAdminPreview("pdf", href);
-      }
-      return;
-    }
-    const viewBtn = e.target.closest(".pdf-card .preview-actions .view-btn");
-    if (viewBtn) {
-      const card = viewBtn.closest(".pdf-card");
-      const href = card ? card.getAttribute("data-href") || "" : "";
-      if (href) {
-        window.open(href, "_blank");
-      }
-    }
-  });
 }
