@@ -201,7 +201,7 @@
 											type="file"
 											id="profile-image"
 											name="profile-image"
-											accept="image/*"
+											accept=".jpg,.jpeg,.png,.webp"
 											style="display: none"
 											required
 										/>
@@ -261,7 +261,7 @@
 											type="file"
 											id="aadhaar-file"
 											name="aadhaar-file"
-											accept=".pdf,.jpg,.jpeg,.png"
+											accept=".pdf,.jpg,.jpeg,.png,.webp"
 											style="display: none"
 											required
 										/>
@@ -288,7 +288,7 @@
 											type="file"
 											id="pan-file"
 											name="pan-file"
-											accept=".pdf,.jpg,.jpeg,.png"
+											accept=".pdf,.jpg,.jpeg,.png,.webp"
 											style="display: none"
 											required
 										/>
@@ -1506,7 +1506,7 @@
 												type="file"
 												id="aadhaarFront"
 												name="aadhaarFront"
-												accept=".pdf,.jpg,.jpeg,.png"
+												accept=".pdf,.jpg,.jpeg,.png,.webp"
 												style="display: none"
 												required
 											/>
@@ -1533,7 +1533,7 @@
 												type="file"
 												id="aadhaarBack"
 												name="aadhaarBack"
-												accept=".pdf,.jpg,.jpeg,.png"
+												accept=".pdf,.jpg,.jpeg,.png,.webp"
 												style="display: none"
 												required
 											/>
@@ -1566,7 +1566,7 @@
 												type="file"
 												id="panCardUpload"
 												name="panCardUpload"
-												accept=".pdf,.jpg,.jpeg,.png"
+												accept=".pdf,.jpg,.jpeg,.png,.webp"
 												style="display: none"
 												required
 											/>
@@ -1593,7 +1593,7 @@
 												type="file"
 												id="passbookUpload"
 												name="passbookUpload"
-												accept=".pdf,.jpg,.jpeg,.png"
+												accept=".pdf,.jpg,.jpeg,.png,.webp"
 												style="display: none"
 											/>
 											<button
@@ -1813,10 +1813,46 @@
 			</div>
 		</footer>
 
+		<!-- Preview Modal -->
+		<div id="preview-modal" class="modal-overlay">
+			<div class="modal-content">
+				<button class="modal-close"><i class="fas fa-times"></i></button>
+				<img id="modal-image-preview" class="modal-image" src="" alt="Preview" style="display: none;">
+				<div id="modal-pdf-preview" style="display: none; width: 80vw; height: 80vh; background: white; border-radius: 8px;">
+					<iframe id="pdf-frame" src="" style="width: 100%; height: 100%; border: none; border-radius: 8px;"></iframe>
+				</div>
+			</div>
+		</div>
+
 		<!-- Add scripts -->
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 		<script src="/js/auth.js"></script>
+		<!-- Preview Modal -->
+		<div id="preview-modal" class="modal-overlay">
+			<div class="modal-content">
+				<button class="modal-close">
+					<i class="fas fa-times"></i>
+				</button>
+				<img
+					id="modal-image-preview"
+					class="modal-image"
+					src=""
+					alt="Preview"
+					style="display: none"
+				/>
+				<div
+					id="modal-pdf-preview"
+					style="display: none; width: 100%; height: 85vh"
+				>
+					<iframe
+						id="pdf-frame"
+						style="width: 100%; height: 100%; border: none"
+					></iframe>
+				</div>
+			</div>
+		</div>
+
 		<script src="/js/userform.js"></script>
 		<script>
 			// Toggle password visibility
