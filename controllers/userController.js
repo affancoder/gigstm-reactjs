@@ -347,6 +347,78 @@ exports.getCombinedUsers = catchAsync(async (req, res, next) => {
 	});
 });
 
+exports.getProfileCompletion = catchAsync(async (req, res, next) => {
+	const userId = req.user.id;
+	
+	// Get user's profile, experience, and KYC data
+	const profile = await Profile.findOne({ user: userId });
+	const experience = await UserExperience.findOne({ user: userId });
+	const kyc = await Kyc.findOne({ user: userId });
+	
+	// Define all required fields for 100% completion
+	const requiredFields = {
+		profile: [
+			'name', 'email', 'mobile', 'jobRole', 'gender', 'dob',
+			'profileImage', 'aadhaar', 'pan', 'aadhaarFile', 'panFile',
+			'country', 'state', 'city', 'address1', 'pincode'
+		],
+		experience: [
+			'experienceYears', 'experienceMonths', 'employmentType',
+			'occupation', 'jobRequirement', 'heardAbout', 'interestType'
+		],
+		kyc: [
+			'bankName', 'accountNumber', 'ifscCode',
+			'aadhaarFront', 'aadhaarBack', 'panCardUpload', 'passbookUpload'
+		]
+	};
+	
+	let totalRequiredFields = 0;
+	let completedFields = 0;
+	
+	// Check profile fields
+	totalRequiredFields += requiredFields.profile.length;
+	if (profile) {
+		requiredFields.profile.forEach(field => {
+			if (profile[field] && profile[field] !== '') {
+				completedFields++;
+			}
+		});
+	}
+	
+	// Check experience fields
+	totalRequiredFields += requiredFields.experience.length;
+	if (experience) {
+		requiredFields.experience.forEach(field => {
+			if (experience[field] && experience[field] !== '') {
+				completedFields++;
+			}
+		});
+	}
+	
+	// Check KYC fields
+	totalRequiredFields += requiredFields.kyc.length;
+	if (kyc) {
+		requiredFields.kyc.forEach(field => {
+			if (kyc[field] && kyc[field] !== '') {
+				completedFields++;
+			}
+		});
+	}
+	
+	const completionPercentage = totalRequiredFields > 0 
+		? Math.round((completedFields / totalRequiredFields) * 100)
+		: 0;
+	
+	res.status(200).json({
+		status: 'success',
+		data: {
+			completionPercentage,
+			totalRequiredFields,
+			completedFields
+		}
+	});
+});
+
 exports.getMyCombined = catchAsync(async (req, res, next) => {
 	const user = await User.findById(req.user.id);
 	if (!user) {

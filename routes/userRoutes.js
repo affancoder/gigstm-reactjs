@@ -41,4 +41,5 @@ router.post(
 );
 router.get("/admin/users", protect, restrictTo("admin"), userController.getCombinedUsers);
 router.get("/me/combined", protect, userController.getMyCombined);
+router.get("/profile-completion", protect, userController.getProfileCompletion);
 module.exports = router;
