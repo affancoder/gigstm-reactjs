@@ -38,12 +38,49 @@
   border: none;
 }
 
+/* Hero Section */
+.hero-section {
+  position: relative;
+  /* Using a fallback gradient if image fails, and the image */
+  background: linear-gradient(135deg, rgba(44, 90, 160, 0.9), rgba(61, 111, 181, 0.8)), url('gigs-categories_files/job_ctr.jpg');
+  background-size: cover;
+  background-position: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  color: white;
+  min-height: 40vh; /* Approx 40-50% of screen height */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  opacity: 0.95;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
 /* Job Categories Container */
 .job-categories-container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 3rem 2rem;
-  display: block; /* Removed flex since sidebar is fixed */
+  padding: 0 2rem 3rem 2rem; /* Removed top padding */
+  display: block; 
   position: relative;
 }
 
@@ -221,24 +258,6 @@
   opacity: 1;
 }
 
-/* Content Styles */
-.categories-header {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-.categories-header h1 {
-  font-size: 2.8rem;
-  color: #2c5aa0;
-  margin-bottom: 0.5rem;
-  font-weight: 700;
-}
-
-.categories-header p {
-  font-size: 1.1rem;
-  color: #5a6c7d;
-}
-
 /* Cards Grid */
 .cards-grid {
   display: grid;
@@ -323,8 +342,13 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .categories-header h1 {
-    font-size: 2rem;
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+  
+  .hero-section {
+    min-height: 30vh;
+    padding: 3rem 1.5rem;
   }
 
   .cards-grid {
@@ -348,5 +372,9 @@
   
   .brand-logo img {
     width: 80px;
+  }
+  
+  .hero-content h1 {
+    font-size: 1.8rem;
   }
 }
