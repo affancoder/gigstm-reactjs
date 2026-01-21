@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -14,97 +14,185 @@
   </head>
   <body>
     <header class="site-header">
-				<div class="brand-logo">
-					<a href="index.html">
-						<img
-							src="/GigsTm_files/lgo_project1.png"
-							alt="GigsTm"
-							class="light-version-logo default-logo"
-						/>
-					</a>
-				</div>
-				<div class="header-btns">
-					<!-- <a class="btn btn-transparent" href="gigs-categories.html">
-						GIGS CATEGORIES
-					</a> -->
-          <a class="login-btn" href="index.html"><button>Back to Home</button></a>
-				</div>
-			</header>
-    
+      <div class="brand-logo">
+        <a href="index.html">
+          <img
+            src="/GigsTm_files/lgo_project1.png"
+            alt="GigsTm"
+            class="light-version-logo default-logo"
+          />
+        </a>
+      </div>
+      <div class="header-btns">
+        <button
+          class="profile-toggle-btn"
+          aria-label="Open User Menu"
+          aria-controls="userSidebar"
+          aria-expanded="false"
+        >
+          <div class="nav-avatar">AD</div>
+        </button>
+      </div>
+    </header>
+
     <div class="job-categories-container">
-      <div class="categories-header">
-        <h1>Job Categories</h1>
-        <p>Explore different categories of gigs and find the perfect job for you</p>
-      </div>
-
-      <div class="cards-grid">
-        <!-- Card 1: Audits & Survey -->
-        <div class="job-card">
-          <div class="card-icon">
-            <i class="fas fa-clipboard-check"></i>
-          </div>
-          <h3 class="card-title">Audits & Survey</h3>
-          <p class="card-jobs">0 Jobs</p>
-          <p class="card-description">An Audit or survey is the on-site verification activity, such as inspection or examination, of a process or quality system, to ensure compliance to requirement.</p>
-          <button class="card-btn">View Jobs</button>
+      <main class="content-area">
+        <div class="categories-header">
+          <h1>Job Categories</h1>
+          <p>
+            Explore different categories of gigs and find the perfect job for
+            you
+          </p>
         </div>
 
-        <!-- Card 2: Sales & Marketing -->
-        <div class="job-card">
-          <div class="card-icon">
-            <i class="fas fa-chart-line"></i>
+        <div class="cards-grid">
+          <!-- Card 1: Audits & Survey -->
+          <div class="job-card">
+            <div class="card-icon">
+              <i class="fas fa-clipboard-check"></i>
+            </div>
+            <h3 class="card-title">Audits & Survey</h3>
+            <p class="card-jobs">0 Jobs</p>
+            <p class="card-description">
+              An Audit or survey is the on-site verification activity, such as
+              inspection or examination, of a process or quality system, to
+              ensure compliance to requirement.
+            </p>
+            <button class="card-btn">View Jobs</button>
           </div>
-          <h3 class="card-title">Sales & Marketing</h3>
-          <p class="card-jobs">0 Jobs</p>
-          <p class="card-description">Promote and sell products or services through various marketing channels. Develop leads, conduct presentations, and close deals. Perfect for professionals with excellent communication skills and sales experience.</p>
-          <button class="card-btn">View Jobs</button>
-        </div>
 
-        <!-- Card 3: Tele Calling Jobs -->
-        <div class="job-card">
-          <div class="card-icon">
-            <i class="fas fa-phone-alt"></i>
+          <!-- Card 2: Sales & Marketing -->
+          <div class="job-card">
+            <div class="card-icon">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <h3 class="card-title">Sales & Marketing</h3>
+            <p class="card-jobs">0 Jobs</p>
+            <p class="card-description">
+              Promote and sell products or services through various marketing
+              channels. Develop leads, conduct presentations, and close deals.
+              Perfect for professionals with excellent communication skills and
+              sales experience.
+            </p>
+            <button class="card-btn">View Jobs</button>
           </div>
-          <h3 class="card-title">Tele Calling Jobs</h3>
-          <p class="card-jobs">0 Jobs</p>
-          <p class="card-description">Handle inbound and outbound calls to customers and prospects. Provide support, gather information, and complete transactions over the phone. Ideal for people with strong verbal communication and customer service skills.</p>
-          <button class="card-btn">View Jobs</button>
-        </div>
 
-        <!-- Card 4: Digital Gigs Job -->
-        <div class="job-card">
-          <div class="card-icon">
-            <i class="fas fa-laptop"></i>
+          <!-- Card 3: Tele Calling Jobs -->
+          <div class="job-card">
+            <div class="card-icon">
+              <i class="fas fa-phone-alt"></i>
+            </div>
+            <h3 class="card-title">Tele Calling Jobs</h3>
+            <p class="card-jobs">0 Jobs</p>
+            <p class="card-description">
+              Handle inbound and outbound calls to customers and prospects.
+              Provide support, gather information, and complete transactions
+              over the phone. Ideal for people with strong verbal communication
+              and customer service skills.
+            </p>
+            <button class="card-btn">View Jobs</button>
           </div>
-          <h3 class="card-title">Digital Gigs Job</h3>
-          <p class="card-jobs">0 Jobs</p>
-          <p class="card-description">Work on digital projects including content creation, graphic design, social media management, and online data entry. Flexible remote work opportunities for digital-savvy professionals and creatives.</p>
-          <button class="card-btn">View Jobs</button>
-        </div>
 
-        <!-- Card 5: Job Delivery Partner -->
-        <div class="job-card">
-          <div class="card-icon">
-            <i class="fas fa-truck"></i>
+          <!-- Card 4: Digital Gigs Job -->
+          <div class="job-card">
+            <div class="card-icon">
+              <i class="fas fa-laptop"></i>
+            </div>
+            <h3 class="card-title">Digital Gigs Job</h3>
+            <p class="card-jobs">0 Jobs</p>
+            <p class="card-description">
+              Work on digital projects including content creation, graphic
+              design, social media management, and online data entry. Flexible
+              remote work opportunities for digital-savvy professionals and
+              creatives.
+            </p>
+            <button class="card-btn">View Jobs</button>
           </div>
-          <h3 class="card-title">Job Delivery Partner</h3>
-          <p class="card-jobs">0 Jobs</p>
-          <p class="card-description">Deliver products and services to customers efficiently and reliably. Use your own vehicle or company transportation. Great opportunity for motivated individuals with flexible schedules and strong route management.</p>
-          <button class="card-btn">View Jobs</button>
-        </div>
 
-        <!-- Card 6: Field Sales - Marketplace -->
-        <div class="job-card">
-          <div class="card-icon">
-            <i class="fas fa-store"></i>
+          <!-- Card 5: Job Delivery Partner -->
+          <div class="job-card">
+            <div class="card-icon">
+              <i class="fas fa-truck"></i>
+            </div>
+            <h3 class="card-title">Job Delivery Partner</h3>
+            <p class="card-jobs">0 Jobs</p>
+            <p class="card-description">
+              Deliver products and services to customers efficiently and
+              reliably. Use your own vehicle or company transportation. Great
+              opportunity for motivated individuals with flexible schedules and
+              strong route management.
+            </p>
+            <button class="card-btn">View Jobs</button>
           </div>
-          <h3 class="card-title">Field Sales - Marketplace</h3>
-          <p class="card-jobs">3 Jobs</p>
-          <p class="card-description">Field sales is also commonly known as outside sales. It is a sales process where a salesperson sells products and services by physically going out into the field to meet prospective customers face-to-face. This can include going door-to-door,</p>
-          <button class="card-btn">View Jobs</button>
+
+          <!-- Card 6: Field Sales - Marketplace -->
+          <div class="job-card">
+            <div class="card-icon">
+              <i class="fas fa-store"></i>
+            </div>
+            <h3 class="card-title">Field Sales - Marketplace</h3>
+            <p class="card-jobs">3 Jobs</p>
+            <p class="card-description">
+              Field sales is also commonly known as outside sales. It is a sales
+              process where a salesperson sells products and services by
+              physically going out into the field to meet prospective customers
+              face-to-face. This can include going door-to-door,
+            </p>
+            <button class="card-btn">View Jobs</button>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
+
+    <!-- User Sidebar Drawer -->
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+    <aside
+      class="user-sidebar"
+      id="userSidebar"
+      aria-label="User Menu"
+      aria-hidden="true"
+      role="dialog"
+    >
+      <button class="sidebar-close-btn" aria-label="Close Sidebar">
+        &times;
+      </button>
+
+      <div class="sidebar-profile">
+        <div class="sidebar-avatar-large">AD</div>
+        <div class="sidebar-user-info centered">
+          <h4>Affan Danish</h4>
+          <p class="user-email">affan.danish@example.com</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="userform.html" class="nav-item">
+          <i class="fas fa-user-circle"></i> User Profile
+        </a>
+
+        <a href="#" class="nav-item"> <i class="fas fa-briefcase"></i> Gigs </a>
+
+        <a href="#" class="nav-item">
+          <i class="fas fa-file-alt"></i> Application
+        </a>
+
+        <a href="#" class="nav-item"> <i class="fas fa-gift"></i> Rewards </a>
+
+        <a href="#" class="nav-item"> <i class="fas fa-wallet"></i> Payout </a>
+
+        <a href="#" class="nav-item">
+          <i class="fas fa-sliders-h"></i> Settings
+        </a>
+
+        <a href="#" class="nav-item"> <i class="fas fa-life-ring"></i> Help </a>
+
+        <div class="nav-divider"></div>
+
+        <a href="#" class="nav-item logout-link">
+          <i class="fas fa-right-from-bracket"></i> Logout
+        </a>
+      </nav>
+    </aside>
 
     <footer class="gigstm-footer">
       <div class="footer-content">
@@ -143,9 +231,7 @@
         <div class="footer-section">
           <h3>Categories</h3>
           <ul class="footer-links">
-            <li>
-              <a href="#">Field Sales - E commerce Marketplace</a>
-            </li>
+            <li><a href="#">Field Sales - E commerce Marketplace</a></li>
           </ul>
         </div>
 
@@ -165,5 +251,148 @@
         <p>Copyright 2025 gigstm.com | All Rights Reserved.</p>
       </div>
     </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const toggleBtn = document.querySelector(".profile-toggle-btn");
+        const sidebar = document.getElementById("userSidebar");
+        const overlay = document.getElementById("sidebarOverlay");
+        const closeBtn = document.querySelector(".sidebar-close-btn");
+        const body = document.body;
+
+        // Focus Trap Variables
+        const focusableElements =
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+        let firstFocusableElement;
+        let lastFocusableElement;
+
+        function openSidebar() {
+          sidebar.classList.add("active");
+          overlay.classList.add("active");
+          sidebar.setAttribute("aria-hidden", "false");
+          toggleBtn.setAttribute("aria-expanded", "true");
+          body.style.overflow = "hidden"; // Prevent background scrolling
+
+          // Setup Focus Trap
+          const focusableContent = sidebar.querySelectorAll(focusableElements);
+          firstFocusableElement = focusableContent[0];
+          lastFocusableElement = focusableContent[focusableContent.length - 1];
+
+          // Focus the close button first
+          setTimeout(() => {
+            closeBtn.focus();
+          }, 100);
+
+          document.addEventListener("keydown", handleTabKey);
+          document.addEventListener("keydown", handleEscKey);
+        }
+
+        function closeSidebar() {
+          sidebar.classList.remove("active");
+          overlay.classList.remove("active");
+          sidebar.setAttribute("aria-hidden", "true");
+          toggleBtn.setAttribute("aria-expanded", "false");
+          body.style.overflow = ""; // Restore scrolling
+
+          document.removeEventListener("keydown", handleTabKey);
+          document.removeEventListener("keydown", handleEscKey);
+
+          // Return focus to toggle button
+          toggleBtn.focus();
+        }
+
+        function handleTabKey(e) {
+          if (e.key === "Tab") {
+            if (e.shiftKey) {
+              // Shift + Tab
+              if (document.activeElement === firstFocusableElement) {
+                e.preventDefault();
+                lastFocusableElement.focus();
+              }
+            } else {
+              // Tab
+              if (document.activeElement === lastFocusableElement) {
+                e.preventDefault();
+                firstFocusableElement.focus();
+              }
+            }
+          }
+        }
+
+        function handleEscKey(e) {
+          if (e.key === "Escape") {
+            closeSidebar();
+          }
+        }
+
+        // Event Listeners
+        if (toggleBtn) {
+          toggleBtn.addEventListener("click", (e) => {
+            e.stopPropagation(); // Prevent immediate closing if clicking the button triggers document click
+            openSidebar();
+          });
+        }
+
+        if (closeBtn) {
+          closeBtn.addEventListener("click", closeSidebar);
+        }
+
+        if (overlay) {
+          overlay.addEventListener("click", closeSidebar);
+        }
+
+        // Close on outside click (optional backup for overlay)
+        document.addEventListener("click", (e) => {
+          if (
+            sidebar.classList.contains("active") &&
+            !sidebar.contains(e.target) &&
+            !toggleBtn.contains(e.target)
+          ) {
+            closeSidebar();
+          }
+        });
+
+        // Logout Logic
+        const logoutLink = document.querySelector(".logout-link");
+        if (logoutLink) {
+          logoutLink.addEventListener("click", async (e) => {
+            e.preventDefault();
+
+            // Visual feedback
+            const originalText = logoutLink.innerHTML;
+            logoutLink.innerHTML =
+              '<i class="fas fa-spinner fa-spin"></i> Logging out...';
+            logoutLink.style.pointerEvents = "none"; // Prevent double clicks
+
+            try {
+              // 1. Call Backend Logout (to clear HttpOnly cookie)
+              // We use a short timeout to prevent hanging if the server is slow
+              const controller = new AbortController();
+              const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+              await fetch("/api/v1/auth/logout", {
+                method: "GET",
+                signal: controller.signal,
+              }).catch((err) =>
+                console.warn("Backend logout failed or timed out", err),
+              );
+
+              clearTimeout(timeoutId);
+            } catch (err) {
+              console.error("Logout error:", err);
+            } finally {
+              // 2. Clear Client State (Always do this)
+              localStorage.removeItem("jwt_token");
+              localStorage.removeItem("token");
+              localStorage.removeItem("user");
+              sessionStorage.clear();
+
+              // 3. Redirect and Replace History
+              window.location.replace("index.html");
+            }
+          });
+        }
+      });
+    </script>
   </body>
 </html>
