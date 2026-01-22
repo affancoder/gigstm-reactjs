@@ -30,7 +30,8 @@
           aria-controls="userSidebar"
           aria-expanded="false"
         >
-          <div class="nav-avatar">AD</div>
+          <div class="nav-avatar"><i id="user-icon" class="fa fa-user-circle" aria-label="User Avatar"></i>
+</div>
         </button>
       </div>
     </header>
@@ -407,8 +408,48 @@
 
                 // Update Avatar
                 if (sidebarAvatar) {
-                    const avatarUrl = user.avatar || "https://via.placeholder.com/150?text=User";
-                    sidebarAvatar.innerHTML = `<img src="${avatarUrl}" alt="User Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                    // Function to generate and display initials
+                    const setInitials = () => {
+                        const name = (user.name || "").trim();
+                        if (!name) {
+                            // Fallback to generic icon if name is missing
+                            sidebarAvatar.innerHTML = '<i class="fas fa-user"></i>'; 
+                            return;
+                        }
+
+                        // Generate initials (First Last -> FL)
+                        const parts = name.split(/\s+/);
+                        let initials = parts[0].charAt(0);
+                        if (parts.length > 1) {
+                            initials += parts[parts.length - 1].charAt(0);
+                        }
+                        
+                        sidebarAvatar.innerHTML = ""; // Clear any existing content
+                        sidebarAvatar.textContent = initials.toUpperCase();
+                    };
+
+                    if (user.avatar && user.avatar.trim() !== "") {
+                        // Try to show uploaded avatar
+                        const img = document.createElement("img");
+                        img.src = user.avatar;
+                        img.alt = user.name || "User Avatar";
+                        img.style.width = "100%";
+                        img.style.height = "100%";
+                        img.style.objectFit = "cover";
+                        img.style.borderRadius = "50%";
+                        
+                        // Fallback to initials if image fails to load
+                        img.onerror = () => {
+                            console.warn("Avatar image failed to load, falling back to initials.");
+                            setInitials();
+                        };
+                        
+                        sidebarAvatar.innerHTML = "";
+                        sidebarAvatar.appendChild(img);
+                    } else {
+                        // No avatar image, show initials
+                        setInitials();
+                    }
                 }
 
                 // Update Info

@@ -1008,6 +1008,64 @@ document.addEventListener("DOMContentLoaded", function () {
 
       console.log("Fetched user data:", result.data);
 
+      // Auto-redirect: Check if Step 1 and Step 2 are 100% complete
+      try {
+        const isStep1Complete = (() => {
+          if (!profile) return false;
+          // Required text fields based on HTML
+          const requiredFields = [
+            "name",
+            "email",
+            "mobile",
+            "jobRole",
+            "gender",
+            "dob",
+            "aadhaar",
+            "pan",
+            "country",
+            "state",
+            "city",
+            "address1",
+            "address2",
+            "pincode",
+            "about",
+          ];
+          const hasTextData = requiredFields.every((key) => !!profile[key]);
+
+          // Required file uploads
+          const hasFiles =
+            !!profile.profileImage &&
+            !!profile.aadhaarFile &&
+            !!profile.panFile &&
+            !!profile.resumeFile;
+
+          return hasTextData && hasFiles;
+        })();
+
+        const isStep2Complete = (() => {
+          if (!experience) return false;
+          // Required fields based on populateForm mapping
+          const requiredFields = [
+            "experienceYears",
+            "experienceMonths",
+            "employmentType",
+            "occupation",
+            "jobRequirement",
+            "heardAbout",
+            "interestType",
+          ];
+          return requiredFields.every((key) => !!experience[key]);
+        })();
+
+        if (isStep1Complete && isStep2Complete) {
+          console.log("Steps 1 & 2 complete. Redirecting to job categories...");
+          window.location.href = "/job-categories.html";
+          return; // Stop form population
+        }
+      } catch (err) {
+        console.error("Error in auto-redirect check:", err);
+      }
+
       // 1. Populate Profile
       if (profile) {
         setFieldValue("name", profile.name);
