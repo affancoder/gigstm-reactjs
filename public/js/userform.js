@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const sections = [
       { name: "Personal Details", panelId: "step1-panel" },
       { name: "Experience", panelId: "step2-panel" },
-      { name: "KYC Details", panelId: "kyc-panel" },
+      // { name: "KYC Details", panelId: "kyc-panel" },
     ];
 
     let totalRequiredFields = 0;
@@ -1094,7 +1094,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const form = document.getElementById("user-profile");
   if (form) {
-    const sections = ["step1-panel", "step2-panel", "kyc-panel"];
+    const sections = ["step1-panel", "step2-panel"];
     sections.forEach((sectionId) => {
       const section = document.getElementById(sectionId);
       if (section) {
