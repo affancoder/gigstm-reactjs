@@ -92,35 +92,8 @@ async function handleLogin(event) {
 		if (data.data?.user)
 			localStorage.setItem("user", JSON.stringify(data.data.user));
 
-		// Check profile completion and redirect accordingly
-		try {
-			const completionResponse = await fetch(`${API_URL}/user/profile-completion`, {
-				method: "GET",
-				credentials: "include",
-				headers: {
-					"Authorization": `Bearer ${data.token}`,
-					"Content-Type": "application/json"
-				}
-			});
-
-			if (completionResponse.ok) {
-				const completionData = await completionResponse.json();
-				const completionPercentage = completionData.data.completionPercentage;
-				
-				if (completionPercentage === 100) {
-					window.location.href = "/job-categories.html";
-				} else {
-					window.location.href = "/userform.html";
-				}
-			} else {
-				// If profile completion check fails, default to userform
-				window.location.href = "/userform.html";
-			}
-		} catch (error) {
-			console.error("Error checking profile completion:", error);
-			// If profile completion check fails, default to userform
-			window.location.href = "/userform.html";
-		}
+		// Redirect to job categories
+		window.location.href = "/job-categories.html";
 	} catch (err) {
 		showMessage("login-message", err.message);
 	} finally {
@@ -231,35 +204,8 @@ async function handleSignUp(event) {
 				);
 			}
 
-			// Check profile completion and redirect accordingly
-			try {
-				const completionResponse = await fetch(`${API_URL}/user/profile-completion`, {
-					method: "GET",
-					credentials: "include",
-					headers: {
-						"Authorization": `Bearer ${loginData.token}`,
-						"Content-Type": "application/json"
-					}
-				});
-
-				if (completionResponse.ok) {
-					const completionData = await completionResponse.json();
-					const completionPercentage = completionData.data.completionPercentage;
-					
-					if (completionPercentage === 100) {
-						window.location.href = "/job-categories.html";
-					} else {
-						window.location.href = "/userform.html";
-					}
-				} else {
-					// If profile completion check fails, default to userform
-					window.location.href = "/userform.html";
-				}
-			} catch (error) {
-				console.error("Error checking profile completion:", error);
-				// If profile completion check fails, default to userform
-				window.location.href = "/userform.html";
-			}
+			// Redirect to job categories
+			window.location.href = "/job-categories.html";
 		}
 
 		// Show success message for failed auto-login

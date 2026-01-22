@@ -1057,7 +1057,10 @@ document.addEventListener("DOMContentLoaded", function () {
           return requiredFields.every((key) => !!experience[key]);
         })();
 
-        if (isStep1Complete && isStep2Complete) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const isEditMode = urlParams.get('mode') === 'edit';
+
+        if (isStep1Complete && isStep2Complete && !isEditMode) {
           console.log("Steps 1 & 2 complete. Redirecting to job categories...");
           window.location.href = "/job-categories.html";
           return; // Stop form population
