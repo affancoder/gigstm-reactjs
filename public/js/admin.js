@@ -156,81 +156,184 @@ const detailModalEl = document.getElementById("detailModal");
 if (detailModalEl && window.bootstrap) {
   bootstrapDetailModal = new bootstrap.Modal(detailModalEl);
 }
-function openDetail(item){
-  document.getElementById("detail-title").textContent=`Details — ${item.user?.name||""}`;
-  const p=item.profile||{}, e=item.experience||{}, k=item.kyc||{};
-  const userKv=`
-    <div class="kv">
-      ${field("Name",item.user?.name)}
-      ${field("Email",item.user?.email)}
-      ${field("Role",item.user?.role||"")}
-      ${field("Created",item.user?.createdAt?new Date(item.user.createdAt).toLocaleString():"")}
-    </div>`;
-  const profileKv=`
-    <div class="kv">
-      ${field("Mobile",p.mobile)}
-      ${field("Job Role",p.jobRole)}
-      ${field("Gender",p.gender)}
-      ${field("DOB",p.dob?new Date(p.dob).toLocaleDateString():"")}
-      ${field("Aadhaar",p.aadhaar)}
-      ${field("PAN",p.pan)}
-      ${field("Country",p.country)}
-      ${field("State",p.state)}
-      ${field("City",p.city)}
-      ${field("Address 1",p.address1)}
-      ${field("Address 2",p.address2)}
-      ${field("Pincode",p.pincode)}
-      ${field("About",p.about)}
+function openDetail(item) {
+  document.getElementById("detail-title").textContent = `Details — ${item.user?.name || ""}`;
+  const p = item.profile || {}, e = item.experience || {}, k = item.kyc || {};
+
+  // Helper to create a data row
+  const row = (label, value) => {
+    if (!value) return "";
+    return `
+      <div class="detail-item">
+        <div class="detail-label">${label}</div>
+        <div class="detail-value">${value}</div>
+      </div>
+    `;
+  };
+
+  // Helper to create file preview
+  const filePreview = (url, label) => {
+    if (!url) return "";
+    const isPdf = url.toLowerCase().endsWith(".pdf");
+    
+    if (isPdf) {
+      return `
+        <a href="${url}" target="_blank" class="document-thumb">
+          <div class="document-image-container">
+            <i class="fas fa-file-pdf fa-2x" style="color: #e74c3c;"></i>
+          </div>
+          <div class="document-name">${label}</div>
+        </a>
+      `;
+    } else {
+      return `
+        <div class="document-thumb" onclick="window.open('${url}', '_blank')" style="cursor: pointer;">
+          <div class="document-image-container">
+            <img src="${url}" alt="${label}">
+          </div>
+          <div class="document-name">${label}</div>
+        </div>
+      `;
+    }
+  };
+
+  const userSection = `
+    <div class="detail-section">
+      <div class="section-header">
+        User Info
+      </div>
+      <div class="section-content">
+        <div class="detail-grid">
+          ${row("Name", item.user?.name)}
+          ${row("Email", item.user?.email)}
+          ${row("Role", item.user?.role || "User")}
+          ${row("Joined", item.user?.createdAt ? new Date(item.user.createdAt).toLocaleDateString() : "")}
+        </div>
+      </div>
     </div>
-    <div class="thumbs">
-      ${linkOrImg(p.profileImage,"Profile Image")||""}
-      ${linkOrImg(p.aadhaarFile,"Aadhaar File")||""}
-      ${linkOrImg(p.panFile,"PAN File")||""}
-      ${linkOrImg(p.resumeFile,"Resume File")||""}
-    </div>`;
-  const expKv=`
-    <div class="kv">
-      ${field("Years",e.experienceYears)}
-      ${field("Months",e.experienceMonths)}
-      ${field("Employment",e.employmentType)}
-      ${field("Occupation",e.occupation)}
-      ${field("Requirement",e.jobRequirement)}
-      ${field("Heard About",e.heardAbout)}
-      ${field("Interest Type",e.interestType)}
-      ${field("Created",e.createdAt?new Date(e.createdAt).toLocaleString():"")}
+  `;
+
+  const profileSection = `
+    <div class="detail-section">
+      <div class="section-header">
+        Profile Details
+      </div>
+      <div class="section-content">
+        <div class="detail-grid">
+          ${row("Mobile", p.mobile)}
+          ${row("Job Role", p.jobRole)}
+          ${row("Gender", p.gender)}
+          ${row("DOB", p.dob ? new Date(p.dob).toLocaleDateString() : "")}
+          ${row("Aadhaar", p.aadhaar)}
+          ${row("PAN", p.pan)}
+          ${row("Country", p.country)}
+          ${row("State", p.state)}
+          ${row("City", p.city)}
+          ${row("Pincode", p.pincode)}
+        </div>
+        <div style="margin-top: 1rem;">
+          ${row("Address", [p.address1, p.address2].filter(Boolean).join(", "))}
+          ${row("About", p.about)}
+        </div>
+        
+        <div style="margin-top: 1.5rem;">
+          <div class="detail-label" style="margin-bottom: 0.5rem;">Documents</div>
+          <div class="documents-grid">
+            ${filePreview(p.profileImage, "Profile Photo")}
+            ${filePreview(p.aadhaarFile, "Aadhaar Card")}
+            ${filePreview(p.panFile, "PAN Card")}
+            ${filePreview(p.resumeFile, "Resume")}
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="thumbs">
-      ${linkOrImg(e.resumeStep2,"Resume")||""}
-    </div>`;
-  const kycKv=`
-    <div class="kv">
-      ${field("Bank",k.bankName)}
-      ${field("Account",k.accountNumber)}
-      ${field("IFSC",k.ifscCode)}
-      ${field("Created",k.createdAt?new Date(k.createdAt).toLocaleString():"")}
+  `;
+
+  const expSection = `
+    <div class="detail-section">
+      <div class="section-header">
+        Experience
+      </div>
+      <div class="section-content">
+        <div class="detail-grid">
+          ${row("Experience", `${e.experienceYears || 0} Years ${e.experienceMonths || 0} Months`)}
+          ${row("Employment", e.employmentType)}
+          ${row("Occupation", e.occupation)}
+          ${row("Interest", e.interestType)}
+        </div>
+        <div style="margin-top: 1rem;">
+          ${row("Job Requirement", e.jobRequirement)}
+          ${row("Heard About", e.heardAbout)}
+        </div>
+        
+        <div style="margin-top: 1.5rem;">
+          <div class="detail-label" style="margin-bottom: 0.5rem;">Documents</div>
+          <div class="documents-grid">
+            ${filePreview(e.resumeStep2, "Updated Resume")}
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="thumbs">
-      ${linkOrImg(k.aadhaarFront,"Aadhaar Front")||""}
-      ${linkOrImg(k.aadhaarBack,"Aadhaar Back")||""}
-      ${linkOrImg(k.panCardUpload,"PAN Upload")||""}
-      ${linkOrImg(k.passbookUpload,"Passbook Upload")||""}
-    </div>`;
-  const body=`
-    <div class="detail-grid">
-      <div class="detail-section"><h3>User</h3>${userKv}</div>
-      <div class="detail-section"><h3>Profile</h3>${profileKv}</div>
-      <div class="detail-section"><h3>Experience</h3>${expKv}</div>
-      <div class="detail-section"><h3>KYC</h3>${kycKv}</div>
-    </div>`;
-  document.getElementById("detail-body").innerHTML=body;
+  `;
+
+  const kycSection = `
+    <div class="detail-section">
+      <div class="section-header">
+        KYC & Bank
+      </div>
+      <div class="section-content">
+        <div class="detail-grid">
+          ${row("Bank Name", k.bankName)}
+          ${row("Account No", k.accountNumber)}
+          ${row("IFSC Code", k.ifscCode)}
+        </div>
+        
+        <div style="margin-top: 1.5rem;">
+          <div class="detail-label" style="margin-bottom: 0.5rem;">KYC Documents</div>
+          <div class="documents-grid">
+            ${filePreview(k.aadhaarFront, "Aadhaar Front")}
+            ${filePreview(k.aadhaarBack, "Aadhaar Back")}
+            ${filePreview(k.panCardUpload, "PAN Card")}
+            ${filePreview(k.passbookUpload, "Passbook/Cheque")}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const body = `
+    <div>
+      ${userSection}
+      ${profileSection}
+      ${expSection}
+      ${kycSection}
+    </div>
+  `;
+
+  document.getElementById("detail-body").innerHTML = body;
+
   if (bootstrapDetailModal) {
     bootstrapDetailModal.show();
   } else {
-    // Fallback: if Bootstrap is unavailable, open in new window
+    // Fallback
     const w = window.open("", "_blank", "width=1000,height=800,scrollbars=yes");
     if (w && w.document) {
-      w.document.title = `Details — ${item.user?.name||""}`;
-      w.document.body.innerHTML = body;
+      w.document.title = `Details — ${item.user?.name || ""}`;
+      w.document.write(`
+        <html>
+          <head>
+            <title>Details — ${item.user?.name || ""}</title>
+            <link rel="stylesheet" href="/admin.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+            <style>
+              body { padding: 20px; background: #f5f7fa; }
+              .detail-section { background: white; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+            </style>
+          </head>
+          <body>${body}</body>
+        </html>
+      `);
+      w.document.close();
     }
   }
 }

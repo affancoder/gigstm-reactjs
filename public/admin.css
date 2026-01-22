@@ -609,7 +609,7 @@
    letter-spacing: 1em;
  }
 
- .section-header::after {
+ /* .section-header::after {
    content: '';
    position: absolute;
    bottom: -1px;
@@ -618,7 +618,7 @@
    height: 2px;
    background: var(--modal-accent);
    transition: width 0.3s ease;
- }
+ } */
 
  .detail-section:hover .section-header::after {
    width: 80px;
@@ -739,17 +739,22 @@
 
  /* Animation */
  @keyframes modalFadeIn {
-   from {
-     opacity: 0;
-     transform: translateY(10px);
-   }
-   to {
-     opacity: 1;
-     transform: translateY(0);
-   }
- }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
- .modal.show .modal-dialog {
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal.show .modal-dialog {
    animation: modalFadeIn 0.2s ease-out;
  }
 
