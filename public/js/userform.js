@@ -938,6 +938,48 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
   // ==========================================
+  // IFSC Auto-Fill Logic
+  // ==========================================
+  const bankSelect = document.getElementById('bankName');
+  const ifscInput = document.getElementById('ifscCode');
+  
+  const BANK_IFSC_PREFIXES = {
+    "State Bank of India": "SBIN",
+    "HDFC Bank": "HDFC",
+    "ICICI Bank": "ICIC",
+    "Axis Bank": "UTIB",
+    "Punjab National Bank": "PUNB",
+    "Bank of Baroda": "BARB",
+    "Canara Bank": "CNRB",
+    "Union Bank of India": "UBIN",
+    "Bank of India": "BKID",
+    "Indian Bank": "IDIB",
+    "IDBI Bank": "IBKL",
+    "Kotak Mahindra Bank": "KKBK",
+    "Yes Bank": "YESB",
+    "IDFC First Bank": "IDFB",
+    "IndusInd Bank": "INDB",
+    "Federal Bank": "FDRL",
+    "AU Small Finance Bank": "AUBL",
+    "Paytm Payments Bank": "PYTM",
+    "Airtel Payments Bank": "AIRP"
+  };
+
+  if (bankSelect && ifscInput) {
+    bankSelect.addEventListener('change', function() {
+      const selectedBank = this.value;
+      const prefix = BANK_IFSC_PREFIXES[selectedBank];
+      
+      // Auto-fill only if prefix found AND ifsc input is empty
+      if (prefix && !ifscInput.value.trim()) {
+        ifscInput.value = prefix;
+        // Trigger input event to ensure progress bar updates
+        ifscInput.dispatchEvent(new Event('input'));
+      }
+    });
+  }
+
+  // ==========================================
   // Persistent Form Filling Logic
   // ==========================================
 
