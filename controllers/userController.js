@@ -212,6 +212,39 @@ exports.kyc = catchAsync(async (req, res, next) => {
 	});
 });
 
+exports.getMe = catchAsync(async (req, res, next) => {
+	const user = await User.findById(req.user.id);
+	if (!user) {
+		return next(new AppError("User not found", 404));
+	}
+
+	const profile = await Profile.findOne({ user: req.user.id });
+	const kyc = await Kyc.findOne({ user: req.user.id });
+
+	// document helper
+	const docs = [];
+	if (profile?.aadhaarFile) docs.push({ name: "Aadhaar File", url: profile.aadhaarFile });
+	if (profile?.panFile) docs.push({ name: "PAN File", url: profile.panFile });
+	if (profile?.resumeFile) docs.push({ name: "Resume", url: profile.resumeFile });
+	if (kyc?.aadhaarFront) docs.push({ name: "Aadhaar Front", url: kyc.aadhaarFront });
+	if (kyc?.aadhaarBack) docs.push({ name: "Aadhaar Back", url: kyc.aadhaarBack });
+	if (kyc?.panCardUpload) docs.push({ name: "PAN Card", url: kyc.panCardUpload });
+	if (kyc?.passbookUpload) docs.push({ name: "Passbook", url: kyc.passbookUpload });
+
+	res.status(200).json({
+		name: user.name, // prefer User model name, fallback to profile
+		email: user.email,
+		phone: profile?.mobile || "",
+		city: profile?.city || "",
+		state: profile?.state || "",
+		pincode: profile?.pincode || "",
+		profileImage: profile?.profileImage || "",
+		bankName: kyc?.bankName || "",
+		ifscCode: kyc?.ifscCode || "",
+		documents: docs
+	});
+});
+
 exports.getCombinedUsers = catchAsync(async (req, res, next) => {
 	const page = Math.max(parseInt(req.query.page) || 1, 1);
 	const limit = Math.min(Math.max(parseInt(req.query.limit) || 10, 1), 100);

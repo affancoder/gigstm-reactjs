@@ -203,3 +203,69 @@
     width: 80px;
   }
 }
+
+/* -------------------------------------------------------------------------- */
+/*                            DASHBOARD STYLES                                */
+/* -------------------------------------------------------------------------- */
+
+/* Profile Image */
+.profile-image-container img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 4px solid #fff;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Cards */
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
+}
+
+.card-header {
+  background-color: transparent;
+  border-bottom: 0;
+}
+
+/* Typography */
+.text-primary {
+  color: #00b074 !important; /* GigsTM Green */
+}
+
+.btn-primary {
+  background-color: #00b074;
+  border-color: #00b074;
+}
+
+.btn-primary:hover {
+  background-color: #009663;
+  border-color: #009663;
+}
+
+/* Documents List */
+.list-group-item {
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+  transition: background-color 0.2s;
+}
+
+.list-group-item:hover {
+  background-color: #f8f9fa;
+}
+
+.list-group-item:last-child {
+  border-bottom: 0;
+}
+
+/* Badges */
+.badge-light {
+  background-color: rgba(0, 176, 116, 0.1);
+  color: #00b074;
+}

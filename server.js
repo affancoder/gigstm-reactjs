@@ -60,6 +60,7 @@ const userRoutes = require('./routes/userRoutes');
 
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/users', userRoutes);
 
 app.use("/", routes);
 

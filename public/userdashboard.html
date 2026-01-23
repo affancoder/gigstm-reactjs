@@ -1,32 +1,32 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>User Dashboard - GigsTm</title>
-  
-  <!-- External Styles -->
-  <link rel="stylesheet" href="./styles.css">
-  <link rel="stylesheet" href="/GigsTm_files/bootstrap.css">
-  <link rel="stylesheet" href="/GigsTm_files/style.css">
-  <link rel="stylesheet" href="/GigsTm_files/typo.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="/GigsTm_files/aos.min.css">
-  <link rel="stylesheet" href="/GigsTm_files/jquery.fancybox.min.css">
-  <link rel="stylesheet" href="/GigsTm_files/slick.min.css">
-  <link rel="stylesheet" href="/GigsTm_files/jquery-ui.css">
-  <link rel="stylesheet" href="/GigsTm_files/sweetalert2.min.css">
-  <link rel="stylesheet" href="/GigsTm_files/main.css">
-  <link rel="stylesheet" href="/GigsTm_files/custom.css">
-  <link rel="stylesheet" href="/GigsTm_files/find-worker.css">
-  <link rel="stylesheet" href="userdashboard.css">
-</head>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>User Dashboard - GigsTm</title>
 
-<body data-aos-easing="ease" data-aos-duration="400" data-aos-delay="0">
-    <div class="site-wrapper overflow-hidden">
-        
-        <header class="site-header">
+    <!-- External Styles -->
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="/GigsTm_files/bootstrap.css" />
+    <link rel="stylesheet" href="/GigsTm_files/style.css" />
+    <link rel="stylesheet" href="/GigsTm_files/typo.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/GigsTm_files/aos.min.css" />
+    <link rel="stylesheet" href="/GigsTm_files/jquery.fancybox.min.css" />
+    <link rel="stylesheet" href="/GigsTm_files/slick.min.css" />
+    <link rel="stylesheet" href="/GigsTm_files/jquery-ui.css" />
+    <link rel="stylesheet" href="/GigsTm_files/sweetalert2.min.css" />
+    <link rel="stylesheet" href="/GigsTm_files/main.css" />
+    <link rel="stylesheet" href="/GigsTm_files/custom.css" />
+    <link rel="stylesheet" href="/GigsTm_files/find-worker.css" />
+    <link rel="stylesheet" href="userdashboard.css" />
+  </head>
+  <body>
+    <header class="site-header">
       <div class="brand-logo">
         <a href="index.html">
           <img
@@ -43,83 +43,354 @@
           aria-controls="userSidebar"
           aria-expanded="false"
         >
-          <div class="nav-avatar"><i id="user-icon" class="fa fa-user-circle" aria-label="User Avatar"></i>
-</div>
+          <div class="nav-avatar">
+            <i
+              id="user-icon"
+              class="fa fa-user-circle"
+              aria-label="User Avatar"
+            ></i>
+          </div>
         </button>
       </div>
     </header>
 
-        <!-- Main Content -->
-        <main class="bg-light pt-20 pb-20">
-             <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-12">
-                         <h1 class="text-center mb-5">Seller Acquisition</h1>
-                         <p class="text-center">Start selling on GigsTm today!</p>
-                    </div>
-                </div>
-             </div>
-        </main>
+    <!-- Main Content -->
+    <main class="bg-light pt-5 pb-5">
+      <div class="container">
+        <!-- Dashboard Header -->
+        <div class="row mb-4">
+          <div class="col-12">
+            <h2 class="font-weight-bold text-dark mb-0">My Dashboard</h2>
+            <p class="text-muted">Manage your profile and view your details</p>
+          </div>
+        </div>
 
-        <!-- Footer (from index.html) -->
-        <footer class="footer bg-ebony-clay dark-mode-texts">
-            <div class="container pt-10 pt-lg-16 pb-10 pb-lg-10">
-                <div class="row">
-                    <div class="col-lg-3 col-sm-6 mb-lg-0 mb-9">
-                        <div class="media mb-11">
-                            <div class="contt_areaa media-body pl-5">
-                                <h5>Contact us at</h5>
-                                <p><a href="mailto:support@gigstm.com"><i class="fa fa-envelope"></i> support@gigstm.com</a></p>
-                                <p><a href="tel:+91-+91-7081266668"><i class="fa fa-phone"></i> +91-+91-7081266668</a></p>
-                            </div>
-                        </div>
-                        <div class="social-icons">
-                            <ul class="pl-0 list-unstyled d-flex align-items-end ">
-                                <li class="d-flex flex-column justify-content-center px-3 mr-3 font-size-4 heading-default-color">Follow us on:</li>
-                                <li class="d-flex flex-column justify-content-center px-3 mr-0"><a href="http://www.google.com/" target="_blank" class="hover-color-primary heading-default-color"><i class="fab fa-facebook-f font-size-3 pt-2"></i></a></li>
-                                <li class="d-flex flex-column justify-content-center px-3 mr-0"><a href="http://www.google.com/" target="_blank" class="hover-color-primary heading-default-color"><i class="fab fa-twitter font-size-3 pt-2"></i></a></li>
-                                <li class="d-flex flex-column justify-content-center px-3 mr-0"><a href="http://www.google.com/" target="_blank" class="hover-color-primary heading-default-color"><i class="fab fa-linkedin-in font-size-3 pt-2"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-9 col-md-6">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-6 col-sm-3 col-xs-6">
-                                <div class="footer-widget widget2 mb-md-0 mb-13">
-                                    <p class="widget-title font-size-4 text-wait mb-md-5 mb-7 contt_areaa">Company</p>
-                                    <ul class="widget-links pl-0 list-unstyled list-hover-primary">
-                                        <li><a href="javacript:void(0);"><i class="fa fa-angle-right"></i> Who We Are</a></li>
-                                        <li><a href="https://gigstm.com/page/how-it-works" wire:navigate=""><i class="fa fa-angle-right"></i> How GigsTm Work</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-3 col-xs-6">
-                                <div class="footer-widget widget2 mb-md-0 mb-13">
-                                    <p class="widget-title font-size-4 text-wait mb-md-5 mb-7 contt_areaa">Categories</p>
-                                    <ul class="widget-links pl-0 list-unstyled list-hover-primary">
-                                        <li><a href="https://gigstm.com/gigs/field-sales-e-commerce-marketplace" wire:navigate=""><i class="fa fa-angle-right"></i> Field Sales - E commerce Marketplace</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-3 col-xs-6">
-                                <div class="footer-widget widget3 mb-sm-0 mb-13">
-                                    <p class="widget-title font-size-4 text-wait mb-md-5 mb-7 contt_areaa">Legal</p>
-                                    <ul class="widget-links pl-0 list-unstyled list-hover-primary">
-                                        <li><a href="https://gigstm.com/" wire:navigate=""><i class="fa fa-angle-right"></i> Home</a></li>
-                                        <li><a href="javacript:void(0);"><i class="fa fa-angle-right"></i> Blog</a></li>
-                                        <li><a href="https://gigstm.com/page/privacy-policy" wire:navigate=""><i class="fa fa-angle-right"></i> Privacy Policy</a></li>
-                                        <li><a href="https://gigstm.com/page/terms-conditions" wire:navigate=""><i class="fa fa-angle-right"></i> Terms &amp; Conditions</a></li>
-                                        <li><a href="https://gigstm.com/contact-us" wire:navigate=""><i class="fa fa-angle-right"></i> Contact Us</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <div class="row">
+          <!-- Left Column: Profile Card -->
+          <div class="col-lg-4 mb-4">
+            <div class="card border-0 shadow-sm rounded-lg h-100">
+              <div class="card-body text-center p-5">
+                <div class="profile-image-container mb-4 mx-auto">
+                  <img
+                    id="profileImage"
+                    src="https://via.placeholder.com/150"
+                    alt="Profile"
+                    class="img-fluid rounded-circle shadow-sm"
+                  />
                 </div>
+                <h4 id="userName" class="font-weight-bold mb-1">Loading...</h4>
+                <p id="userEmail" class="text-muted mb-4">...</p>
+                <a href="userform.html?mode=edit" class="btn btn-primary btn-block rounded-pill py-2">
+                  <i class="fas fa-edit mr-2"></i>Edit Profile
+                </a>
+              </div>
             </div>
-            <div class="copy_rites">Copyright © 2025 gigstm.com | All Rights Reserved.</div>
-        </footer>
-    </div>
+          </div>
+
+          <!-- Right Column: Details & Documents -->
+          <div class="col-lg-8">
+            <!-- Personal Information -->
+            <div class="card border-0 shadow-sm rounded-lg mb-4">
+              <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0">
+                <h5 class="font-weight-bold text-primary mb-0">
+                  <i class="fas fa-user-circle mr-2"></i>Personal Information
+                </h5>
+              </div>
+              <div class="card-body p-4">
+                <div class="row">
+                  <div class="col-sm-6 mb-3">
+                    <label class="text-muted small text-uppercase font-weight-bold">Full Name</label>
+                    <p id="infoName" class="font-weight-bold text-dark mb-0">-</p>
+                  </div>
+                  <div class="col-sm-6 mb-3">
+                    <label class="text-muted small text-uppercase font-weight-bold">Phone</label>
+                    <p id="infoPhone" class="font-weight-bold text-dark mb-0">-</p>
+                  </div>
+                  <div class="col-sm-6 mb-3">
+                    <label class="text-muted small text-uppercase font-weight-bold">Email</label>
+                    <p id="infoEmail" class="font-weight-bold text-dark mb-0">-</p>
+                  </div>
+                  <div class="col-sm-6 mb-3">
+                    <label class="text-muted small text-uppercase font-weight-bold">Location</label>
+                    <p id="infoLocation" class="font-weight-bold text-dark mb-0">-</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bank Details -->
+            <div class="card border-0 shadow-sm rounded-lg mb-4">
+              <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0">
+                <h5 class="font-weight-bold text-primary mb-0">
+                  <i class="fas fa-university mr-2"></i>Bank Details
+                </h5>
+              </div>
+              <div class="card-body p-4">
+                <div class="row">
+                  <div class="col-sm-6 mb-3">
+                    <label class="text-muted small text-uppercase font-weight-bold">Bank Name</label>
+                    <p id="infoBank" class="font-weight-bold text-dark mb-0">-</p>
+                  </div>
+                  <div class="col-sm-6 mb-3">
+                    <label class="text-muted small text-uppercase font-weight-bold">IFSC Code</label>
+                    <p id="infoIfsc" class="font-weight-bold text-dark mb-0">-</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Documents -->
+            <div class="card border-0 shadow-sm rounded-lg mb-4">
+              <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0">
+                <h5 class="font-weight-bold text-primary mb-0">
+                  <i class="fas fa-file-alt mr-2"></i>Uploaded Documents
+                </h5>
+              </div>
+              <div class="card-body p-4">
+                <div id="documentsList" class="list-group list-group-flush">
+                  <!-- Documents will be populated here -->
+                  <div class="text-center text-muted py-3">Loading documents...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Dashboard Logic -->
+    <script>
+      document.addEventListener('DOMContentLoaded', async () => {
+        const token = localStorage.getItem('jwt_token');
+        if (!token) {
+          window.location.href = 'login.html';
+          return;
+        }
+
+        try {
+          const response = await fetch('/api/users/me', {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+
+          if (!response.ok) {
+            if (response.status === 401) {
+              localStorage.removeItem('jwt_token');
+              window.location.href = 'login.html';
+              return;
+            }
+            throw new Error('Failed to fetch user data');
+          }
+
+          const user = await response.json();
+
+          // Populate Profile Card
+          document.getElementById('userName').textContent = user.name || 'User';
+          document.getElementById('userEmail').textContent = user.email || '';
+          if (user.profileImage) {
+            document.getElementById('profileImage').src = user.profileImage;
+          }
+
+          // Populate Personal Info
+          document.getElementById('infoName').textContent = user.name || '-';
+          document.getElementById('infoPhone').textContent = user.phone || '-';
+          document.getElementById('infoEmail').textContent = user.email || '-';
+          
+          const location = [user.city, user.state, user.pincode].filter(Boolean).join(', ');
+          document.getElementById('infoLocation').textContent = location || '-';
+
+          // Populate Bank Info
+          document.getElementById('infoBank').textContent = user.bankName || 'Not provided';
+          document.getElementById('infoIfsc').textContent = user.ifscCode || 'Not provided';
+
+          // Populate Documents
+          const docsList = document.getElementById('documentsList');
+          docsList.innerHTML = ''; // Clear loading state
+
+          if (user.documents && user.documents.length > 0) {
+            user.documents.forEach(doc => {
+              const item = document.createElement('a');
+              item.href = doc.url;
+              item.target = '_blank';
+              item.className = 'list-group-item list-group-item-action d-flex justify-content-between align-items-center px-0 border-bottom';
+              item.innerHTML = `
+                <span class="text-dark"><i class="fas fa-file-pdf text-danger mr-2"></i>${doc.name}</span>
+                <span class="badge badge-light text-primary"><i class="fas fa-external-link-alt"></i> View</span>
+              `;
+              docsList.appendChild(item);
+            });
+          } else {
+            docsList.innerHTML = `
+              <div class="text-center text-muted py-3">
+                <i class="fas fa-folder-open fa-2x mb-2 d-block opacity-50"></i>
+                No documents uploaded
+              </div>
+            `;
+          }
+
+        } catch (error) {
+          console.error('Error:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong while loading your dashboard!',
+          });
+        }
+      });
+    </script>
+    <footer class="footer bg-ebony-clay dark-mode-texts">
+      <div class="container pt-10 pt-lg-16 pb-10 pb-lg-10">
+        <div class="row">
+          <div class="col-lg-3 col-sm-6 mb-lg-0 mb-9">
+            <div class="media mb-11">
+              <div class="contt_areaa media-body pl-5">
+                <h5>Contact us at</h5>
+                <p>
+                  <a href="mailto:support@gigstm.com"
+                    ><i class="fa fa-envelope"></i> support@gigstm.com</a
+                  >
+                </p>
+                <p>
+                  <a href="tel:+91-+91-7081266668"
+                    ><i class="fa fa-phone"></i> +91-+91-7081266668</a
+                  >
+                </p>
+              </div>
+            </div>
+            <div class="social-icons">
+              <ul class="pl-0 list-unstyled d-flex align-items-end">
+                <li
+                  class="d-flex flex-column justify-content-center px-3 mr-3 font-size-4 heading-default-color"
+                >
+                  Follow us on:
+                </li>
+                <li class="d-flex flex-column justify-content-center px-3 mr-0">
+                  <a
+                    href="http://www.google.com/"
+                    target="_blank"
+                    class="hover-color-primary heading-default-color"
+                    ><i class="fab fa-facebook-f font-size-3 pt-2"></i
+                  ></a>
+                </li>
+                <li class="d-flex flex-column justify-content-center px-3 mr-0">
+                  <a
+                    href="http://www.google.com/"
+                    target="_blank"
+                    class="hover-color-primary heading-default-color"
+                    ><i class="fab fa-twitter font-size-3 pt-2"></i
+                  ></a>
+                </li>
+                <li class="d-flex flex-column justify-content-center px-3 mr-0">
+                  <a
+                    href="http://www.google.com/"
+                    target="_blank"
+                    class="hover-color-primary heading-default-color"
+                    ><i class="fab fa-linkedin-in font-size-3 pt-2"></i
+                  ></a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-9 col-md-6">
+            <div class="row">
+              <div class="col-lg-4 col-md-6 col-sm-3 col-xs-6">
+                <div class="footer-widget widget2 mb-md-0 mb-13">
+                  <p
+                    class="widget-title font-size-4 text-wait mb-md-5 mb-7 contt_areaa"
+                  >
+                    Company
+                  </p>
+                  <ul
+                    class="widget-links pl-0 list-unstyled list-hover-primary"
+                  >
+                    <li>
+                      <a href="javacript:void(0);"
+                        ><i class="fa fa-angle-right"></i> Who We Are</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="https://gigstm.com/page/how-it-works"
+                        wire:navigate=""
+                        ><i class="fa fa-angle-right"></i> How GigsTm Work</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6 col-sm-3 col-xs-6">
+                <div class="footer-widget widget2 mb-md-0 mb-13">
+                  <p
+                    class="widget-title font-size-4 text-wait mb-md-5 mb-7 contt_areaa"
+                  >
+                    Categories
+                  </p>
+                  <ul
+                    class="widget-links pl-0 list-unstyled list-hover-primary"
+                  >
+                    <li>
+                      <a
+                        href="https://gigstm.com/gigs/field-sales-e-commerce-marketplace"
+                        wire:navigate=""
+                        ><i class="fa fa-angle-right"></i> Field Sales - E
+                        commerce Marketplace</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6 col-sm-3 col-xs-6">
+                <div class="footer-widget widget3 mb-sm-0 mb-13">
+                  <p
+                    class="widget-title font-size-4 text-wait mb-md-5 mb-7 contt_areaa"
+                  >
+                    Legal
+                  </p>
+                  <ul
+                    class="widget-links pl-0 list-unstyled list-hover-primary"
+                  >
+                    <li>
+                      <a href="https://gigstm.com/" wire:navigate=""
+                        ><i class="fa fa-angle-right"></i> Home</a
+                      >
+                    </li>
+                    <li>
+                      <a href="javacript:void(0);"
+                        ><i class="fa fa-angle-right"></i> Blog</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="https://gigstm.com/page/privacy-policy"
+                        wire:navigate=""
+                        ><i class="fa fa-angle-right"></i> Privacy Policy</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        href="https://gigstm.com/page/terms-conditions"
+                        wire:navigate=""
+                        ><i class="fa fa-angle-right"></i> Terms &amp;
+                        Conditions</a
+                      >
+                    </li>
+                    <li>
+                      <a href="https://gigstm.com/contact-us" wire:navigate=""
+                        ><i class="fa fa-angle-right"></i> Contact Us</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="copy_rites">
+        Copyright © 2025 gigstm.com | All Rights Reserved.
+      </div>
+    </footer>
 
     <!-- User Sidebar Drawer -->
     <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
@@ -147,23 +418,33 @@
           <i class="fas fa-user-circle"></i> User Profile
         </a>
 
-        <a href="userdashboard.html" class="nav-item"> <i class="fas fa-briefcase"></i> Dashboard </a>
+        <a href="userdashboard.html" class="nav-item">
+          <i class="fas fa-briefcase"></i> Dashboard
+        </a>
 
-        <a href="gigs.html" class="nav-item"> <i class="fas fa-briefcase"></i> Gigs </a>
+        <a href="gigs.html" class="nav-item">
+          <i class="fas fa-briefcase"></i> Gigs
+        </a>
 
         <a href="application.html" class="nav-item">
           <i class="fas fa-file-alt"></i> Application
         </a>
 
-        <a href="rewards.html" class="nav-item"> <i class="fas fa-gift"></i> Rewards </a>
+        <a href="rewards.html" class="nav-item">
+          <i class="fas fa-gift"></i> Rewards
+        </a>
 
-        <a href="payout.html" class="nav-item"> <i class="fas fa-wallet"></i> Payout </a>
+        <a href="payout.html" class="nav-item">
+          <i class="fas fa-wallet"></i> Payout
+        </a>
 
         <a href="settings.html" class="nav-item">
           <i class="fas fa-sliders-h"></i> Settings
         </a>
 
-        <a href="help.html" class="nav-item"> <i class="fas fa-life-ring"></i> Help </a>
+        <a href="help.html" class="nav-item">
+          <i class="fas fa-life-ring"></i> Help
+        </a>
 
         <div class="nav-divider"></div>
 
@@ -172,7 +453,7 @@
         </a>
       </nav>
     </aside>
-    
+
     <!-- Vendor Scripts -->
     <script src="/GigsTm_files/vendor.min.js.download"></script>
     <script src="/GigsTm_files/jquery.fancybox.min.js.download"></script>
@@ -190,6 +471,5 @@
     <script src="/GigsTm_files/animated.js.download"></script>
     <script src="/GigsTm_files/maps(1).js.download"></script>
     <script src="/js/icon-toggle.js"></script>
-
-</body>
+  </body>
 </html>
