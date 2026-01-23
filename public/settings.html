@@ -90,12 +90,302 @@
 
 
   <!-- Main Content -->
-  <main class="bg-light pt-20 pb-20">
+  <main class="bg-light pt-20 pb-20 settings-page">
     <div class="container">
       <div class="row justify-content-center">
-        <div class="col-lg-12">
-          <h1 class="text-center mb-5">Seller Acquisition</h1>
-          <p class="text-center">Start selling on GigsTm today!</p>
+        <div class="col-lg-8 col-md-10">
+          
+          <!-- 1. Page Header -->
+          <div class="text-center mb-10 page-header">
+            <h1 class="mb-2">Account & Work Settings</h1>
+            <p class="subtitle">Customize how you work, earn, and get paid on GigsTM</p>
+          </div>
+
+          <!-- 2. Personal Profile Card -->
+          <div class="settings-card">
+             <div class="card-header-custom mb-4 pb-3 border-bottom">
+               <h4 class="mb-0">Personal Profile</h4>
+             </div>
+             <form>
+                <div class="row">
+                   <div class="col-md-6 form-group">
+                      <label for="fullName">Full Name</label>
+                      <input type="text" class="form-control" id="fullName" placeholder="Enter your full name">
+                   </div>
+                   <div class="col-md-6 form-group">
+                      <label for="mobileNumber">Mobile Number</label>
+                      <input type="text" class="form-control" id="mobileNumber" placeholder="Registered mobile number" readonly>
+                   </div>
+                   <div class="col-md-6 form-group">
+                      <label for="email">Email Address</label>
+                      <input type="email" class="form-control" id="email" placeholder="Enter your email address">
+                   </div>
+                   <div class="col-md-6 form-group">
+                      <label for="city">City</label>
+                      <input type="text" class="form-control" id="city" placeholder="Select your city">
+                   </div>
+                   <div class="col-md-6 form-group">
+                      <label for="language">Preferred Language</label>
+                      <select class="form-control" id="language">
+                          <option value="" disabled selected>Choose language</option>
+                          <option value="en">English</option>
+                          <option value="hi">Hindi</option>
+                          <option value="regional">Regional</option>
+                      </select>
+                   </div>
+                </div>
+                <div class="text-right mt-3">
+                   <button type="button" class="btn btn-save">Save Profile Changes</button>
+                </div>
+             </form>
+          </div>
+
+          <!-- 3. Work Eligibility & Compliance Card -->
+          <div class="settings-card">
+             <div class="card-header-custom mb-4 pb-3 border-bottom">
+               <h4 class="mb-0">Work Eligibility & Compliance</h4>
+             </div>
+             <div class="compliance-status mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <span class="font-weight-bold d-block">Identity Verification</span>
+                        <small class="text-muted">Required for high-value gigs</small>
+                    </div>
+                    <span class="text-muted small">Verification status will appear here</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <span class="font-weight-bold">PAN / Aadhaar</span>
+                    </div>
+                    <span class="text-muted small">Document status will be shown here</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="font-weight-bold">Task-Based Agreement</span>
+                    </div>
+                    <span class="text-muted small">Task agreement status pending</span>
+                </div>
+             </div>
+             <div class="text-right">
+                <button class="btn btn-outline-primary btn-sm">Complete Verification</button>
+             </div>
+          </div>
+
+          <!-- 4. Gig Preferences Card -->
+          <div class="settings-card">
+             <div class="card-header-custom mb-4 pb-3 border-bottom">
+               <h4 class="mb-0">Gig Preferences</h4>
+             </div>
+             <form>
+                <div class="form-group mb-4">
+                   <label class="mb-3 font-weight-bold">Preferred Categories</label>
+                   <div class="empty-state-box p-3 text-center mb-2">
+                      <span class="text-muted">Select gig categories</span>
+                   </div>
+                   <div class="row">
+                      <div class="col-md-6">
+                         <div class="custom-control custom-checkbox mb-2">
+                            <input type="checkbox" class="custom-control-input" id="catSales">
+                            <label class="custom-control-label" for="catSales">Field Sales</label>
+                         </div>
+                      </div>
+                      <div class="col-md-6">
+                         <div class="custom-control custom-checkbox mb-2">
+                            <input type="checkbox" class="custom-control-input" id="catOps">
+                            <label class="custom-control-label" for="catOps">Operations</label>
+                         </div>
+                      </div>
+                      <div class="col-md-6">
+                         <div class="custom-control custom-checkbox mb-2">
+                            <input type="checkbox" class="custom-control-input" id="catRetail">
+                            <label class="custom-control-label" for="catRetail">Retail Support</label>
+                         </div>
+                      </div>
+                      <div class="col-md-6">
+                         <div class="custom-control custom-checkbox mb-2">
+                            <input type="checkbox" class="custom-control-input" id="catAudit">
+                            <label class="custom-control-label" for="catAudit">Auditing</label>
+                         </div>
+                      </div>
+                   </div>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label class="mb-2 font-weight-bold">Preferred Industries</label>
+                    <select class="form-control text-muted" multiple style="height: 100px;">
+                        <option disabled>Choose industries</option>
+                        <option>EduTech</option>
+                        <option>Fintech</option>
+                        <option>Logistics</option>
+                        <option>Retail</option>
+                        <option>Healthcare</option>
+                    </select>
+                </div>
+
+                <div class="row">
+                   <div class="col-md-4 form-group">
+                      <label for="availability">Availability</label>
+                      <select class="form-control" id="availability">
+                         <option value="" disabled selected>Select availability</option>
+                         <option value="full-time">Full-time</option>
+                         <option value="part-time">Part-time</option>
+                         <option value="weekend">Weekend Only</option>
+                      </select>
+                   </div>
+                   <div class="col-md-4 form-group">
+                      <label for="workType">Work Type</label>
+                      <select class="form-control" id="workType">
+                         <option value="" disabled selected>Field / Remote / Hybrid</option>
+                         <option value="field">Field</option>
+                         <option value="remote">Remote</option>
+                         <option value="hybrid">Hybrid</option>
+                      </select>
+                   </div>
+                   <div class="col-md-4 form-group">
+                      <label for="geoPref">Geo-Preference</label>
+                      <select class="form-control" id="geoPref">
+                         <option value="" disabled selected>Allow nearby location gigs</option>
+                         <option value="current">Current City</option>
+                         <option value="relocate">Open to Relocate</option>
+                      </select>
+                   </div>
+                </div>
+                
+                <div class="custom-control custom-switch mb-3">
+                    <input type="checkbox" class="custom-control-input" id="nearbyToggle">
+                    <label class="custom-control-label" for="nearbyToggle">Show gigs in nearby locations</label>
+                </div>
+
+                <div class="text-right mt-3">
+                   <button type="button" class="btn btn-save">Save Gig Preferences</button>
+                </div>
+             </form>
+          </div>
+
+          <!-- 5. Training & Skill Settings Card -->
+          <div class="settings-card">
+              <div class="card-header-custom mb-4 pb-3 border-bottom">
+                  <h4 class="mb-0">Training & Skills</h4>
+              </div>
+              <div class="mb-4">
+                  <h6 class="font-weight-bold mb-3">Enrolled Programs</h6>
+                  <div class="empty-state-box p-4 text-center border rounded bg-light mb-3">
+                      <p class="mb-0 text-muted">Your enrolled trainings will appear here</p>
+                  </div>
+              </div>
+              <div class="mb-4">
+                  <h6 class="font-weight-bold mb-3">Completed Certifications</h6>
+                  <div class="empty-state-box p-4 text-center border rounded bg-light mb-3">
+                      <p class="mb-0 text-muted">Your badges will appear here</p>
+                  </div>
+              </div>
+              <div class="custom-control custom-switch mb-4">
+                  <input type="checkbox" class="custom-control-input" id="trainNotif">
+                  <label class="custom-control-label" for="trainNotif">Notify me about new training opportunities</label>
+              </div>
+              <div class="text-right">
+                  <button class="btn btn-outline-primary btn-sm">View Training Resources</button>
+              </div>
+          </div>
+
+          <!-- 6. Payout & Payment Preferences Card -->
+          <div class="settings-card">
+              <div class="card-header-custom mb-4 pb-3 border-bottom">
+                  <h4 class="mb-0">Payout & Payment Preferences</h4>
+              </div>
+              <div class="row">
+                  <div class="col-md-6 form-group">
+                      <label>Default Payout Method</label>
+                      <input type="text" class="form-control" placeholder="No payout method added" readonly>
+                  </div>
+                  <div class="col-md-6 form-group">
+                      <label for="payFreq">Payout Frequency</label>
+                      <select class="form-control" id="payFreq">
+                          <option value="" disabled selected>Select payout preference</option>
+                          <option value="task">Per Task (Instant)</option>
+                          <option value="weekly">Weekly Settlement</option>
+                          <option value="milestone">Milestone-based</option>
+                      </select>
+                  </div>
+              </div>
+              <div class="alert alert-info small">
+                  <i class="fas fa-info-circle mr-1"></i> Payment status note: Payment details will be shown here
+              </div>
+              <div class="text-right">
+                  <button class="btn btn-outline-primary btn-sm">Manage Payout Details</button>
+              </div>
+          </div>
+
+          <!-- 7. Notification & Alerts Card -->
+          <div class="settings-card">
+             <div class="card-header-custom mb-4 pb-3 border-bottom">
+               <h4 class="mb-0">Notifications & Alerts</h4>
+             </div>
+             <form>
+                <div class="custom-control custom-switch mb-3">
+                   <input type="checkbox" class="custom-control-input" id="notifMatch">
+                   <label class="custom-control-label" for="notifMatch">New gig matching alerts</label>
+                </div>
+                <div class="custom-control custom-switch mb-3">
+                   <input type="checkbox" class="custom-control-input" id="notifApp">
+                   <label class="custom-control-label" for="notifApp">Application status updates</label>
+                </div>
+                <div class="custom-control custom-switch mb-3">
+                   <input type="checkbox" class="custom-control-input" id="notifAssign">
+                   <label class="custom-control-label" for="notifAssign">Task assignment notifications</label>
+                </div>
+                <div class="custom-control custom-switch mb-3">
+                   <input type="checkbox" class="custom-control-input" id="notifPay">
+                   <label class="custom-control-label" for="notifPay">Payout & settlement alerts</label>
+                </div>
+                <div class="custom-control custom-switch">
+                   <input type="checkbox" class="custom-control-input" id="notifCert">
+                   <label class="custom-control-label" for="notifCert">Training & certification updates</label>
+                </div>
+             </form>
+          </div>
+
+          <!-- 8. Security & Account Control Card -->
+          <div class="settings-card">
+             <div class="card-header-custom mb-4 pb-3 border-bottom">
+               <h4 class="mb-0">Security & Account Control</h4>
+             </div>
+             <div class="row align-items-center mb-4">
+                <div class="col-md-8">
+                   <p class="mb-0 font-weight-bold text-dark">Password</p>
+                   <small class="text-muted">Last changed: Never</small>
+                </div>
+                <div class="col-md-4 text-right">
+                   <button class="btn btn-outline-secondary btn-sm">Change Password</button>
+                </div>
+             </div>
+             <div class="row align-items-center mb-4">
+                 <div class="col-md-8">
+                   <p class="mb-0 font-weight-bold text-dark">Active Sessions</p>
+                   <small class="text-muted">Current session only</small>
+                </div>
+                <div class="col-md-4 text-right">
+                   <button class="btn btn-outline-secondary btn-sm">Logout from all devices</button>
+                </div>
+             </div>
+             <hr>
+             <div class="row align-items-center mt-4">
+                <div class="col-md-8">
+                   <p class="mb-0 text-danger font-weight-bold">Deactivate Account</p>
+                   <small class="text-muted">Deactivating your account will pause your access to gigs</small>
+                </div>
+                <div class="col-md-4 text-right">
+                   <button class="btn btn-outline-danger btn-sm">Deactivate Account</button>
+                </div>
+             </div>
+          </div>
+
+          <!-- 9. Help & Support Shortcut -->
+          <div class="help-shortcut text-center p-4 rounded" style="background: #e6f7f1;">
+             <p class="mb-2 font-weight-bold text-dark">Need help with verification, gigs, or payments?</p>
+             <a href="help.html" class="btn btn-link text-primary font-weight-bold p-0">Go to Help & Support <i class="fas fa-arrow-right ml-1"></i></a>
+          </div>
+
         </div>
       </div>
     </div>

@@ -1,8 +1,141 @@
-.site-haeder{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #f5f5f5;
-    background-color: red;
+/* Help Page Styles */
+
+/* Page Header */
+.page-header h1 {
+  font-weight: 700;
+  color: #2b3940;
+}
+.page-header .subtitle {
+  color: #6c757d;
+  font-size: 1.1rem;
+}
+
+/* Quick Help Cards */
+.help-card {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease;
+  height: 100%;
+}
+.help-card:hover {
+  transform: translateY(-5px);
+}
+.icon-wrapper {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  font-size: 1.5rem;
+}
+.gigger-icon {
+  background-color: rgba(0, 176, 116, 0.1);
+  color: #00b074;
+}
+.business-icon {
+  background-color: rgba(0, 123, 255, 0.1);
+  color: #007bff;
+}
+.support-icon {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: #ffc107;
+}
+.help-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+.help-card p {
+  color: #6c757d;
+  font-size: 0.95rem;
+  margin-bottom: 0;
+}
+
+/* FAQ Section */
+.section-title {
+  font-weight: 700;
+  color: #2b3940;
+  margin-bottom: 2rem;
+}
+.accordion .card {
+  border: none;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+  border-radius: 8px !important;
+  overflow: hidden;
+}
+.accordion .card-header {
+  background-color: #fff;
+  border-bottom: none;
+  padding: 0;
+}
+.accordion .btn-link {
+  color: #2b3940;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 1.25rem;
+  font-size: 1.05rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+}
+.accordion .btn-link:hover {
+  color: #00b074;
+}
+.accordion .card-body {
+  padding: 0 1.25rem 1.25rem;
+  color: #6c757d;
+  line-height: 1.6;
+}
+
+/* How It Works */
+.step-circle {
+  width: 50px;
+  height: 50px;
+  background-color: #00b074;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 auto 1rem;
+}
+
+/* Contact Support */
+.contact-support-card {
+  background: #ffffff;
+  padding: 3rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: 1px solid #e1e5eb;
+}
+.custom-btn {
+  background-color: #00b074;
+  border-color: #00b074;
+  padding: 12px 30px;
+  font-weight: 600;
+  color: #fff;
+  transition: all 0.3s;
+}
+.custom-btn:hover {
+  background-color: #009663;
+  border-color: #009663;
+  color: #fff;
+}
+
+/* Trust Note */
+.trust-note {
+  margin-top: 2rem;
+}
+.trust-note i {
+  color: #00b074;
 }
