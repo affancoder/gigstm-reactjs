@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Gigs - GigsTm</title>
-  
+
   <!-- External Styles -->
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="/GigsTm_files/bootstrap.css">
@@ -20,391 +21,173 @@
   <link rel="stylesheet" href="/GigsTm_files/main.css">
   <link rel="stylesheet" href="/GigsTm_files/custom.css">
   <link rel="stylesheet" href="/GigsTm_files/find-worker.css">
-   <link rel="stylesheet" href="gigs.css">
-   <link rel="stylesheet" href="job-categories.css">
+  <link rel="stylesheet" href="gigs.css">
+  <link rel="stylesheet" href="job-categories.css">
 </head>
 
 
-        <header class="site-header">
-      <div class="brand-logo">
-        <a href="index.html">
-          <img
-            src="/GigsTm_files/lgo_project1.png"
-            alt="GigsTm"
-            class="light-version-logo default-logo"
-          />
-        </a>
+<header class="site-header">
+  <div class="brand-logo">
+    <a href="index.html">
+      <img src="/GigsTm_files/lgo_project1.png" alt="GigsTm" class="light-version-logo default-logo" />
+    </a>
+  </div>
+  <div class="header-btns">
+    <button class="profile-toggle-btn" aria-label="Open User Menu" aria-controls="userSidebar" aria-expanded="false">
+      <div class="nav-avatar"><i id="user-icon" class="fa fa-user-circle" aria-label="User Avatar"></i>
       </div>
-      <div class="header-btns">
-        <button
-          class="profile-toggle-btn"
-          aria-label="Open User Menu"
-          aria-controls="userSidebar"
-          aria-expanded="false"
-        >
-          <div class="nav-avatar"><i id="user-icon" class="fa fa-user-circle" aria-label="User Avatar"></i>
-</div>
-        </button>
+    </button>
+  </div>
+</header>
+
+<div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+<aside class="user-sidebar" id="userSidebar" aria-label="User Menu" aria-hidden="true" role="dialog">
+  <button class="sidebar-close-btn" aria-label="Close Sidebar">
+    &times;
+  </button>
+
+  <div class="sidebar-profile">
+    <div class="sidebar-avatar-large"></div>
+    <div class="sidebar-user-info centered">
+      <!-- <h4>Affan Danish</h4> -->
+      <!-- <p class="user-email">affan.danish@example.com</p> -->
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a href="userform.html?mode=edit" class="nav-item">
+      <i class="fas fa-user-circle"></i> User Profile
+    </a>
+
+    <a href="userdashboard.html" class="nav-item"> <i class="fas fa-briefcase"></i> Dashboard </a>
+
+    <a href="gigs.html" class="nav-item"> <i class="fas fa-briefcase"></i> Gigs </a>
+
+    <a href="application.html" class="nav-item">
+      <i class="fas fa-file-alt"></i> Application
+    </a>
+
+    <a href="rewards.html" class="nav-item"> <i class="fas fa-gift"></i> Rewards </a>
+
+    <a href="payout.html" class="nav-item"> <i class="fas fa-wallet"></i> Payout </a>
+
+    <a href="settings.html" class="nav-item">
+      <i class="fas fa-sliders-h"></i> Settings
+    </a>
+
+    <a href="help.html" class="nav-item"> <i class="fas fa-life-ring"></i> Help </a>
+
+    <div class="nav-divider"></div>
+
+    <a href="#" class="nav-item logout-link">
+      <i class="fas fa-right-from-bracket"></i> Logout
+    </a>
+  </nav>
+</aside>
+
+
+<!-- Main Content -->
+<main class="bg-light pt-20 pb-20">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+        <h1 class="text-center mb-5">Seller Acquisition</h1>
+        <p class="text-center">Start selling on GigsTm today!</p>
       </div>
-    </header>
+    </div>
+  </div>
+</main>
 
-    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
-    <aside
-      class="user-sidebar"
-      id="userSidebar"
-      aria-label="User Menu"
-      aria-hidden="true"
-      role="dialog"
-    >
-      <button class="sidebar-close-btn" aria-label="Close Sidebar">
-        &times;
-      </button>
-
-      <div class="sidebar-profile">
-        <div class="sidebar-avatar-large"></div>
-        <div class="sidebar-user-info centered">
-          <!-- <h4>Affan Danish</h4> -->
-          <!-- <p class="user-email">affan.danish@example.com</p> -->
+<!-- Footer (from index.html) -->
+<footer class="footer bg-ebony-clay dark-mode-texts">
+  <div class="container pt-10 pt-lg-16 pb-10 pb-lg-10">
+    <div class="row">
+      <div class="col-lg-3 col-sm-6 mb-lg-0 mb-9">
+        <div class="media mb-11">
+          <div class="contt_areaa media-body pl-5">
+            <h5>Contact us at</h5>
+            <p><a href="mailto:support@gigstm.com"><i class="fa fa-envelope"></i> support@gigstm.com</a></p>
+            <p><a href="tel:+91-+91-7081266668"><i class="fa fa-phone"></i> +91-+91-7081266668</a></p>
+          </div>
+        </div>
+        <div class="social-icons">
+          <ul class="pl-0 list-unstyled d-flex align-items-end ">
+            <li class="d-flex flex-column justify-content-center px-3 mr-3 font-size-4 heading-default-color">Follow us
+              on:</li>
+            <li class="d-flex flex-column justify-content-center px-3 mr-0"><a href="http://www.google.com/"
+                target="_blank" class="hover-color-primary heading-default-color"><i
+                  class="fab fa-facebook-f font-size-3 pt-2"></i></a></li>
+            <li class="d-flex flex-column justify-content-center px-3 mr-0"><a href="http://www.google.com/"
+                target="_blank" class="hover-color-primary heading-default-color"><i
+                  class="fab fa-twitter font-size-3 pt-2"></i></a></li>
+            <li class="d-flex flex-column justify-content-center px-3 mr-0"><a href="http://www.google.com/"
+                target="_blank" class="hover-color-primary heading-default-color"><i
+                  class="fab fa-linkedin-in font-size-3 pt-2"></i></a></li>
+          </ul>
         </div>
       </div>
-
-      <nav class="sidebar-nav">
-        <a href="userform.html?mode=edit" class="nav-item">
-          <i class="fas fa-user-circle"></i> User Profile
-        </a>
-
-        <a href="userdashboard.html" class="nav-item"> <i class="fas fa-briefcase"></i> Dashboard </a>
-
-        <a href="gigs.html" class="nav-item"> <i class="fas fa-briefcase"></i> Gigs </a>
-
-        <a href="application.html" class="nav-item">
-          <i class="fas fa-file-alt"></i> Application
-        </a>
-
-        <a href="rewards.html" class="nav-item"> <i class="fas fa-gift"></i> Rewards </a>
-
-        <a href="payout.html" class="nav-item"> <i class="fas fa-wallet"></i> Payout </a>
-
-        <a href="settings.html" class="nav-item">
-          <i class="fas fa-sliders-h"></i> Settings
-        </a>
-
-        <a href="help.html" class="nav-item"> <i class="fas fa-life-ring"></i> Help </a>
-
-        <div class="nav-divider"></div>
-
-        <a href="#" class="nav-item logout-link">
-          <i class="fas fa-right-from-bracket"></i> Logout
-        </a>
-      </nav>
-    </aside>
-        
-
-        <!-- Main Content -->
-        <main class="bg-light pt-20 pb-20">
-             <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-12">
-                         <h1 class="text-center mb-5">Seller Acquisition</h1>
-                         <p class="text-center">Start selling on GigsTm today!</p>
-                    </div>
-                </div>
-             </div>
-        </main>
-
-        <!-- Footer (from index.html) -->
-        <footer class="footer bg-ebony-clay dark-mode-texts">
-            <div class="container pt-10 pt-lg-16 pb-10 pb-lg-10">
-                <div class="row">
-                    <div class="col-lg-3 col-sm-6 mb-lg-0 mb-9">
-                        <div class="media mb-11">
-                            <div class="contt_areaa media-body pl-5">
-                                <h5>Contact us at</h5>
-                                <p><a href="mailto:support@gigstm.com"><i class="fa fa-envelope"></i> support@gigstm.com</a></p>
-                                <p><a href="tel:+91-+91-7081266668"><i class="fa fa-phone"></i> +91-+91-7081266668</a></p>
-                            </div>
-                        </div>
-                        <div class="social-icons">
-                            <ul class="pl-0 list-unstyled d-flex align-items-end ">
-                                <li class="d-flex flex-column justify-content-center px-3 mr-3 font-size-4 heading-default-color">Follow us on:</li>
-                                <li class="d-flex flex-column justify-content-center px-3 mr-0"><a href="http://www.google.com/" target="_blank" class="hover-color-primary heading-default-color"><i class="fab fa-facebook-f font-size-3 pt-2"></i></a></li>
-                                <li class="d-flex flex-column justify-content-center px-3 mr-0"><a href="http://www.google.com/" target="_blank" class="hover-color-primary heading-default-color"><i class="fab fa-twitter font-size-3 pt-2"></i></a></li>
-                                <li class="d-flex flex-column justify-content-center px-3 mr-0"><a href="http://www.google.com/" target="_blank" class="hover-color-primary heading-default-color"><i class="fab fa-linkedin-in font-size-3 pt-2"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-9 col-md-6">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-6 col-sm-3 col-xs-6">
-                                <div class="footer-widget widget2 mb-md-0 mb-13">
-                                    <p class="widget-title font-size-4 text-wait mb-md-5 mb-7 contt_areaa">Company</p>
-                                    <ul class="widget-links pl-0 list-unstyled list-hover-primary">
-                                        <li><a href="javacript:void(0);"><i class="fa fa-angle-right"></i> Who We Are</a></li>
-                                        <li><a href="https://gigstm.com/page/how-it-works" wire:navigate=""><i class="fa fa-angle-right"></i> How GigsTm Work</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-3 col-xs-6">
-                                <div class="footer-widget widget2 mb-md-0 mb-13">
-                                    <p class="widget-title font-size-4 text-wait mb-md-5 mb-7 contt_areaa">Categories</p>
-                                    <ul class="widget-links pl-0 list-unstyled list-hover-primary">
-                                        <li><a href="https://gigstm.com/gigs/field-sales-e-commerce-marketplace" wire:navigate=""><i class="fa fa-angle-right"></i> Field Sales - E commerce Marketplace</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-3 col-xs-6">
-                                <div class="footer-widget widget3 mb-sm-0 mb-13">
-                                    <p class="widget-title font-size-4 text-wait mb-md-5 mb-7 contt_areaa">Legal</p>
-                                    <ul class="widget-links pl-0 list-unstyled list-hover-primary">
-                                        <li><a href="https://gigstm.com/" wire:navigate=""><i class="fa fa-angle-right"></i> Home</a></li>
-                                        <li><a href="javacript:void(0);"><i class="fa fa-angle-right"></i> Blog</a></li>
-                                        <li><a href="https://gigstm.com/page/privacy-policy" wire:navigate=""><i class="fa fa-angle-right"></i> Privacy Policy</a></li>
-                                        <li><a href="https://gigstm.com/page/terms-conditions" wire:navigate=""><i class="fa fa-angle-right"></i> Terms &amp; Conditions</a></li>
-                                        <li><a href="https://gigstm.com/contact-us" wire:navigate=""><i class="fa fa-angle-right"></i> Contact Us</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+      <div class="col-lg-9 col-md-6">
+        <div class="row">
+          <div class="col-lg-4 col-md-6 col-sm-3 col-xs-6">
+            <div class="footer-widget widget2 mb-md-0 mb-13">
+              <p class="widget-title font-size-4 text-wait mb-md-5 mb-7 contt_areaa">Company</p>
+              <ul class="widget-links pl-0 list-unstyled list-hover-primary">
+                <li><a href="javacript:void(0);"><i class="fa fa-angle-right"></i> Who We Are</a></li>
+                <li><a href="https://gigstm.com/page/how-it-works" wire:navigate=""><i class="fa fa-angle-right"></i>
+                    How GigsTm Work</a></li>
+              </ul>
             </div>
-            <div class="copy_rites">Copyright © 2025 gigstm.com | All Rights Reserved.</div>
-        </footer>
+          </div>
+          <div class="col-lg-4 col-md-6 col-sm-3 col-xs-6">
+            <div class="footer-widget widget2 mb-md-0 mb-13">
+              <p class="widget-title font-size-4 text-wait mb-md-5 mb-7 contt_areaa">Categories</p>
+              <ul class="widget-links pl-0 list-unstyled list-hover-primary">
+                <li><a href="https://gigstm.com/gigs/field-sales-e-commerce-marketplace" wire:navigate=""><i
+                      class="fa fa-angle-right"></i> Field Sales - E commerce Marketplace</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 col-sm-3 col-xs-6">
+            <div class="footer-widget widget3 mb-sm-0 mb-13">
+              <p class="widget-title font-size-4 text-wait mb-md-5 mb-7 contt_areaa">Legal</p>
+              <ul class="widget-links pl-0 list-unstyled list-hover-primary">
+                <li><a href="https://gigstm.com/" wire:navigate=""><i class="fa fa-angle-right"></i> Home</a></li>
+                <li><a href="javacript:void(0);"><i class="fa fa-angle-right"></i> Blog</a></li>
+                <li><a href="https://gigstm.com/page/privacy-policy" wire:navigate=""><i class="fa fa-angle-right"></i>
+                    Privacy Policy</a></li>
+                <li><a href="https://gigstm.com/page/terms-conditions" wire:navigate=""><i
+                      class="fa fa-angle-right"></i> Terms &amp; Conditions</a></li>
+                <li><a href="https://gigstm.com/contact-us" wire:navigate=""><i class="fa fa-angle-right"></i> Contact
+                    Us</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="copy_rites">Copyright © 2025 gigstm.com | All Rights Reserved.</div>
+</footer>
 
-    
-    <!-- Vendor Scripts -->
-    <script src="/GigsTm_files/vendor.min.js.download"></script>
-    <script src="/GigsTm_files/jquery.fancybox.min.js.download"></script>
-    <script src="/GigsTm_files/aos.min.js.download"></script>
-    <script src="/GigsTm_files/slick.min.js.download"></script>
-    <script src="/GigsTm_files/jquery.counterup.min.js.download"></script>
-    <script src="/GigsTm_files/jquery.waypoints.min.js.download"></script>
-    <script src="/GigsTm_files/jquery-ui.js.download"></script>
-    <script src="/GigsTm_files/sweetalert2.all.min.js.download"></script>
-    <script src="/GigsTm_files/custom.js.download"></script>
-    <script src="/GigsTm_files/main.js.download"></script>
-    <script src="/GigsTm_files/core.js.download"></script>
-    <script src="/GigsTm_files/maps.js.download"></script>
-    <script src="/GigsTm_files/india2019High.js.download"></script>
-    <script src="/GigsTm_files/animated.js.download"></script>
-    <script src="/GigsTm_files/maps(1).js.download"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const toggleBtn = document.querySelector(".profile-toggle-btn");
-        const sidebar = document.getElementById("userSidebar");
-        const overlay = document.getElementById("sidebarOverlay");
-        const closeBtn = document.querySelector(".sidebar-close-btn");
-        const body = document.body;
 
-        // Focus Trap Variables
-        const focusableElements =
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
-        let firstFocusableElement;
-        let lastFocusableElement;
+<!-- Vendor Scripts -->
+<script src="/GigsTm_files/vendor.min.js.download"></script>
+<script src="/GigsTm_files/jquery.fancybox.min.js.download"></script>
+<script src="/GigsTm_files/aos.min.js.download"></script>
+<script src="/GigsTm_files/slick.min.js.download"></script>
+<script src="/GigsTm_files/jquery.counterup.min.js.download"></script>
+<script src="/GigsTm_files/jquery.waypoints.min.js.download"></script>
+<script src="/GigsTm_files/jquery-ui.js.download"></script>
+<script src="/GigsTm_files/sweetalert2.all.min.js.download"></script>
+<script src="/GigsTm_files/custom.js.download"></script>
+<script src="/GigsTm_files/main.js.download"></script>
+<script src="/GigsTm_files/core.js.download"></script>
+<script src="/GigsTm_files/maps.js.download"></script>
+<script src="/GigsTm_files/india2019High.js.download"></script>
+<script src="/GigsTm_files/animated.js.download"></script>
+<script src="/GigsTm_files/maps(1).js.download"></script>
+<script src="/js/icon-toggle.js"></script>
 
-        function openSidebar() {
-          sidebar.classList.add("active");
-          overlay.classList.add("active");
-          sidebar.setAttribute("aria-hidden", "false");
-          toggleBtn.setAttribute("aria-expanded", "true");
-          body.style.overflow = "hidden"; // Prevent background scrolling
-
-          // Setup Focus Trap
-          const focusableContent = sidebar.querySelectorAll(focusableElements);
-          firstFocusableElement = focusableContent[0];
-          lastFocusableElement = focusableContent[focusableContent.length - 1];
-
-          // Focus the close button first
-          setTimeout(() => {
-            closeBtn.focus();
-          }, 100);
-
-          document.addEventListener("keydown", handleTabKey);
-          document.addEventListener("keydown", handleEscKey);
-        }
-
-        function closeSidebar() {
-          sidebar.classList.remove("active");
-          overlay.classList.remove("active");
-          sidebar.setAttribute("aria-hidden", "true");
-          toggleBtn.setAttribute("aria-expanded", "false");
-          body.style.overflow = ""; // Restore scrolling
-
-          document.removeEventListener("keydown", handleTabKey);
-          document.removeEventListener("keydown", handleEscKey);
-
-          // Return focus to toggle button
-          toggleBtn.focus();
-        }
-
-        function handleTabKey(e) {
-          if (e.key === "Tab") {
-            if (e.shiftKey) {
-              // Shift + Tab
-              if (document.activeElement === firstFocusableElement) {
-                e.preventDefault();
-                lastFocusableElement.focus();
-              }
-            } else {
-              // Tab
-              if (document.activeElement === lastFocusableElement) {
-                e.preventDefault();
-                firstFocusableElement.focus();
-              }
-            }
-          }
-        }
-
-        function handleEscKey(e) {
-          if (e.key === "Escape") {
-            closeSidebar();
-          }
-        }
-
-        // Event Listeners
-        if (toggleBtn) {
-          toggleBtn.addEventListener("click", (e) => {
-            e.stopPropagation(); // Prevent immediate closing if clicking the button triggers document click
-            openSidebar();
-          });
-        }
-
-        if (closeBtn) {
-          closeBtn.addEventListener("click", closeSidebar);
-        }
-
-        if (overlay) {
-          overlay.addEventListener("click", closeSidebar);
-        }
-
-        // Close on outside click (optional backup for overlay)
-        document.addEventListener("click", (e) => {
-          if (
-            sidebar.classList.contains("active") &&
-            !sidebar.contains(e.target) &&
-            !toggleBtn.contains(e.target)
-          ) {
-            closeSidebar();
-          }
-        });
-
-        // Logout Logic
-        const logoutLink = document.querySelector(".logout-link");
-        if (logoutLink) {
-          logoutLink.addEventListener("click", async (e) => {
-            e.preventDefault();
-
-            // Visual feedback
-            const originalText = logoutLink.innerHTML;
-            logoutLink.innerHTML =
-              '<i class="fas fa-spinner fa-spin"></i> Logging out...';
-            logoutLink.style.pointerEvents = "none"; // Prevent double clicks
-
-            try {
-              // 1. Call Backend Logout (to clear HttpOnly cookie)
-              // We use a short timeout to prevent hanging if the server is slow
-              const controller = new AbortController();
-              const timeoutId = setTimeout(() => controller.abort(), 2000);
-
-              await fetch("/api/v1/auth/logout", {
-                method: "GET",
-                signal: controller.signal,
-              }).catch((err) =>
-                console.warn("Backend logout failed or timed out", err),
-              );
-
-              clearTimeout(timeoutId);
-            } catch (err) {
-              console.error("Logout error:", err);
-            } finally {
-              // 2. Clear Client State (Always do this)
-              localStorage.removeItem("jwt_token");
-              localStorage.removeItem("token");
-              localStorage.removeItem("user");
-              sessionStorage.clear();
-
-              // 3. Redirect and Replace History
-              window.location.replace("index.html");
-            }
-          });
-        }
-
-        // Load User Profile from LocalStorage
-        const userJson = localStorage.getItem("user");
-        if (userJson) {
-            try {
-                const user = JSON.parse(userJson);
-                const sidebarAvatar = document.querySelector(".sidebar-avatar-large");
-                const sidebarInfo = document.querySelector(".sidebar-user-info");
-
-                // Update Avatar
-                if (sidebarAvatar) {
-                    // Function to generate and display initials
-                    const setInitials = () => {
-                        const name = (user.name || "").trim();
-                        if (!name) {
-                            // Fallback to generic icon if name is missing
-                            sidebarAvatar.innerHTML = '<i class="fas fa-user"></i>'; 
-                            return;
-                        }
-
-                        // Generate initials (First Last -> FL)
-                        const parts = name.split(/\s+/);
-                        let initials = parts[0].charAt(0);
-                        if (parts.length > 1) {
-                            initials += parts[parts.length - 1].charAt(0);
-                        }
-                        
-                        sidebarAvatar.innerHTML = ""; // Clear any existing content
-                        sidebarAvatar.textContent = initials.toUpperCase();
-                    };
-
-                    if (user.avatar && user.avatar.trim() !== "") {
-                        // Try to show uploaded avatar
-                        const img = document.createElement("img");
-                        img.src = user.avatar;
-                        img.alt = user.name || "User Avatar";
-                        img.style.width = "100%";
-                        img.style.height = "100%";
-                        img.style.objectFit = "cover";
-                        img.style.borderRadius = "50%";
-                        
-                        // Fallback to initials if image fails to load
-                        img.onerror = () => {
-                            console.warn("Avatar image failed to load, falling back to initials.");
-                            setInitials();
-                        };
-                        
-                        sidebarAvatar.innerHTML = "";
-                        sidebarAvatar.appendChild(img);
-                    } else {
-                        // No avatar image, show initials
-                        setInitials();
-                    }
-                }
-
-                // Update Info
-                if (sidebarInfo) {
-                    sidebarInfo.innerHTML = ""; // Clear existing content
-                    
-                    if (user.name) {
-                        const nameEl = document.createElement("h4");
-                        nameEl.textContent = user.name;
-                        sidebarInfo.appendChild(nameEl);
-                    }
-                    
-                    if (user.email) {
-                        const emailEl = document.createElement("p");
-                        emailEl.className = "user-email";
-                        emailEl.textContent = user.email;
-                        sidebarInfo.appendChild(emailEl);
-                    }
-                }
-            } catch (e) {
-                console.error("Error parsing user data:", e);
-            }
-        }
-      });
-    </script>
 </body>
+
 </html>
