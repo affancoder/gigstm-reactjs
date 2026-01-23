@@ -1,0 +1,91 @@
+/* Gigs Page Styles */
+
+/* Page Header */
+.page-header h1 {
+  font-weight: 700;
+  color: #2b3940;
+}
+.page-header .subtitle {
+  color: #6c757d;
+  font-size: 1.1rem;
+}
+
+/* Filter Card */
+.filter-card {
+  border: 1px solid #e1e5eb;
+  transition: box-shadow 0.3s ease;
+}
+.filter-card:hover {
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06) !important;
+}
+.filter-card .form-control, 
+.filter-card .custom-select {
+  border-color: #ced4da;
+  height: calc(1.5em + 1rem + 2px); /* Taller inputs */
+  padding: 0.5rem 1rem;
+}
+.filter-card .input-group-text {
+  background-color: #fff;
+  border-color: #ced4da;
+}
+
+/* Gig Cards */
+.gig-card {
+  border: 1px solid #e1e5eb;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
+}
+.gig-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.1) !important;
+  border-color: #00b074;
+}
+.gig-card .badge {
+  padding: 0.5em 0.8em;
+  font-weight: 600;
+}
+.gig-card .text-primary {
+  color: #00b074 !important;
+}
+.gig-card .border-primary {
+  border-color: #00b074 !important;
+}
+.gig-card .btn-primary {
+  background-color: #00b074;
+  border-color: #00b074;
+}
+.gig-card .btn-primary:hover {
+  background-color: #009663;
+  border-color: #009663;
+}
+.gig-card .btn-outline-primary {
+  color: #00b074;
+  border-color: #00b074;
+}
+.gig-card .btn-outline-primary:hover {
+  background-color: #00b074;
+  color: #fff;
+}
+
+/* Info Section */
+.info-section {
+  border: 1px solid #e1e5eb;
+}
+.info-section i {
+  color: #00b074;
+}
+
+/* Empty State */
+.empty-state {
+  border: 1px dashed #ced4da;
+  background-color: #f8f9fa;
+}
+
+/* Custom Utilities */
+.text-success {
+  color: #28a745 !important;
+}
+.bg-light {
+  background-color: #f8f9fa !important;
+}

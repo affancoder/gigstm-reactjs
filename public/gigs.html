@@ -89,12 +89,179 @@
 <!-- Main Content -->
 <main class="bg-light pt-20 pb-20">
   <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-12">
-        <h1 class="text-center mb-5">Seller Acquisition</h1>
-        <p class="text-center">Start selling on GigsTm today!</p>
+    
+    <!-- Page Header / Intro Section -->
+    <div class="text-center mb-5 page-header">
+      <h1 class="mb-2">Explore Gigs</h1>
+      <p class="subtitle">Choose tasks that match your skills, time, and location</p>
+    </div>
+
+    <!-- Gig Filters Section -->
+    <div class="filter-card p-4 mb-5 rounded bg-white shadow-sm border">
+      <div class="row">
+        <div class="col-md-12 mb-3">
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text bg-light border-right-0"><i class="fas fa-search text-muted"></i></span>
+              </div>
+              <input type="text" class="form-control border-left-0" placeholder="Search by task or category">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <select class="form-control custom-select">
+            <option selected>Select city or remote</option>
+            <option>Remote</option>
+            <option>Current Location</option>
+          </select>
+        </div>
+        <div class="col-md-3 mb-3">
+          <select class="form-control custom-select">
+            <option selected>Choose category</option>
+            <option>Field Sales</option>
+            <option>Digital Marketing</option>
+            <option>Operations</option>
+          </select>
+        </div>
+        <div class="col-md-3 mb-3">
+          <select class="form-control custom-select">
+            <option selected>Choose industry</option>
+            <option>Fintech</option>
+            <option>EdTech</option>
+            <option>E-commerce</option>
+          </select>
+        </div>
+        <div class="col-md-3 mb-3">
+          <select class="form-control custom-select">
+            <option selected>Work Type</option>
+            <option>Field</option>
+            <option>Remote</option>
+            <option>Hybrid</option>
+          </select>
+        </div>
+        <div class="col-md-3 mb-3">
+          <select class="form-control custom-select">
+            <option selected>Availability</option>
+            <option>Full-time</option>
+            <option>Part-time</option>
+            <option>Weekend</option>
+          </select>
+        </div>
+        <div class="col-md-9 text-md-right">
+          <button class="btn btn-outline-secondary">Reset Filters</button>
+        </div>
       </div>
     </div>
+
+    <!-- Gig Listing Grid -->
+    <div class="row mb-5">
+      <!-- Gig Card 1 -->
+      <div class="col-md-4 mb-4">
+        <div class="gig-card h-100 bg-white rounded shadow-sm border p-4 d-flex flex-column">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <span class="badge badge-light text-primary border border-primary font-weight-bold">New</span>
+            <span class="text-muted small"><i class="fas fa-map-marker-alt mr-1"></i> City / Remote</span>
+          </div>
+          <h5 class="font-weight-bold mb-1">Gig title will appear here</h5>
+          <p class="text-muted small mb-3">Category • Industry</p>
+          <div class="mb-3">
+            <h6 class="font-weight-bold text-success mb-0">Task payout will appear here</h6>
+            <small class="text-muted">Per completed task</small>
+          </div>
+          <p class="text-muted small mb-4 flex-grow-1">Short task description will appear here. It will provide a brief overview of the gig requirements and expectations.</p>
+          <div class="tags mb-4">
+            <span class="badge badge-light mr-1">Training provided</span>
+            <span class="badge badge-light mr-1">Flexible timing</span>
+            <span class="badge badge-light">Task-based</span>
+          </div>
+          <div class="d-flex">
+            <button class="btn btn-outline-primary flex-grow-1 mr-2">View Details</button>
+            <button class="btn btn-primary flex-grow-1">Apply Now</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gig Card 2 -->
+      <div class="col-md-4 mb-4">
+        <div class="gig-card h-100 bg-white rounded shadow-sm border p-4 d-flex flex-column">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <span class="badge badge-light text-warning border border-warning font-weight-bold">Hot</span>
+            <span class="text-muted small"><i class="fas fa-map-marker-alt mr-1"></i> City / Remote</span>
+          </div>
+          <h5 class="font-weight-bold mb-1">Gig title will appear here</h5>
+          <p class="text-muted small mb-3">Category • Industry</p>
+          <div class="mb-3">
+            <h6 class="font-weight-bold text-success mb-0">Task payout will appear here</h6>
+            <small class="text-muted">Per completed task</small>
+          </div>
+          <p class="text-muted small mb-4 flex-grow-1">Short task description will appear here. It will provide a brief overview of the gig requirements and expectations.</p>
+          <div class="tags mb-4">
+            <span class="badge badge-light mr-1">Training provided</span>
+            <span class="badge badge-light mr-1">Flexible timing</span>
+            <span class="badge badge-light">Task-based</span>
+          </div>
+          <div class="d-flex">
+            <button class="btn btn-outline-primary flex-grow-1 mr-2">View Details</button>
+            <button class="btn btn-primary flex-grow-1">Apply Now</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gig Card 3 -->
+      <div class="col-md-4 mb-4">
+        <div class="gig-card h-100 bg-white rounded shadow-sm border p-4 d-flex flex-column">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <span class="badge badge-light text-info border border-info font-weight-bold">Featured</span>
+            <span class="text-muted small"><i class="fas fa-map-marker-alt mr-1"></i> City / Remote</span>
+          </div>
+          <h5 class="font-weight-bold mb-1">Gig title will appear here</h5>
+          <p class="text-muted small mb-3">Category • Industry</p>
+          <div class="mb-3">
+            <h6 class="font-weight-bold text-success mb-0">Task payout will appear here</h6>
+            <small class="text-muted">Per completed task</small>
+          </div>
+          <p class="text-muted small mb-4 flex-grow-1">Short task description will appear here. It will provide a brief overview of the gig requirements and expectations.</p>
+          <div class="tags mb-4">
+            <span class="badge badge-light mr-1">Training provided</span>
+            <span class="badge badge-light mr-1">Flexible timing</span>
+            <span class="badge badge-light">Task-based</span>
+          </div>
+          <div class="d-flex">
+            <button class="btn btn-outline-primary flex-grow-1 mr-2">View Details</button>
+            <button class="btn btn-primary flex-grow-1">Apply Now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State Section (Hidden by default, shown via logic in real app) -->
+    <!-- 
+    <div class="empty-state text-center py-5 mb-5 border rounded bg-white">
+      <div class="mb-3 text-muted"><i class="fas fa-search fa-3x"></i></div>
+      <h5 class="font-weight-bold text-dark">No gigs match your preferences right now</h5>
+      <p class="text-muted">Try updating your filters or check back later</p>
+      <button class="btn btn-outline-secondary mt-2">Reset Filters</button>
+    </div> 
+    -->
+
+    <!-- How Gigs Work -->
+    <div class="info-section bg-white p-4 rounded border mb-5">
+      <h5 class="font-weight-bold mb-3 text-dark"><i class="fas fa-briefcase mr-2 text-primary"></i>How Gigs Work</h5>
+      <ul class="pl-3 mb-0 text-muted">
+        <li class="mb-2">Gigs are <strong>task-based</strong> engagements, not traditional jobs.</li>
+        <li class="mb-2">You have the flexibility to choose gigs based on your availability.</li>
+        <li class="mb-2">Payments are released upon successful completion and approval of tasks.</li>
+        <li class="mb-0">Comprehensive training is provided for specific gigs where required.</li>
+      </ul>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="text-center">
+      <a href="userform.html?mode=edit" class="btn btn-primary btn-lg px-5 mb-2 shadow-sm">Complete Your Profile for Better Matches</a>
+      <p class="text-muted small mt-2">Well-completed profiles get priority access to gigs</p>
+    </div>
+
   </div>
 </main>
 
