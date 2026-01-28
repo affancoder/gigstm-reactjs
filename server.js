@@ -57,10 +57,12 @@ app.use(
 // API Routes
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.use("/", routes);
 

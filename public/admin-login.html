@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login - GigsTm</title>
+    <link rel="stylesheet" href="login-themed.css" />
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        .loader-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #026bae;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        .loader-text {
+            color: #026bae;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .form-hidden {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        /* Admin specific styles */
+        .auth-container {
+            max-width: 450px;
+            margin: 0 auto;
+        }
+        .admin-badge {
+            background: #026bae;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="loader" class="loader-container">
+        <div class="loader"></div>
+        <div class="loader-text">Please wait...</div>
+    </div>
+
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="brand-logo">
+                <a href="#">
+                    <img src="/GigsTm_files/lgo_project1.png" alt="GigsTm" class="light-version-logo default-logo" />
+                </a>
+                <span class="admin-badge">ADMIN PORTAL</span>
+            </div>
+        </header>
+
+        <main>
+            <div class="auth-container">
+                <h4 style="text-align: center">Admin Login</h4>
+                
+                <form id="admin-login-form" class="auth-form active">
+                    <div id="login-message" class="auth-message" style="display: none;"></div>
+                    
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="login-email" placeholder="admin@gigstm.com" required />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="login-password" placeholder="Enter your password" required />
+                            <i class="fas fa-eye toggle-password" onclick="togglePassword('login-password')"></i>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block" id="login-btn">
+                        Login to Admin Dashboard
+                    </button>
+                    
+                    <div class="auth-footer" style="text-align: center; margin-top: 15px;">
+                        <a href="admin-signup.html" style="font-size: 0.9rem;">Register new admin</a>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/icon-toggle.js"></script>
+    <script src="js/adminAuth.js"></script>
+</body>
+</html>
