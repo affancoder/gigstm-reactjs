@@ -942,41 +942,95 @@ document.addEventListener("DOMContentLoaded", function () {
   // ==========================================
   const bankSelect = document.getElementById('bankName');
   const ifscInput = document.getElementById('ifscCode');
+  const ifscStatus = document.getElementById('ifsc-status');
   
-  const BANK_IFSC_PREFIXES = {
-    "State Bank of India": "SBIN",
-    "HDFC Bank": "HDFC",
-    "ICICI Bank": "ICIC",
-    "Axis Bank": "UTIB",
-    "Punjab National Bank": "PUNB",
-    "Bank of Baroda": "BARB",
-    "Canara Bank": "CNRB",
-    "Union Bank of India": "UBIN",
-    "Bank of India": "BKID",
-    "Indian Bank": "IDIB",
-    "IDBI Bank": "IBKL",
-    "Kotak Mahindra Bank": "KKBK",
-    "Yes Bank": "YESB",
-    "IDFC First Bank": "IDFB",
-    "IndusInd Bank": "INDB",
-    "Federal Bank": "FDRL",
-    "AU Small Finance Bank": "AUBL",
-    "Paytm Payments Bank": "PYTM",
-    "Airtel Payments Bank": "AIRP"
-  };
-
   if (bankSelect && ifscInput) {
+    // 1. Reset IFSC when Bank Name changes (to prevent mismatch)
     bankSelect.addEventListener('change', function() {
-      const selectedBank = this.value;
-      const prefix = BANK_IFSC_PREFIXES[selectedBank];
-      
-      // Auto-fill only if prefix found AND ifsc input is empty
-      if (prefix && !ifscInput.value.trim()) {
-        ifscInput.value = prefix;
-        // Trigger input event to ensure progress bar updates
-        ifscInput.dispatchEvent(new Event('input'));
+      ifscInput.value = "";
+      if (ifscStatus) {
+        ifscStatus.textContent = "";
+        ifscStatus.className = "form-text text-muted";
       }
     });
+
+    // 2. Validate IFSC on Blur/Change
+    const validateIfsc = async function() {
+      const ifsc = ifscInput.value.toUpperCase().trim();
+      const selectedBank = bankSelect.value;
+
+      if (!selectedBank) {
+        // If no bank selected, we can't validate match
+        return;
+      }
+
+      // Reset status
+      if (ifscStatus) {
+         ifscStatus.textContent = "";
+         ifscStatus.className = "form-text text-muted";
+      }
+
+      if (!ifsc) return;
+
+      if (ifsc.length !== 11) {
+         if (ifscStatus) {
+             ifscStatus.textContent = "❌ Invalid IFSC Code length";
+             ifscStatus.style.color = "red";
+         }
+         return;
+      }
+
+      if (ifscStatus) {
+          ifscStatus.textContent = "Verifying...";
+          ifscStatus.style.color = "#666";
+      }
+
+      try {
+        const response = await fetch(`https://ifsc.razorpay.com/${ifsc}`);
+        if (response.ok) {
+          const data = await response.json();
+          
+          // Normalize names for comparison
+          const apiBank = (data.BANK || "").toLowerCase().replace(/ limited$/, "").replace(/ bank$/, "").trim();
+          const userBank = (selectedBank || "").toLowerCase().replace(/ limited$/, "").replace(/ bank$/, "").trim();
+
+          // Check if IFSC belongs to the selected bank
+          // Using simplified inclusion/match to handle naming variations
+          // e.g. "State Bank of India" vs "STATE BANK OF INDIA"
+          // e.g. "HDFC" vs "HDFC Bank"
+          
+          const isMatch = apiBank === userBank || apiBank.includes(userBank) || userBank.includes(apiBank);
+
+          if (isMatch) {
+             if (ifscStatus) {
+                 ifscStatus.textContent = `✅ Verified: ${data.BRANCH}, ${data.CITY}`;
+                 ifscStatus.style.color = "green";
+             }
+          } else {
+             if (ifscStatus) {
+                 ifscStatus.textContent = `❌ IFSC belongs to ${data.BANK}, not ${selectedBank}`;
+                 ifscStatus.style.color = "red";
+             }
+             ifscInput.value = ""; // Clear invalid input
+          }
+        } else {
+           if (ifscStatus) {
+               ifscStatus.textContent = "❌ Invalid IFSC Code (Not found)";
+               ifscStatus.style.color = "red";
+           }
+           ifscInput.value = ""; // Clear invalid input
+        }
+      } catch (error) {
+        console.error("IFSC API Error:", error);
+        if (ifscStatus) {
+            ifscStatus.textContent = "⚠️ Validation failed (Network error)";
+            ifscStatus.style.color = "orange";
+        }
+      }
+    };
+
+    ifscInput.addEventListener('blur', validateIfsc);
+    ifscInput.addEventListener('change', validateIfsc);
   }
 
   // ==========================================
