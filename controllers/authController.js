@@ -2,6 +2,35 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const sendEmail = require('../utils/email');
+
+// Helper: Send OTP
+const sendOtp = async (user) => {
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  user.otpHash = crypto.createHash('sha256').update(otp).digest('hex');
+  user.otpExpiresAt = Date.now() + 10 * 60 * 1000; // 10 mins
+  await user.save({ validateBeforeSave: false });
+
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: 'Your Verification Code - GigsTm',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #026bae;">Verify Your Email</h2>
+          <p>Hi ${user.name},</p>
+          <p>Your verification code is:</p>
+          <div style="font-size: 24px; font-weight: bold; letter-spacing: 5px; color: #026bae; margin: 20px 0;">
+            ${otp}
+          </div>
+          <p>This code is valid for 10 minutes.</p>
+        </div>
+      `
+    });
+  } catch (err) {
+    console.error('OTP Email failed:', err);
+  }
+};
 
 // Generate JWT Token
 const signToken = (id) => {
@@ -52,6 +81,9 @@ exports.register = async (req, res) => {
       password
     });
 
+    // Send OTP for new users
+    await sendOtp(newUser);
+
     createSendToken(newUser, 201, res);
   } catch (error) {
     console.error('Register error:', error);
@@ -83,6 +115,11 @@ exports.login = async (req, res) => {
       });
     }
 
+    // OTP Logic for unverified users
+    if (!user.emailVerified) {
+      await sendOtp(user);
+    }
+
     createSendToken(user, 200, res);
   } catch (error) {
     console.error('Login error:', error);
@@ -90,6 +127,54 @@ exports.login = async (req, res) => {
       status: 'error',
       message: error.message
     });
+  }
+};
+
+exports.verifyOtp = async (req, res) => {
+  try {
+    const { otp } = req.body;
+    if (!otp) {
+      return res.status(400).json({ status: 'error', message: 'Please provide OTP' });
+    }
+
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ status: 'error', message: 'User not found' });
+    }
+
+    const hashedOtp = crypto.createHash('sha256').update(otp).digest('hex');
+
+    if (user.otpHash !== hashedOtp || user.otpExpiresAt < Date.now()) {
+      return res.status(400).json({ status: 'error', message: 'Invalid or expired OTP' });
+    }
+
+    user.emailVerified = true;
+    user.otpHash = undefined;
+    user.otpExpiresAt = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    res.status(200).json({ status: 'success', message: 'Email verified successfully' });
+  } catch (error) {
+    res.status(400).json({ status: 'error', message: error.message });
+  }
+};
+
+exports.resendOtp = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ status: 'error', message: 'User not found' });
+    }
+
+    if (user.emailVerified) {
+      return res.status(400).json({ status: 'error', message: 'Email already verified' });
+    }
+
+    await sendOtp(user);
+
+    res.status(200).json({ status: 'success', message: 'OTP resent successfully' });
+  } catch (error) {
+    res.status(400).json({ status: 'error', message: error.message });
   }
 };
 

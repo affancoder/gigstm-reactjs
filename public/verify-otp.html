@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verify OTP - GigsTm</title>
+  <link rel="stylesheet" href="login-themed.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    /* Reuse Loader Styles from login.html */
+    .loader-container {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255, 255, 255, 0.8); z-index: 9999;
+      justify-content: center; align-items: center; flex-direction: column;
+    }
+    .loader {
+      border: 5px solid #f3f3f3; border-top: 5px solid #026bae; border-radius: 50%;
+      width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 15px;
+    }
+    .loader-text { color: #026bae; font-weight: 500; margin-top: 10px; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    
+    .otp-container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    .otp-input {
+        letter-spacing: 5px;
+        font-size: 24px;
+        text-align: center;
+        width: 100%;
+        padding: 10px;
+        margin: 20px 0;
+        border: 2px solid #ddd;
+        border-radius: 5px;
+    }
+    .btn-verify {
+        width: 100%;
+        padding: 12px;
+        background: #026bae;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .btn-verify:hover { background: #02558b; }
+    .resend-link {
+        display: block;
+        margin-top: 15px;
+        color: #666;
+        text-decoration: none;
+        font-size: 14px;
+        cursor: pointer;
+    }
+    .resend-link.disabled { color: #ccc; pointer-events: none; }
+    .error-msg { color: red; margin-bottom: 15px; display: none; }
+    .success-msg { color: green; margin-bottom: 15px; display: none; }
+  </style>
+</head>
+<body>
+  <!-- Loader -->
+  <div id="loader" class="loader-container">
+    <div class="loader"></div>
+    <div class="loader-text">Verifying...</div>
+  </div>
+
+  <div class="otp-container">
+    <h2 style="color: #026bae; margin-bottom: 10px;">Verify OTP</h2>
+    <p class="text-muted">Enter the 6-digit code sent to your email.</p>
+    
+    <div id="otp-error" class="error-msg"></div>
+    <div id="otp-success" class="success-msg"></div>
+
+    <input type="text" id="otp-input" class="otp-input" maxlength="6" placeholder="000000" pattern="\d*">
+    
+    <button id="verify-btn" class="btn-verify">Verify Email</button>
+    
+    <a id="resend-btn" class="resend-link disabled">Resend OTP (60s)</a>
+    
+    <div style="margin-top: 20px;">
+        <a href="login.html" style="color: #999; font-size: 13px; text-decoration: none;">Back to Login</a>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "/api";
+    const otpInput = document.getElementById('otp-input');
+    const verifyBtn = document.getElementById('verify-btn');
+    const resendBtn = document.getElementById('resend-btn');
+    const errorEl = document.getElementById('otp-error');
+    const successEl = document.getElementById('otp-success');
+    const loader = document.getElementById('loader');
+
+    // Check if user is logged in (has token)
+    const token = localStorage.getItem('jwt_token');
+    if (!token) {
+        window.location.href = 'login.html';
+    }
+
+    let cooldown = 60;
+    let timer;
+
+    function startCooldown() {
+        cooldown = 60;
+        resendBtn.classList.add('disabled');
+        clearInterval(timer);
+        timer = setInterval(() => {
+            cooldown--;
+            resendBtn.textContent = `Resend OTP (${cooldown}s)`;
+            if (cooldown <= 0) {
+                clearInterval(timer);
+                resendBtn.textContent = "Resend OTP";
+                resendBtn.classList.remove('disabled');
+            }
+        }, 1000);
+    }
+    
+    startCooldown();
+
+    verifyBtn.addEventListener('click', async () => {
+        const otp = otpInput.value.trim();
+        if (otp.length !== 6) {
+            errorEl.textContent = "Please enter a valid 6-digit OTP";
+            errorEl.style.display = "block";
+            return;
+        }
+
+        errorEl.style.display = "none";
+        loader.style.display = "flex";
+
+        try {
+            const res = await fetch(`${API_URL}/auth/verify-otp`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ otp })
+            });
+            
+            const data = await res.json();
+            
+            if (res.ok) {
+                // Update local user data if possible
+                let user = JSON.parse(localStorage.getItem('user') || '{}');
+                user.emailVerified = true;
+                localStorage.setItem('user', JSON.stringify(user));
+
+                successEl.textContent = "Verified! Redirecting...";
+                successEl.style.display = "block";
+                setTimeout(() => {
+                    window.location.href = '/job-categories.html';
+                }, 1500);
+            } else {
+                errorEl.textContent = data.message || "Verification failed";
+                errorEl.style.display = "block";
+            }
+        } catch (err) {
+            errorEl.textContent = "Network error. Please try again.";
+            errorEl.style.display = "block";
+        } finally {
+            loader.style.display = "none";
+        }
+    });
+
+    resendBtn.addEventListener('click', async () => {
+        if (resendBtn.classList.contains('disabled')) return;
+
+        loader.style.display = "flex";
+        loader.querySelector('.loader-text').textContent = "Resending OTP...";
+
+        try {
+            const res = await fetch(`${API_URL}/auth/resend-otp`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await res.json();
+            
+            if (res.ok) {
+                successEl.textContent = "OTP resent to your email!";
+                successEl.style.display = "block";
+                startCooldown();
+                setTimeout(() => successEl.style.display = "none", 3000);
+            } else {
+                errorEl.textContent = data.message || "Failed to resend";
+                errorEl.style.display = "block";
+            }
+        } catch (err) {
+            errorEl.textContent = "Network error";
+            errorEl.style.display = "block";
+        } finally {
+            loader.style.display = "none";
+        }
+    });
+  </script>
+</body>
+</html>

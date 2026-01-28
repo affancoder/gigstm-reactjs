@@ -89,8 +89,14 @@ async function handleLogin(event) {
 		if (!res.ok) throw new Error(data.message);
 
 		localStorage.setItem(TOKEN_KEY, data.token);
-		if (data.data?.user)
+		if (data.data?.user) {
 			localStorage.setItem("user", JSON.stringify(data.data.user));
+
+			if (!data.data.user.emailVerified) {
+				window.location.href = "/verify-otp.html";
+				return;
+			}
+		}
 
 		// Redirect to job categories
 		window.location.href = "/job-categories.html";
@@ -175,50 +181,28 @@ async function handleSignUp(event) {
 		}
 
 		// Auto login after successful signup
-		console.log("Signup successful, attempting auto-login...");
-		const loginResponse = await fetch(`${API_URL}/auth/login`, {
-			method: "POST",  credentials: "include",
+		console.log("Signup successful, checking verification status...");
+		// const loginResponse = await fetch(`${API_URL}/auth/login`, {
+		// 	method: "POST",  credentials: "include",
+		// 	headers: { "Content-Type": "application/json", Accept: "application/json" },
+		// 	body: JSON.stringify({ email, password }),
+		// });
 
-			headers: {
-				"Content-Type": "application/json",
-				Accept: "application/json",
-			},
-			body: JSON.stringify({ email, password }),
-		});
-
-		const loginData = await loginResponse.json();
-		console.log("Login response:", loginData);
-
-		if (!loginResponse.ok) {
-			// Only show error message if auto-login fails, but don't block the success flow
-			console.warn(
-				"Auto-login failed, but signup was successful. User can log in manually."
-			);
-		} else {
-			// Store token and redirect if auto-login is successful
-			localStorage.setItem(TOKEN_KEY, loginData.token);
-			if (loginData.data?.user) {
-				localStorage.setItem(
-					"user",
-					JSON.stringify(loginData.data.user)
-				);
+		localStorage.setItem(TOKEN_KEY, signupData.token);
+		if (signupData.data?.user) {
+			localStorage.setItem("user", JSON.stringify(signupData.data.user));
+			if (!signupData.data.user.emailVerified) {
+				window.location.href = "/verify-otp.html";
+				return;
 			}
-
-			// Redirect to job categories
-			window.location.href = "/job-categories.html";
 		}
+
+		// Redirect to job categories
+		window.location.href = "/job-categories.html";
 
 		// Show success message for failed auto-login
-		const successMessage =
-			"Signup successful! " +
-			(loginResponse.ok
-				? "You have been logged in."
-				: "Please log in with your new credentials.");
-		sessionStorage.setItem("signupSuccess", successMessage);
-		
-		if (!loginResponse.ok) {
-			window.location.href = "/login.html";
-		}
+		// const successMessage = "Signup successful!";
+		// sessionStorage.setItem("signupSuccess", successMessage);
 	} catch (err) {
 		console.error("Signup error:", err);
 		showMessage(
