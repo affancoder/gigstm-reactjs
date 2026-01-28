@@ -120,6 +120,46 @@
                     <label class="text-muted small text-uppercase font-weight-bold">Location</label>
                     <p id="infoLocation" class="font-weight-bold text-dark mb-0">-</p>
                   </div>
+                  <div class="col-sm-6 mb-3">
+                    <label class="text-muted small text-uppercase font-weight-bold">Job Role</label>
+                    <p id="infoJobRole" class="font-weight-bold text-dark mb-0">-</p>
+                  </div>
+                  <div class="col-sm-6 mb-3">
+                    <label class="text-muted small text-uppercase font-weight-bold">Gender</label>
+                    <p id="infoGender" class="font-weight-bold text-dark mb-0">-</p>
+                  </div>
+                  <div class="col-sm-6 mb-3">
+                    <label class="text-muted small text-uppercase font-weight-bold">Date of Birth</label>
+                    <p id="infoDob" class="font-weight-bold text-dark mb-0">-</p>
+                  </div>
+                  <div class="col-sm-6 mb-3">
+                    <label class="text-muted small text-uppercase font-weight-bold">Country</label>
+                    <p id="infoCountry" class="font-weight-bold text-dark mb-0">-</p>
+                  </div>
+                  <div class="col-sm-6 mb-3">
+                    <label class="text-muted small text-uppercase font-weight-bold">State</label>
+                    <p id="infoState" class="font-weight-bold text-dark mb-0">-</p>
+                  </div>
+                  <div class="col-sm-6 mb-3">
+                    <label class="text-muted small text-uppercase font-weight-bold">City</label>
+                    <p id="infoCity" class="font-weight-bold text-dark mb-0">-</p>
+                  </div>
+                  <div class="col-sm-6 mb-3">
+                    <label class="text-muted small text-uppercase font-weight-bold">Address Line 1</label>
+                    <p id="infoAddress1" class="font-weight-bold text-dark mb-0">-</p>
+                  </div>
+                  <div class="col-sm-6 mb-3">
+                    <label class="text-muted small text-uppercase font-weight-bold">Address Line 2</label>
+                    <p id="infoAddress2" class="font-weight-bold text-dark mb-0">-</p>
+                  </div>
+                  <div class="col-sm-6 mb-3">
+                    <label class="text-muted small text-uppercase font-weight-bold">Pincode</label>
+                    <p id="infoPincode" class="font-weight-bold text-dark mb-0">-</p>
+                  </div>
+                  <div class="col-sm-12 mb-3">
+                    <label class="text-muted small text-uppercase font-weight-bold">About</label>
+                    <p id="infoAbout" class="font-weight-bold text-dark mb-0">-</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -141,6 +181,10 @@
                     <label class="text-muted small text-uppercase font-weight-bold">IFSC Code</label>
                     <p id="infoIfsc" class="font-weight-bold text-dark mb-0">-</p>
                   </div>
+                  <div class="col-sm-6 mb-3">
+                    <label class="text-muted small text-uppercase font-weight-bold">Account Number</label>
+                    <p id="infoAccount" class="font-weight-bold text-dark mb-0">-</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -153,6 +197,16 @@
                 </h5>
               </div>
               <div class="card-body p-4">
+                <div class="row mb-3">
+                  <div class="col-sm-6 mb-3">
+                    <label class="text-muted small text-uppercase font-weight-bold">Aadhaar Number</label>
+                    <p id="docAadhaar" class="font-weight-bold text-dark mb-0">-</p>
+                  </div>
+                  <div class="col-sm-6 mb-3">
+                    <label class="text-muted small text-uppercase font-weight-bold">PAN Number</label>
+                    <p id="docPan" class="font-weight-bold text-dark mb-0">-</p>
+                  </div>
+                </div>
                 <div id="documentsList" class="list-group list-group-flush">
                   <!-- Documents will be populated here -->
                   <div class="text-center text-muted py-3">Loading documents...</div>
@@ -200,33 +254,95 @@
 
           // Populate Personal Info
           document.getElementById('infoName').textContent = user.name || '-';
-          document.getElementById('infoPhone').textContent = user.phone || '-';
+          document.getElementById('infoPhone').textContent = user.phone || user.mobile || '-';
           document.getElementById('infoEmail').textContent = user.email || '-';
           
           const location = [user.city, user.state, user.pincode].filter(Boolean).join(', ');
           document.getElementById('infoLocation').textContent = location || '-';
+          document.getElementById('infoJobRole').textContent = user.jobRole || 'Not provided';
+          document.getElementById('infoGender').textContent = user.gender || 'Not provided';
+          (function(){
+            const dob = user.dob;
+            if (dob) {
+              const d = new Date(dob);
+              document.getElementById('infoDob').textContent = isNaN(d) ? dob : d.toISOString().split('T')[0];
+            } else {
+              document.getElementById('infoDob').textContent = 'Not provided';
+            }
+          })();
+          document.getElementById('infoCountry').textContent = user.country || 'Not provided';
+          document.getElementById('infoState').textContent = user.state || 'Not provided';
+          document.getElementById('infoCity').textContent = user.city || 'Not provided';
+          document.getElementById('infoAddress1').textContent = user.address1 || 'Not provided';
+          document.getElementById('infoAddress2').textContent = user.address2 || 'Not provided';
+          document.getElementById('infoPincode').textContent = user.pincode || 'Not provided';
+          document.getElementById('infoAbout').textContent = user.about || 'Not provided';
 
           // Populate Bank Info
           document.getElementById('infoBank').textContent = user.bankName || 'Not provided';
           document.getElementById('infoIfsc').textContent = user.ifscCode || 'Not provided';
+          (function(){
+            const acc = user.accountNumber;
+            if (acc && typeof acc === 'string') {
+              document.getElementById('infoAccount').textContent = acc.replace(/\d(?=\d{4})/g, '•');
+            } else {
+              document.getElementById('infoAccount').textContent = 'Not provided';
+            }
+          })();
 
           // Populate Documents
           const docsList = document.getElementById('documentsList');
           docsList.innerHTML = ''; // Clear loading state
 
-          if (user.documents && user.documents.length > 0) {
+          document.getElementById('docAadhaar').textContent = user.aadhaar || 'Not provided';
+          document.getElementById('docPan').textContent = user.pan || 'Not provided';
+
+          const knownDocs = [
+            { key: 'profileImage', name: 'Profile Image', icon: 'fa-file-image' },
+            { key: 'aadhaarFront', name: 'Aadhaar Front', icon: 'fa-file-image' },
+            { key: 'aadhaarBack', name: 'Aadhaar Back', icon: 'fa-file-image' },
+            { key: 'panCardUpload', name: 'PAN Card', icon: 'fa-file-image' },
+            { key: 'passbookUpload', name: 'Passbook/Cheque', icon: 'fa-file-image' },
+            { key: 'aadhaarFile', name: 'Aadhaar File', icon: 'fa-file-pdf' },
+            { key: 'panFile', name: 'PAN File', icon: 'fa-file-pdf' },
+            { key: 'resumeFile', name: 'Resume', icon: 'fa-file' }
+          ];
+
+          let hasAnyDoc = false;
+
+          if (Array.isArray(user.documents) && user.documents.length > 0) {
             user.documents.forEach(doc => {
+              if (!doc || !doc.url) return;
+              hasAnyDoc = true;
               const item = document.createElement('a');
               item.href = doc.url;
               item.target = '_blank';
               item.className = 'list-group-item list-group-item-action d-flex justify-content-between align-items-center px-0 border-bottom';
               item.innerHTML = `
-                <span class="text-dark"><i class="fas fa-file-pdf text-danger mr-2"></i>${doc.name}</span>
+                <span class="text-dark"><i class="fas fa-file text-primary mr-2"></i>${doc.name || 'Document'}</span>
                 <span class="badge badge-light text-primary"><i class="fas fa-external-link-alt"></i> View</span>
               `;
               docsList.appendChild(item);
             });
-          } else {
+          }
+
+          knownDocs.forEach(d => {
+            const url = user[d.key];
+            if (url) {
+              hasAnyDoc = true;
+              const item = document.createElement('a');
+              item.href = url;
+              item.target = '_blank';
+              item.className = 'list-group-item list-group-item-action d-flex justify-content-between align-items-center px-0 border-bottom';
+              item.innerHTML = `
+                <span class="text-dark"><i class="fas ${d.icon} text-primary mr-2"></i>${d.name}</span>
+                <span class="badge badge-light text-primary"><i class="fas fa-external-link-alt"></i> View</span>
+              `;
+              docsList.appendChild(item);
+            }
+          });
+
+          if (!hasAnyDoc) {
             docsList.innerHTML = `
               <div class="text-center text-muted py-3">
                 <i class="fas fa-folder-open fa-2x mb-2 d-block opacity-50"></i>
