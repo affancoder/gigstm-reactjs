@@ -26,6 +26,17 @@ document.addEventListener("DOMContentLoaded", function () {
     let totalRequiredFields = 0;
     let completedRequiredFields = 0;
 
+    // Define Step 2 required fields that are missing the 'required' attribute in HTML
+    const step2RequiredIds = [
+      "experienceYears",
+      "experienceMonths",
+      "employmentType",
+      "occupation",
+      "jobRequirement",
+      "heardAbout",
+      "interestType",
+    ];
+
     sections.forEach((section) => {
       const panel = document.getElementById(section.panelId);
       if (!panel) return;
@@ -33,9 +44,14 @@ document.addEventListener("DOMContentLoaded", function () {
       const fields = panel.querySelectorAll("input, select, textarea");
 
       fields.forEach((field) => {
-        if (!field.required) return;
+        // Check if field is required via attribute OR if it's in our manual list
+        const isRequired = field.required || step2RequiredIds.includes(field.id);
+        
+        if (!isRequired) return;
         if (field.disabled) return;
-        if (field.type !== "file" && field.offsetParent === null) return;
+        
+        // REMOVED: Visibility check (offsetParent) to ensure fields in hidden steps are counted
+        // if (field.type !== "file" && field.offsetParent === null) return;
 
         totalRequiredFields++;
 
