@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const authRoutes = require("./authRoutes");
 const userRoutes = require("./userRoutes");
+const adminAuthController = require("../controllers/adminAuthController");
 const { protect, restrictTo } = require("../middleware/authMiddleware");
 
 const router = express.Router();
@@ -9,6 +10,14 @@ const router = express.Router();
 // API routes
 router.use("/api/user", userRoutes);
 router.use("/api/auth", authRoutes);
+
+// Explicitly block/redirect the public admin.html BEFORE static middleware
+router.get("/admin.html", (req, res) => {
+  res.redirect("/admin-login.html");
+});
+
+// Admin Logout Route
+router.get("/admin-logout", adminAuthController.logout);
 
 // Static public files
 router.use(express.static(path.join(__dirname, "..", "public")));
@@ -19,6 +28,24 @@ router.get("/", (req, res) => {
 });
 
 // Admin (protected)
+// Explicitly serve /private/admin.html as requested
+router.get(
+  "/private/admin.html",
+  (req, res, next) => {
+    // Basic session check as requested
+    if (!req.session || !req.session.admin) {
+        return res.redirect("/admin-login.html");
+    }
+    next();
+  },
+  (req, res) => {
+    res.sendFile(
+      path.join(__dirname, "..", "private", "admin.html")
+    );
+  }
+);
+
+// Alias /admin to the same file (legacy support)
 router.get(
   "/admin",
   protect,

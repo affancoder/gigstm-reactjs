@@ -91,7 +91,8 @@ if (loginForm) {
                 localStorage.setItem("admin_user", JSON.stringify(data.data.admin));
             }
 
-            window.location.href = "/admin.html";
+            // Redirect to the private admin dashboard
+            window.location.href = "/private/admin.html";
         } catch (err) {
             showMessage("login-message", err.message);
         } finally {
@@ -213,7 +214,8 @@ if (otpForm) {
             }
             localStorage.removeItem("pending_admin_email");
 
-            window.location.href = "/admin.html";
+            // Redirect to the private admin dashboard
+            window.location.href = "/private/admin.html";
         } catch (err) {
             showMessage("otp-message", err.message);
         } finally {

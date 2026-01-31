@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let lastFocusableElement;
 
   function openSidebar() {
+    if (!sidebar) return;
     sidebar.classList.add("active");
     overlay.classList.add("active");
     sidebar.setAttribute("aria-hidden", "false");
@@ -20,21 +21,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Setup Focus Trap
     const focusableContent = sidebar.querySelectorAll(focusableElements);
-    firstFocusableElement = focusableContent[0];
-    lastFocusableElement = focusableContent[focusableContent.length - 1];
+    if (focusableContent.length > 0) {
+      firstFocusableElement = focusableContent[0];
+      lastFocusableElement = focusableContent[focusableContent.length - 1];
 
-    // Focus the close button first
-    setTimeout(() => {
-      closeBtn.focus();
-    }, 100);
+      // Focus the close button first
+      setTimeout(() => {
+        if (closeBtn) closeBtn.focus();
+      }, 100);
+    }
 
     document.addEventListener("keydown", handleTabKey);
     document.addEventListener("keydown", handleEscKey);
   }
 
   function closeSidebar() {
+    if (!sidebar) return;
     sidebar.classList.remove("active");
-    overlay.classList.remove("active");
+    if (overlay) overlay.classList.remove("active");
     sidebar.setAttribute("aria-hidden", "true");
     toggleBtn.setAttribute("aria-expanded", "false");
     body.style.overflow = ""; // Restore scrolling
@@ -89,6 +93,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Close on outside click (optional backup for overlay)
   document.addEventListener("click", (e) => {
     if (
+      sidebar && 
+      toggleBtn &&
       sidebar.classList.contains("active") &&
       !sidebar.contains(e.target) &&
       !toggleBtn.contains(e.target)

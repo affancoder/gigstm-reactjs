@@ -179,7 +179,7 @@ limitSelect.addEventListener("change", (e) => {
 logoutBtn.addEventListener("click", () => {
     localStorage.removeItem(ADMIN_TOKEN_KEY);
     localStorage.removeItem("admin_user");
-    window.location.href = "/admin-login.html";
+    window.location.href = "/admin-logout";
 });
 
 // ==========================

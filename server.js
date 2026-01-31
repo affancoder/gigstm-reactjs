@@ -24,6 +24,11 @@ connectDB().then(() => {
 
 // ---------------- SESSION SETUP (FIXED) ---------------- //
 
+// ----------------- MIDDLEWARE ----------------- //
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "mysecret",
@@ -44,11 +49,6 @@ app.use(
     },
   })
 );
-
-// ----------------- MIDDLEWARE ----------------- //
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
 
 app.use(
   cors({

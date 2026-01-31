@@ -40,7 +40,7 @@ const signToken = (id) => {
 };
 
 // Send response with token
-const createSendToken = (admin, statusCode, res) => {
+const createSendToken = (admin, statusCode, req, res) => {
   const token = signToken(admin._id);
 
   const cookieOptions = {
@@ -51,6 +51,15 @@ const createSendToken = (admin, statusCode, res) => {
 
   res.cookie('jwt_admin', token, cookieOptions); // Use a different cookie name
 
+  // Explicitly set session as requested
+  if (req.session) {
+    req.session.admin = {
+      id: admin._id,
+      email: admin.email,
+      role: 'admin'
+    };
+  }
+
   admin.password = undefined;
 
   res.status(statusCode).json({
@@ -60,6 +69,22 @@ const createSendToken = (admin, statusCode, res) => {
       admin
     }
   });
+};
+
+exports.logout = (req, res) => {
+  if (req.session) {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Session destroy error:', err);
+        return res.status(500).send('Could not log out.');
+      }
+      res.clearCookie('connect.sid'); // Clear session cookie
+      res.clearCookie('jwt_admin');   // Clear auth token cookie
+      res.redirect('/admin-login.html');
+    });
+  } else {
+    res.redirect('/admin-login.html');
+  }
 };
 
 exports.register = async (req, res) => {
@@ -135,7 +160,7 @@ exports.verifyOtp = async (req, res) => {
     admin.otpExpiresAt = undefined;
     await admin.save({ validateBeforeSave: false });
 
-    createSendToken(admin, 200, res);
+    createSendToken(admin, 200, req, res);
   } catch (error) {
     res.status(400).json({
       status: 'error',
@@ -177,7 +202,7 @@ exports.login = async (req, res) => {
       });
     }
 
-    createSendToken(admin, 200, res);
+    createSendToken(admin, 200, req, res);
   } catch (error) {
     res.status(400).json({
       status: 'error',
