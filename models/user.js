@@ -45,8 +45,26 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-// Hash password before save
+// Hash password and generate uniqueId before save
 userSchema.pre('save', async function (next) {
+  // Generate uniqueId if not present
+  if (!this.uniqueId) {
+    let isUnique = false;
+    while (!isUnique) {
+      // Generate random number (min 4 digits, max 9 digits for scale)
+      const randomNum = Math.floor(1000 + Math.random() * 9999000); 
+      const candidateId = `GIG${randomNum}`;
+      
+      // Check collision using the model constructor
+      const existingUser = await this.constructor.findOne({ uniqueId: candidateId });
+      
+      if (!existingUser) {
+        this.uniqueId = candidateId;
+        isUnique = true;
+      }
+    }
+  }
+
   if (!this.isModified('password')) return next();
   this.password = await bcrypt.hash(this.password, 12);
   next();

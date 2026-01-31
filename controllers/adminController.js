@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const catchAsync = require("../utils/catchAsync");
+const AppError = require("../utils/appError");
 
 exports.getCombinedUsers = catchAsync(async (req, res, next) => {
 	const page = Math.max(parseInt(req.query.page) || 1, 1);
@@ -12,6 +13,7 @@ exports.getCombinedUsers = catchAsync(async (req, res, next) => {
 					$or: [
 						{ name: { $regex: search, $options: "i" } },
 						{ email: { $regex: search, $options: "i" } },
+						{ uniqueId: { $regex: search, $options: "i" } },
 						{ "profile.mobile": { $regex: search, $options: "i" } },
 						{ "profile.jobRole": { $regex: search, $options: "i" } },
 						{ "experience.occupation": { $regex: search, $options: "i" } },
@@ -84,6 +86,7 @@ exports.getCombinedUsers = catchAsync(async (req, res, next) => {
 		return {
 			user: {
 				id: u._id,
+				uniqueId: u.uniqueId,
 				name: u.name,
 				email: u.email,
 				role: u.role,
@@ -134,5 +137,53 @@ exports.getCombinedUsers = catchAsync(async (req, res, next) => {
 		total,
 		hasNextPage: page * limit < total,
 		data: data.map(sanitize),
+	});
+});
+
+// Approve or Update User
+exports.updateUser = catchAsync(async (req, res, next) => {
+	const { uniqueId } = req.params;
+	
+	// Filter out fields that shouldn't be updated by admin (like password)
+	// For now, allow updating role, name, email, etc.
+	const allowedUpdates = ['name', 'email', 'role', 'emailVerified'];
+	const updates = {};
+	Object.keys(req.body).forEach(key => {
+		if (allowedUpdates.includes(key)) {
+			updates[key] = req.body[key];
+		}
+	});
+
+	const user = await User.findOneAndUpdate(
+		{ uniqueId: uniqueId },
+		updates,
+		{ new: true, runValidators: true }
+	);
+
+	if (!user) {
+		return next(new AppError('No user found with that unique ID', 404));
+	}
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			user
+		}
+	});
+});
+
+// Delete User
+exports.deleteUser = catchAsync(async (req, res, next) => {
+	const { uniqueId } = req.params;
+	
+	const user = await User.findOneAndDelete({ uniqueId: uniqueId });
+
+	if (!user) {
+		return next(new AppError('No user found with that unique ID', 404));
+	}
+
+	res.status(204).json({
+		status: 'success',
+		data: null
 	});
 });

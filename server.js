@@ -10,13 +10,17 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db');
 const routes = require('./routes');
+const migrateUniqueIds = require('./utils/migrateUniqueIds');
 
 // Initialize Express app
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Connect to MongoDB
-connectDB();
+connectDB().then(() => {
+  // Run migration after DB connection
+  migrateUniqueIds();
+});
 
 // ---------------- SESSION SETUP (FIXED) ---------------- //
 

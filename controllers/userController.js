@@ -235,12 +235,27 @@ exports.getMe = catchAsync(async (req, res, next) => {
 		name: user.name, // prefer User model name, fallback to profile
 		email: user.email,
 		phone: profile?.mobile || "",
-		city: profile?.city || "",
+		jobRole: profile?.jobRole || "",
+		gender: profile?.gender || "",
+		dob: profile?.dob || "",
+		country: profile?.country || "",
 		state: profile?.state || "",
+		city: profile?.city || "",
+		address1: profile?.address1 || "",
+		address2: profile?.address2 || "",
 		pincode: profile?.pincode || "",
+		about: profile?.about || "",
 		profileImage: profile?.profileImage || "",
+		
+		// Bank Details (from KYC)
 		bankName: kyc?.bankName || "",
 		ifscCode: kyc?.ifscCode || "",
+		accountNumber: kyc?.accountNumber || "",
+		
+		// IDs
+		aadhaar: profile?.aadhaar || "",
+		pan: profile?.pan || "",
+
 		documents: docs
 	});
 });

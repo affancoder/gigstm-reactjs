@@ -51,6 +51,7 @@ function fmtExp(y, m) {
 function rowHTML(item) {
   const p = item.profile || {};
   return `<tr>
+    <td>${item.user?.uniqueId || "-"}</td>
     <td>${item.user?.name || ""}</td>
     <td>${item.user?.email || ""}</td>
     <td>${p.mobile || ""}</td>
@@ -86,6 +87,8 @@ async function fetchData() {
       state.total = json.total || 0;
       state.hasNext = json.hasNextPage || false;
       state.data = json.data || [];
+      // Debug: Verify uniqueId presence
+      if(state.data.length > 0) console.log("First user uniqueId:", state.data[0].user?.uniqueId);
       render();
   } catch (err) {
       hideLoading();
@@ -107,7 +110,7 @@ function hideLoading() {
 function render() {
   tbody.innerHTML = "";
   if (state.data.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5"><div class="empty">No records found</div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6"><div class="empty">No records found</div></td></tr>`;
     pageInfo.textContent = `Page ${state.page}`;
     prevBtn.disabled = state.page <= 1;
     nextBtn.disabled = true;
@@ -193,7 +196,7 @@ function openDetail(item) {
     // Helper for safe value
     const val = (v) => v || "-";
     // Helper for file link
-    const fileLink = (url, label) => url ? `<a href="${url}" target="_blank" class="file-link"><i class="fas fa-file-alt"></i> ${label}</a>` : `<span class="text-muted">No ${label}</span>`;
+    const fileLink = (url, label) => url ? `<a href="${url}" target="_blank" class="file-link"><i class="fas fa-file-alt"></i> ${label}</a>` : ``;
 
     const html = `
     <div class="container-fluid">
@@ -213,6 +216,7 @@ function openDetail(item) {
                     <div class="col-md-6"><strong>DOB:</strong> ${val(p.dob)}</div>
                     <div class="col-md-6"><strong>Aadhaar No:</strong> ${val(p.aadhaar)}</div>
                     <div class="col-md-6"><strong>PAN No:</strong> ${val(p.pan)}</div>
+                    <div class="col-12"><strong>About:</strong> ${val(p.about)}</div>
                 </div>
                 
                 <h6 class="border-bottom pb-2">Address</h6>
@@ -223,6 +227,13 @@ function openDetail(item) {
                         ${val(p.country)}
                     </div>
                 </div>
+
+                <h6 class="border-bottom pb-2">KYC Details</h6>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6"><strong>Bank Name:</strong> ${val(k.bankName)}</div>
+                    <div class="col-md-6"><strong>Account No:</strong> ${val(k.accountNumber)}</div>
+                    <div class="col-md-6"><strong>IFSC Code:</strong> ${val(k.ifscCode)}</div>
+                </div>
             </div>
         </div>
 
@@ -230,24 +241,32 @@ function openDetail(item) {
             <div class="col-md-6">
                 <h6 class="border-bottom pb-2">Experience</h6>
                 <div class="row g-3">
-                    <div class="col-12"><strong>Occupation:</strong> ${val(e.occupation)}</div>
-                    <div class="col-12"><strong>Years:</strong> ${val(e.experienceYears)}</div>
+                    <div class="col-md-6"><strong>Occupation:</strong> ${val(e.occupation)}</div>
+                    <div class="col-md-6"><strong>Type:</strong> ${val(e.employmentType)}</div>
+                    <div class="col-md-6"><strong>Experience:</strong> ${val(e.experienceYears)} Years ${e.experienceMonths ? e.experienceMonths + ' Months' : ''}</div>
+                    <div class="col-md-6"><strong>Job Req:</strong> ${val(e.jobRequirement)}</div>
+                    <div class="col-md-6"><strong>Heard About:</strong> ${val(e.heardAbout)}</div>
+                    <div class="col-md-6"><strong>Interest:</strong> ${val(e.interestType)}</div>
                 </div>
             </div>
             <div class="col-md-6">
                 <h6 class="border-bottom pb-2">Documents</h6>
                 <div class="d-flex flex-wrap gap-2">
                     ${fileLink(p.resumeFile, "Resume")}
+                    ${fileLink(e.resumeStep2, "Resume (Exp)")}
                     ${fileLink(p.aadhaarFile, "Aadhaar")}
                     ${fileLink(p.panFile, "PAN Card")}
                     ${fileLink(k.aadhaarFront, "Aadhaar Front")}
                     ${fileLink(k.aadhaarBack, "Aadhaar Back")}
+                    ${fileLink(k.panCardUpload, "PAN Card (KYC)")}
+                    ${fileLink(k.passbookUpload, "Passbook/Cheque")}
                 </div>
             </div>
         </div>
     </div>
     `;
     
+    console.log(item);
     detailBody.innerHTML = html;
     detailModal.show();
 }
@@ -256,6 +275,48 @@ function openDetail(item) {
 // EXPORT CSV (Simplified)
 // ==========================
 exportCsvBtn.addEventListener("click", () => {
-    // Implement CSV export if needed, or just alert
-    alert("CSV Export functionality not yet connected to new admin API.");
+    if (!state.data || state.data.length === 0) {
+        alert("No data to export");
+        return;
+    }
+    
+    // Define headers
+    const headers = ["ID", "Name", "Email", "Mobile", "Job Role", "Occupation", "Experience", "City", "State", "Joined At"];
+    
+    // Map data to CSV rows
+    const rows = state.data.map(item => {
+        const u = item.user || {};
+        const p = item.profile || {};
+        const e = item.experience || {};
+        
+        // Helper to escape quotes and handle nulls
+        const safe = (val) => `"${String(val || "").replace(/"/g, '""')}"`;
+        
+        return [
+            safe(u.uniqueId),
+            safe(u.name),
+            safe(u.email),
+            safe(p.mobile),
+            safe(p.jobRole),
+            safe(e.occupation),
+            safe(e.experienceYears),
+            safe(p.city),
+            safe(p.state),
+            safe(new Date(u.createdAt).toLocaleDateString())
+        ].join(",");
+    });
+    
+    // Combine headers and rows
+    const csvContent = [headers.join(","), ...rows].join("\n");
+    
+    // Create download link
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `users_export_${new Date().toISOString().slice(0,10)}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 });
