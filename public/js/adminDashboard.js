@@ -48,10 +48,20 @@ function fmtExp(y, m) {
   return a.join(" ");
 }
 
+function formatGigId(str) {
+  if (!str) return "-";
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return "GIG" + (Math.abs(hash) % 90000 + 10000);
+}
+
 function rowHTML(item) {
   const p = item.profile || {};
   return `<tr>
-    <td>${item.user?.uniqueId || "-"}</td>
+    <td>${formatGigId(item.user?.id)}</td>
     <td>${item.user?.name || ""}</td>
     <td>${item.user?.email || ""}</td>
     <td>${p.mobile || ""}</td>
