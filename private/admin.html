@@ -16,11 +16,48 @@
 />
 </head>
 <body>
+<!-- Custom Sidebar (Isolated) -->
+<link rel="stylesheet" href="/sidebar.css">
+<div id="custom-sidebar">
+  <div class="sidebar-toggle-btn">
+    <i class="fas fa-bars"></i>
+  </div>
+  <ul class="sidebar-menu">
+    <li>
+      <a href="admin.html">
+        <div class="sidebar-icon"><i class="fas fa-tachometer-alt"></i></div>
+        <span class="sidebar-text">Dashboard</span>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <div class="sidebar-icon"><i class="fas fa-user-check"></i></div>
+        <span class="sidebar-text">User Verification</span>
+      </a>
+    </li>
+    <li>
+      <a href="#">
+        <div class="sidebar-icon"><i class="fas fa-plus-circle"></i></div>
+        <span class="sidebar-text">Create Gigs</span>
+      </a>
+    </li>
+    <li>
+      <a href="/gigs-categories.html">
+        <div class="sidebar-icon"><i class="fas fa-list"></i></div>
+        <span class="sidebar-text">Gigs Category</span>
+      </a>
+    </li>
+  </ul>
+</div>
+<div id="mobile-sidebar-trigger">
+  <i class="fas fa-bars"></i>
+</div>
+<script src="/sidebar.js"></script>
+<!-- End Custom Sidebar -->
 <div class="admin-container">
 <div class="admin-header">
 <h1>
   <img src="/GigsTm_files/lgo_project1.png" alt="GigsTM" style="height:36px;vertical-align:middle;margin-right:.5rem;">
-  Admin Dashboard
 </h1>
 <div class="actions">
 <input id="search-input" type="text" placeholder="Search users, roles, occupation">

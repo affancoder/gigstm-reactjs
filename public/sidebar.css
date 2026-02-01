@@ -1,0 +1,198 @@
+/* Sidebar Styles - Isolated */
+:root {
+  --sidebar-width-collapsed: 60px;
+  --sidebar-width-expanded: 250px;
+  --sidebar-bg: #27508e;
+  --sidebar-hover: #587297;
+  --sidebar-text: #f8fafc;
+  --sidebar-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Base Sidebar Layout */
+#custom-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: var(--sidebar-width-collapsed);
+  background-color: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  z-index: 9999;
+  transition: var(--sidebar-transition);
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Expanded State */
+#custom-sidebar.expanded {
+  width: var(--sidebar-width-expanded);
+}
+
+/* Toggle Button */
+.sidebar-toggle-btn {
+  height: 60px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center icon when collapsed */
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: var(--sidebar-transition);
+  /* UX Improvements */
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sidebar-toggle-btn:hover {
+  background-color: var(--sidebar-hover);
+}
+
+.sidebar-toggle-btn:active {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-toggle-btn:focus-visible {
+  outline: 2px solid white;
+  outline-offset: -4px;
+}
+
+.sidebar-toggle-btn i {
+  font-size: 1.25rem;
+  min-width: 60px; /* Match sidebar collapsed width for centering */
+  text-align: center;
+}
+
+/* Menu List */
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0 0;
+  flex-grow: 1;
+}
+
+.sidebar-menu li {
+  width: 100%;
+}
+
+.sidebar-menu a {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  text-decoration: none;
+  color: var(--sidebar-text);
+  transition: var(--sidebar-transition);
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.sidebar-menu a:hover {
+  background-color: var(--sidebar-hover);
+  border-left: 4px solid #3b82f6; /* Accent color */
+}
+
+/* Icons & Text */
+.sidebar-icon {
+  min-width: 60px; /* Match sidebar collapsed width for centering */
+  text-align: center;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-text {
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: var(--sidebar-transition);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+#custom-sidebar.expanded .sidebar-text {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Layout Adjustment for Body */
+/* Only apply on desktop to prevent content hiding */
+@media (min-width: 769px) {
+  body {
+    padding-left: var(--sidebar-width-collapsed);
+    transition: var(--sidebar-transition);
+  }
+  
+  /* Optional: If you wanted push behavior on expand, you would add:
+  body.sidebar-open { padding-left: var(--sidebar-width-expanded); }
+  But per requirements "Overlay behavior", we keep body padding static.
+  */
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  #custom-sidebar {
+    width: 0;
+    transform: translateX(-100%);
+  }
+
+  #custom-sidebar.expanded {
+    width: var(--sidebar-width-expanded);
+    transform: translateX(0);
+  }
+
+  /* When expanded on mobile, show a backdrop? 
+     For simplicity and isolation, we rely on the shadow.
+  */
+
+  /* Mobile Toggle Trigger - External */
+  /* Since sidebar is hidden, we need a visible trigger on page?
+     OR we keep it 60px on mobile too?
+     "Mobile responsive... Overlay behavior on small screens"
+     Usually implies hidden -> overlay.
+     If hidden, we need a button.
+     I will add a mobile-only toggle button fixed to the screen.
+  */
+}
+
+/* Mobile Toggle Trigger (Fixed on screen - Top Position) */
+#mobile-sidebar-trigger {
+  display: none;
+  position: fixed;
+  top: 10px; /* Top aligned */
+  left: 10px; /* Left aligned */
+  width: 50px; /* Min 44px tap area */
+  height: 50px;
+  background-color: var(--sidebar-bg);
+  color: white;
+  border-radius: 8px; /* Soft square */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15); /* Subtle shadow */
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1.4rem;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#mobile-sidebar-trigger:hover {
+  background-color: var(--sidebar-hover);
+  transform: scale(1.05);
+}
+
+#mobile-sidebar-trigger:active {
+  transform: scale(0.95);
+}
+
+@media (max-width: 768px) {
+  #mobile-sidebar-trigger {
+    display: flex;
+  }
+  
+  /* Hide mobile trigger when sidebar is expanded (internal button takes over) */
+  #custom-sidebar.expanded ~ #mobile-sidebar-trigger {
+    display: none;
+  }
+}
