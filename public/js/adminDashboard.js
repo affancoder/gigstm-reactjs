@@ -60,13 +60,26 @@ function formatGigId(str) {
 
 function rowHTML(item) {
   const p = item.profile || {};
-  return `<tr>
+  const status = item.user?.status || 'pending';
+  const statusClass = status === 'approved' ? 'status-approved' : 
+                      status === 'disapproved' ? 'status-disapproved' : 'status-pending';
+  
+  return `<tr data-row-id="${item.user?.id}">
     <td>${formatGigId(item.user?.id)}</td>
     <td>${item.user?.name || ""}</td>
     <td>${item.user?.email || ""}</td>
     <td>${p.mobile || ""}</td>
     <td>${p.jobRole || ""}</td>
     <td><button class="btn-view" data-id="${item.user?.id}">View</button></td>
+    <td>
+      <div class="status-container">
+        <span class="status-badge ${statusClass}" id="badge-${item.user?.id}">${status.charAt(0).toUpperCase() + status.slice(1)}</span>
+        <div class="status-actions">
+          <button class="btn-approve" data-id="${item.user?.id}" title="Approve"><i class="fas fa-check"></i></button>
+          <button class="btn-disapprove" data-id="${item.user?.id}" title="Disapprove"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+    </td>
   </tr>`;
 }
 
@@ -136,6 +149,20 @@ function render() {
       const id = btn.getAttribute("data-id");
       const item = state.data.find(d=>String(d?.user?.id)===String(id));
       if(item) openDetail(item);
+    });
+  });
+
+  tbody.querySelectorAll(".btn-approve").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const id = btn.getAttribute("data-id");
+      updateUserStatus(id, "approved");
+    });
+  });
+
+  tbody.querySelectorAll(".btn-disapprove").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const id = btn.getAttribute("data-id");
+      updateUserStatus(id, "disapproved");
     });
   });
   
@@ -278,7 +305,107 @@ function openDetail(item) {
     
     console.log(item);
     detailBody.innerHTML = html;
+
+    // Pass ID to modal buttons
+    const approveBtn = document.getElementById("modal-btn-approve");
+    const disapproveBtn = document.getElementById("modal-btn-disapprove");
+    
+    // Remove old listeners to prevent duplicates (cloning)
+    if(approveBtn) {
+        const newApprove = approveBtn.cloneNode(true);
+        approveBtn.parentNode.replaceChild(newApprove, approveBtn);
+        newApprove.setAttribute("data-id", item.user?.id);
+        newApprove.addEventListener("click", () => updateUserStatus(item.user?.id, "approved"));
+    }
+    
+    if(disapproveBtn) {
+        const newDisapprove = disapproveBtn.cloneNode(true);
+        disapproveBtn.parentNode.replaceChild(newDisapprove, disapproveBtn);
+        newDisapprove.setAttribute("data-id", item.user?.id);
+        newDisapprove.addEventListener("click", () => updateUserStatus(item.user?.id, "disapproved"));
+    }
+
     detailModal.show();
+}
+
+// ==========================
+// STATUS UPDATE LOGIC
+// ==========================
+async function updateUserStatus(userId, status) {
+    const token = localStorage.getItem(ADMIN_TOKEN_KEY);
+    if (!token) {
+        showToast("Authentication required", "error");
+        return;
+    }
+
+    // Optimistic UI Update (optional, but good for perceived speed)
+    // We'll wait for server response as requested to "On success, update..."
+    
+    try {
+        const res = await fetch(`${API_URL}/users/${userId}/status`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ status })
+        });
+
+        const json = await res.json();
+
+        if (!res.ok) {
+            throw new Error(json.message || "Failed to update status");
+        }
+
+        // Success
+        showToast(`User ${status} successfully`, "success");
+        
+        // Update Local Data
+        const localItem = state.data.find(d => String(d.user?.id) === String(userId));
+        if (localItem && localItem.user) {
+            localItem.user.status = status;
+        }
+
+        // Update UI (Badge) without reload
+        const badge = document.getElementById(`badge-${userId}`);
+        if (badge) {
+            badge.className = `status-badge status-${status}`;
+            badge.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+        }
+
+        // Close Modal if open
+        const modalEl = document.getElementById('detailModal');
+        if (modalEl && modalEl.classList.contains('show')) {
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            if (modalInstance) modalInstance.hide();
+        }
+
+    } catch (err) {
+        console.error(err);
+        showToast(err.message, "error");
+    }
+}
+
+function showToast(msg, type = "success") {
+    const container = document.getElementById("toast-container");
+    if (!container) return;
+
+    const toast = document.createElement("div");
+    toast.className = `toast-msg ${type}`;
+    toast.innerHTML = `
+        <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+        <span>${msg}</span>
+    `;
+
+    container.appendChild(toast);
+
+    // Remove after 3 seconds
+    setTimeout(() => {
+        toast.style.animation = "fadeOut 0.5s ease forwards";
+        setTimeout(() => {
+            if (toast.parentNode) toast.parentNode.removeChild(toast);
+        }, 500);
+    }, 3000);
 }
 
 // ==========================

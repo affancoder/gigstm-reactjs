@@ -44,6 +44,7 @@
   </div>
   </div>
 <div id="loading" class="loading-banner" style="display:none;">Loading...</div>
+<div id="toast-container"></div>
 <div class="table-wrapper">
 <table id="admin-table">
 <thead>
@@ -54,7 +55,8 @@
 <th>Mobile</th>
 <th>Job Role</th>
 <th>Full Details</th>
-<th>Action</th>
+<th>Status</th>
+<!-- <th>Action</th> -->
 </tr>
 </thead>
 <tbody id="table-body"></tbody>
@@ -80,7 +82,10 @@
       <div class="modal-body" id="detail-body"></div>
       <!-- UI: structured footer for clear actions -->
       <div class="modal-footer">
-        <!-- UI: secondary action aligned right (primary can be injected via JS if present) -->
+        <div class="modal-actions-left">
+          <button type="button" class="btn btn-modal-approve" id="modal-btn-approve">Approve</button>
+          <button type="button" class="btn btn-modal-disapprove" id="modal-btn-disapprove">Disapprove</button>
+        </div>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>

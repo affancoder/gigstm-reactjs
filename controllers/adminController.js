@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const mongoose = require("mongoose");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 
@@ -90,6 +91,7 @@ exports.getCombinedUsers = catchAsync(async (req, res, next) => {
 				name: u.name,
 				email: u.email,
 				role: u.role,
+				status: u.status,
 				createdAt: u.createdAt,
 			},
 			profile: {
@@ -193,5 +195,45 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
 	res.status(204).json({
 		status: 'success',
 		data: null
+	});
+});
+
+// Update User Status
+exports.updateUserStatus = catchAsync(async (req, res, next) => {
+	const { uniqueId } = req.params;
+	const { status } = req.body;
+
+	// Validate status
+	const validStatuses = ['approved', 'disapproved'];
+	if (!status || !validStatuses.includes(status)) {
+		return next(new AppError('Invalid status value. Allowed: approved, disapproved', 400));
+	}
+
+	let query = { uniqueId: uniqueId };
+	if (mongoose.Types.ObjectId.isValid(uniqueId)) {
+		// If it's a valid ObjectId, try finding by _id if uniqueId lookup fails, 
+		// OR just search by _id.
+		// Since uniqueId format (GIG...) is not a valid ObjectId (hex), 
+		// if it IS a valid ObjectId, it's likely meant to be an _id.
+		query = { _id: uniqueId };
+	}
+
+	const user = await User.findOneAndUpdate(
+		query,
+		{ status: status },
+		{ new: true, runValidators: true }
+	);
+
+	if (!user) {
+		// Fallback: if we searched by _id and failed, maybe it WAS a uniqueId that happened to be hex? (Unlikely for GIG prefix)
+		// Or if we searched by uniqueId and failed.
+		return next(new AppError('No user found with that ID', 404));
+	}
+
+	res.status(200).json({
+		status: 'success',
+		data: {
+			status: user.status
+		}
 	});
 });

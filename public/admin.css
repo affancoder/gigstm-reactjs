@@ -147,7 +147,56 @@ button:hover:not(:disabled) {
   position: relative;
 }
 
-/* Scrollbar styling */
+/* Toast Notification */
+#toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+}
+
+.toast-msg {
+  background: #333;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slideIn 0.3s ease forwards;
+  font-size: 0.9rem;
+  font-weight: 500;
+  min-width: 250px;
+}
+
+.toast-msg.success {
+  background: #10b981;
+}
+
+.toast-msg.error {
+  background: #ef4444;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
 .table-wrapper::-webkit-scrollbar {
   height: 8px;
 }
@@ -265,6 +314,105 @@ tr:hover td {
 .status-not-synced {
   background: #fee2e2;
   color: #ef4444;
+}
+
+.status-pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-approved {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.status-disapproved {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.status-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.status-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.btn-approve,
+.btn-disapprove {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.8rem;
+}
+
+.btn-approve {
+  background: #e3f9e5;
+  color: #10b981;
+}
+
+.btn-approve:hover {
+  background: #2ecc71;
+  color: #fff;
+}
+
+.btn-disapprove {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+.btn-disapprove:hover {
+  background: #e74c3c;
+  color: #fff;
+}
+
+/* Modal Actions */
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.modal-actions-left {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-modal-approve,
+.btn-modal-disapprove {
+  padding: 0.5rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  border: none;
+  transition: all 0.2s;
+  color: #fff;
+}
+
+.btn-modal-approve {
+  background: #10b981;
+}
+
+.btn-modal-approve:hover {
+  background: #059669;
+}
+
+.btn-modal-disapprove {
+  background: #ef4444;
+}
+
+.btn-modal-disapprove:hover {
+  background: #dc2626;
 }
 
 .action-btn {

@@ -85,7 +85,10 @@
                   />
                 </div>
                 <h4 id="userName" class="font-weight-bold mb-1">Loading...</h4>
-                <p id="userEmail" class="text-muted mb-4">...</p>
+                <p id="userEmail" class="text-muted mb-3">...</p>
+                <div id="userStatusContainer" class="mb-4">
+                  <span id="userStatusBadge" class="badge badge-pill px-3 py-2">Loading...</span>
+                </div>
                 <a href="userform.html?mode=edit" class="btn btn-primary btn-block rounded-pill py-2">
                   <i class="fas fa-edit mr-2"></i>Edit Profile
                 </a>
@@ -248,6 +251,22 @@
           // Populate Profile Card
           document.getElementById('userName').textContent = user.name || 'User';
           document.getElementById('userEmail').textContent = user.email || '';
+          
+          // Populate Status
+          const statusBadge = document.getElementById('userStatusBadge');
+          const status = (user.status || 'pending').toLowerCase();
+          
+          statusBadge.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+          statusBadge.className = 'badge badge-pill px-3 py-2'; // Reset classes
+          
+          if (status === 'approved') {
+            statusBadge.classList.add('badge-success');
+          } else if (status === 'disapproved') {
+            statusBadge.classList.add('badge-danger');
+          } else {
+            statusBadge.classList.add('badge-warning', 'text-dark');
+          }
+
           if (user.profileImage) {
             document.getElementById('profileImage').src = user.profileImage;
           }

@@ -14,6 +14,8 @@ router.use(authController.protect);
 router.get('/me', authController.getMe);
 router.get('/users', adminController.getCombinedUsers);
 
+router.patch('/users/:uniqueId/status', adminController.updateUserStatus);
+
 router.route('/users/:uniqueId')
   .patch(adminController.updateUser)
   .delete(adminController.deleteUser);
