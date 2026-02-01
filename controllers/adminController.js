@@ -115,6 +115,9 @@ exports.getCombinedUsers = catchAsync(async (req, res, next) => {
 				createdAt: profile.createdAt || null,
 			},
 			kyc: {
+				bankName: kyc.bankName || "",
+				accountNumber: kyc.accountNumber || "",
+				ifscCode: kyc.ifscCode || "",
 				aadhaarFront: kyc.aadhaarFront || "",
 				aadhaarBack: kyc.aadhaarBack || "",
 				panCardUpload: kyc.panCardUpload || "",
@@ -124,6 +127,11 @@ exports.getCombinedUsers = catchAsync(async (req, res, next) => {
 			experience: {
 				occupation: u.experience?.occupation || "",
 				experienceYears: u.experience?.experienceYears || "",
+				experienceMonths: u.experience?.experienceMonths || "",
+				employmentType: u.experience?.employmentType || "",
+				jobRequirement: u.experience?.jobRequirement || "",
+				heardAbout: u.experience?.heardAbout || "",
+				interestType: u.experience?.interestType || "",
 				resumeStep2: u.experience?.resumeStep2 || "",
 				createdAt: u.experience?.createdAt || null,
 			},
