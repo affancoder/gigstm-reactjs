@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Update unlock button state
     const unlockButton = document.getElementById("unlock-button");
     if (unlockButton) {
-      if (percentage === 100) {
+      if (percentage === 100 && document.getElementById("step2-panel").classList.contains("submitted")) {
         unlockButton.disabled = false;
         unlockButton.innerHTML =
           '<i class="fas fa-unlock"></i> Unlocked - Job Categories';
@@ -187,6 +187,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // Get the target panel ID from data-target attribute
     const targetId = clickedTab.getAttribute("data-target");
     console.log("Target panel ID:", targetId);
+
+    if (targetId === "#step2-panel" && !document.getElementById("step1-panel").classList.contains("submitted")) return alert("Please submit Personal Details first.");
+
 
     if (!targetId) {
       console.error("No data-target attribute found on tab");
@@ -682,6 +685,7 @@ document.addEventListener("DOMContentLoaded", function () {
         hideLoader(); // Hide loader when request is complete
 
         if (response.ok) {
+          document.getElementById("step1-panel").classList.add("submitted");
           alert("Profile submitted successfully!");
           // window.location.href = "/success.html";
           console.log(result);
@@ -754,6 +758,7 @@ document.addEventListener("DOMContentLoaded", function () {
         hideLoader(); // Hide loader when request is complete
 
         if (response.ok) {
+          document.getElementById("step2-panel").classList.add("submitted"); updateProgressBar();
           alert("Experience details saved successfully!");
           console.log(result);
           // window.location.href = "/success.html";
@@ -1183,6 +1188,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // 1. Populate Profile
       if (profile) {
+        document.getElementById("step1-panel").classList.add("submitted");
         setFieldValue("name", profile.name);
         setFieldValue("email", profile.email || user?.email);
         setFieldValue("mobile", profile.mobile);
@@ -1231,6 +1237,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // 2. Populate Experience
       if (experience) {
+        document.getElementById("step2-panel").classList.add("submitted");
         setFieldValue("experienceYears", experience.experienceYears);
         setFieldValue("experienceMonths", experience.experienceMonths);
         setFieldValue("employmentType", experience.employmentType);
