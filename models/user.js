@@ -45,6 +45,10 @@ const userSchema = new mongoose.Schema({
     default: 'pending',
     index: true
   },
+  admin_message: {
+    type: String,
+    default: null
+  },
   createdAt: {
     type: Date,
     default: Date.now

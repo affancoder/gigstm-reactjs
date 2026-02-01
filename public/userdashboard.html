@@ -88,6 +88,7 @@
                 <p id="userEmail" class="text-muted mb-3">...</p>
                 <div id="userStatusContainer" class="mb-4">
                   <span id="userStatusBadge" class="badge badge-pill px-3 py-2">Loading...</span>
+                  <div id="adminFeedback" class="mt-3 text-left" style="display:none;"></div>
                 </div>
                 <a href="userform.html?mode=edit" class="btn btn-primary btn-block rounded-pill py-2">
                   <i class="fas fa-edit mr-2"></i>Edit Profile
@@ -254,15 +255,32 @@
           
           // Populate Status
           const statusBadge = document.getElementById('userStatusBadge');
+          const feedbackEl = document.getElementById('adminFeedback');
           const status = (user.status || 'pending').toLowerCase();
           
           statusBadge.textContent = status.charAt(0).toUpperCase() + status.slice(1);
           statusBadge.className = 'badge badge-pill px-3 py-2'; // Reset classes
           
+          // Reset feedback
+          feedbackEl.style.display = 'none';
+          feedbackEl.className = '';
+          feedbackEl.innerHTML = '';
+
           if (status === 'approved') {
             statusBadge.classList.add('badge-success');
           } else if (status === 'disapproved') {
             statusBadge.classList.add('badge-danger');
+            
+            // Show Admin Feedback
+            if (user.admin_message) {
+                feedbackEl.style.display = 'block';
+                feedbackEl.className = 'alert alert-danger mt-3 font-size-3';
+                feedbackEl.innerHTML = `
+                    <i class="fas fa-exclamation-circle mr-2"></i>
+                    <strong>Feedback:</strong>
+                    <div class="mt-1">${user.admin_message}</div>
+                `;
+            }
           } else {
             statusBadge.classList.add('badge-warning', 'text-dark');
           }

@@ -201,12 +201,25 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
 // Update User Status
 exports.updateUserStatus = catchAsync(async (req, res, next) => {
 	const { uniqueId } = req.params;
-	const { status } = req.body;
+	const { status, admin_message } = req.body;
 
 	// Validate status
 	const validStatuses = ['approved', 'disapproved'];
 	if (!status || !validStatuses.includes(status)) {
 		return next(new AppError('Invalid status value. Allowed: approved, disapproved', 400));
+	}
+
+	// Prepare update payload
+	const updateData = { status };
+
+	if (status === 'disapproved') {
+		// Accept and store admin feedback message
+		if (typeof admin_message === 'string' && admin_message.trim().length > 0) {
+			updateData.admin_message = admin_message.trim();
+		}
+	} else if (status === 'approved') {
+		// Ensure feedback message is cleared or null
+		updateData.admin_message = null;
 	}
 
 	let query = { uniqueId: uniqueId };
@@ -220,7 +233,7 @@ exports.updateUserStatus = catchAsync(async (req, res, next) => {
 
 	const user = await User.findOneAndUpdate(
 		query,
-		{ status: status },
+		updateData,
 		{ new: true, runValidators: true }
 	);
 

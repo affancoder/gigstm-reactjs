@@ -309,20 +309,73 @@ function openDetail(item) {
     // Pass ID to modal buttons
     const approveBtn = document.getElementById("modal-btn-approve");
     const disapproveBtn = document.getElementById("modal-btn-disapprove");
+    const feedbackContainer = document.getElementById("feedback-container");
+    let feedbackInput = document.getElementById("admin-feedback");
+    const feedbackWarning = document.getElementById("feedback-warning");
+
+    // Reset feedback UI
+    if (feedbackContainer) feedbackContainer.style.display = "none";
+    if (feedbackWarning) feedbackWarning.style.display = "none";
+    if (feedbackInput) {
+        feedbackInput.value = "";
+        // Clone input to remove old listeners
+        const newInput = feedbackInput.cloneNode(true);
+        feedbackInput.parentNode.replaceChild(newInput, feedbackInput);
+        feedbackInput = newInput;
+        
+        // Add validation listener
+        feedbackInput.addEventListener("input", function() {
+            const val = this.value.trim();
+            const btn = document.getElementById("modal-btn-disapprove");
+            if(btn && feedbackContainer.style.display !== "none") {
+                 if(val.length > 0) {
+                     btn.disabled = false;
+                     if(feedbackWarning) feedbackWarning.style.display = "none";
+                 } else {
+                     btn.disabled = true;
+                     if(feedbackWarning) feedbackWarning.style.display = "block";
+                 }
+            }
+        });
+    }
     
     // Remove old listeners to prevent duplicates (cloning)
     if(approveBtn) {
         const newApprove = approveBtn.cloneNode(true);
         approveBtn.parentNode.replaceChild(newApprove, approveBtn);
         newApprove.setAttribute("data-id", item.user?.id);
-        newApprove.addEventListener("click", () => updateUserStatus(item.user?.id, "approved"));
+        newApprove.addEventListener("click", () => {
+             // Hide feedback if open
+             if (feedbackContainer) feedbackContainer.style.display = "none";
+             updateUserStatus(item.user?.id, "approved");
+        });
     }
     
     if(disapproveBtn) {
         const newDisapprove = disapproveBtn.cloneNode(true);
         disapproveBtn.parentNode.replaceChild(newDisapprove, disapproveBtn);
         newDisapprove.setAttribute("data-id", item.user?.id);
-        newDisapprove.addEventListener("click", () => updateUserStatus(item.user?.id, "disapproved"));
+        
+        // Ensure enabled initially
+        newDisapprove.disabled = false;
+
+        newDisapprove.addEventListener("click", () => {
+            if (feedbackContainer && feedbackContainer.style.display === "none") {
+                // First click: Show feedback
+                feedbackContainer.style.display = "block";
+                feedbackInput.focus();
+                
+                // Disable button immediately and show warning
+                newDisapprove.disabled = true;
+                if(feedbackWarning) feedbackWarning.style.display = "block";
+            } else {
+                // Second click: Submit
+                const feedback = feedbackInput ? feedbackInput.value.trim() : "";
+                if (feedback) {
+                    updateUserStatus(item.user?.id, "disapproved", feedback);
+                }
+            }
+        });
     }
 
     detailModal.show();
@@ -331,7 +384,7 @@ function openDetail(item) {
 // ==========================
 // STATUS UPDATE LOGIC
 // ==========================
-async function updateUserStatus(userId, status) {
+async function updateUserStatus(userId, status, feedback = null) {
     const token = localStorage.getItem(ADMIN_TOKEN_KEY);
     if (!token) {
         showToast("Authentication required", "error");
@@ -348,7 +401,7 @@ async function updateUserStatus(userId, status) {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ status })
+            body: JSON.stringify({ status, admin_message: feedback })
         });
 
         const json = await res.json();
@@ -358,7 +411,10 @@ async function updateUserStatus(userId, status) {
         }
 
         // Success
-        showToast(`User ${status} successfully`, "success");
+        const successMsg = status === 'disapproved' 
+            ? "Disapproved with feedback saved successfully" 
+            : `User ${status} successfully`;
+        showToast(successMsg, "success");
         
         // Update Local Data
         const localItem = state.data.find(d => String(d.user?.id) === String(userId));

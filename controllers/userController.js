@@ -235,6 +235,7 @@ exports.getMe = catchAsync(async (req, res, next) => {
 		name: user.name, // prefer User model name, fallback to profile
 		email: user.email,
 		status: user.status || "pending", // Add status field
+		admin_message: user.admin_message || null, // Add admin message
 		phone: profile?.mobile || "",
 		jobRole: profile?.jobRole || "",
 		gender: profile?.gender || "",

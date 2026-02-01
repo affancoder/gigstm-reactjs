@@ -80,6 +80,16 @@
       </div>
       <!-- UI: remove Bootstrap p-0 to restore clean padding via CSS -->
       <div class="modal-body" id="detail-body"></div>
+      
+      <!-- Feedback Section (UI-only) -->
+      <div id="feedback-container" class="px-3 pb-3" style="display: none;">
+        <label for="admin-feedback" class="form-label text-danger fw-bold">Reason for Disapproval *</label>
+        <textarea id="admin-feedback" class="form-control" rows="3" placeholder="Please provide feedback for the user..."></textarea>
+        <div id="feedback-warning" class="text-danger small mt-1" style="display:none;">
+          <i class="fas fa-exclamation-circle"></i> Feedback is required to disapprove.
+        </div>
+      </div>
+
       <!-- UI: structured footer for clear actions -->
       <div class="modal-footer">
         <div class="modal-actions-left">
