@@ -213,6 +213,48 @@ limitSelect.addEventListener("change", (e) => {
     fetchData();
 });
 
+exportCsvBtn.addEventListener("click", () => {
+    // Redirect to backend export route which handles authentication via cookie/header
+    // and returns the CSV file as an attachment
+    const token = localStorage.getItem(ADMIN_TOKEN_KEY);
+    if (!token) {
+        alert("Please login first");
+        return;
+    }
+    
+    // Since we can't easily set headers in window.location, we rely on the cookie 'jwt_admin' 
+    // which should be set upon login. If cookie auth is not enabled/working, we might need a fetch-blob approach.
+    // However, the backend 'protect' middleware checks cookies.jwt_admin.
+    
+    // Fallback using fetch to support Bearer token if cookie is missing
+    fetch(`${API_URL}/export-users`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    .then(response => {
+        if (response.status === 401 || response.status === 403) {
+            throw new Error("Unauthorized");
+        }
+        if (!response.ok) throw new Error("Export failed");
+        return response.blob();
+    })
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "users-export.csv";
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Failed to export CSV: " + err.message);
+    });
+});
+
 logoutBtn.addEventListener("click", () => {
     localStorage.removeItem(ADMIN_TOKEN_KEY);
     localStorage.removeItem("admin_user");

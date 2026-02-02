@@ -198,6 +198,95 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
 	});
 });
 
+// Export Users to CSV
+exports.exportUsersToCSV = catchAsync(async (req, res, next) => {
+	const pipeline = [
+		{
+			$lookup: {
+				from: "profiles",
+				localField: "_id",
+				foreignField: "user",
+				as: "profile",
+			},
+		},
+		{
+			$lookup: {
+				from: "kycs",
+				localField: "_id",
+				foreignField: "user",
+				as: "kyc",
+			},
+		},
+		{
+			$lookup: {
+				from: "userexperiences",
+				localField: "_id",
+				foreignField: "user",
+				as: "experience",
+			},
+		},
+		{
+			$addFields: {
+				profile: { $arrayElemAt: ["$profile", 0] },
+				kyc: { $arrayElemAt: ["$kyc", 0] },
+				experience: { $arrayElemAt: ["$experience", 0] },
+			},
+		},
+		{ $sort: { createdAt: -1 } }
+	];
+
+	const users = await User.aggregate(pipeline);
+
+	if (!users || users.length === 0) {
+		return next(new AppError("No users found to export", 404));
+	}
+
+	// Helper to escape CSV fields
+	const escapeCsv = (val) => {
+		if (val === null || val === undefined) return "";
+		const str = String(val);
+		// If contains comma, double quote, or newline, wrap in quotes and escape internal quotes
+		if (str.includes(",") || str.includes('"') || str.includes("\n")) {
+			return `"${str.replace(/"/g, '""')}"`;
+		}
+		return str;
+	};
+
+	// Define headers
+	const headers = [
+		"User ID", "Unique ID", "Name", "Email", "Role", "Status", "Joined Date",
+		"Mobile", "Job Role", "Gender", "DOB", "Aadhaar No", "PAN No", 
+		"Address Line 1", "Address Line 2", "City", "State", "Country", "Pincode", "About",
+		"Bank Name", "Account Number", "IFSC Code",
+		"Occupation", "Experience Years", "Experience Months", "Employment Type", "Job Requirement", "Heard About", "Interest Type",
+		"Profile Image URL", "Resume URL", "Aadhaar File URL", "PAN File URL",
+		"Aadhaar Front URL", "Aadhaar Back URL", "PAN Card KYC URL", "Passbook URL", "Resume Step 2 URL"
+	];
+
+	// Map data to rows
+	const rows = users.map(u => {
+		const p = u.profile || {};
+		const k = u.kyc || {};
+		const e = u.experience || {};
+
+		return [
+			u._id, u.uniqueId, u.name, u.email, u.role, u.status, u.createdAt,
+			p.mobile, p.jobRole, p.gender, p.dob, p.aadhaar, p.pan,
+			p.address1, p.address2, p.city, p.state, p.country, p.pincode, p.about,
+			k.bankName, k.accountNumber, k.ifscCode,
+			e.occupation, e.experienceYears, e.experienceMonths, e.employmentType, e.jobRequirement, e.heardAbout, e.interestType,
+			p.profileImage, p.resumeFile, p.aadhaarFile, p.panFile,
+			k.aadhaarFront, k.aadhaarBack, k.panCardUpload, k.passbookUpload, e.resumeStep2
+		].map(escapeCsv).join(",");
+	});
+
+	const csvContent = headers.join(",") + "\n" + rows.join("\n");
+
+	res.setHeader("Content-Type", "text/csv");
+	res.setHeader("Content-Disposition", "attachment; filename=users-export.csv");
+	res.status(200).send(csvContent);
+});
+
 // Update User Status
 exports.updateUserStatus = catchAsync(async (req, res, next) => {
 	const { uniqueId } = req.params;

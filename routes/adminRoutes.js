@@ -13,6 +13,7 @@ router.use(authController.protect);
 
 router.get('/me', authController.getMe);
 router.get('/users', adminController.getCombinedUsers);
+router.get('/export-users', adminController.exportUsersToCSV);
 
 router.patch('/users/:uniqueId/status', adminController.updateUserStatus);
 

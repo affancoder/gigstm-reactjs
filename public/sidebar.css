@@ -79,7 +79,7 @@
 .sidebar-menu a {
   display: flex;
   align-items: center;
-  height: 50px;
+  height: 65px;
   text-decoration: none;
   color: var(--sidebar-text);
   transition: var(--sidebar-transition);
@@ -89,6 +89,7 @@
 }
 
 .sidebar-menu a:hover {
+  border-radius: 14px;
   background-color: var(--sidebar-hover);
   border-left: 4px solid #3b82f6; /* Accent color */
 }
