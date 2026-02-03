@@ -307,7 +307,15 @@
               document.getElementById('infoDob').textContent = 'Not provided';
             }
           })();
-          document.getElementById('infoCountry').textContent = user.country || 'Not provided';
+          
+          // Country Display
+          try {
+            const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
+            document.getElementById('infoCountry').textContent = user.country ? regionNames.of(user.country.toUpperCase()) : 'Not provided';
+          } catch (e) {
+            document.getElementById('infoCountry').textContent = user.country || 'Not provided';
+          }
+
           document.getElementById('infoState').textContent = user.state || 'Not provided';
           document.getElementById('infoCity').textContent = user.city || 'Not provided';
           document.getElementById('infoAddress1').textContent = user.address1 || 'Not provided';

@@ -66,7 +66,7 @@ function rowHTML(item) {
   
   return `<tr data-row-id="${item.user?.id}">
     <td>${formatGigId(item.user?.id)}</td>
-    <td>${item.user?.name || ""}</td>
+    <td>${item.profile?.name || item.user?.name || ""}</td>
     <td>${item.user?.email || ""}</td>
     <td>${p.mobile || ""}</td>
     <td>${p.jobRole || ""}</td>
@@ -303,7 +303,7 @@ function openDetail(item) {
                     <div class="col-12">
                         ${val(p.address1)} ${p.address2 ? ', ' + p.address2 : ''}<br>
                         ${val(p.city)}, ${val(p.state)} - ${val(p.pincode)}<br>
-                        ${val(p.country)}
+                        ${(() => { try { return p.country ? new Intl.DisplayNames(['en'], {type: 'region'}).of(p.country.toUpperCase()) : val(p.country); } catch(e) { return val(p.country); } })()}
                     </div>
                 </div>
 

@@ -232,7 +232,7 @@ exports.getMe = catchAsync(async (req, res, next) => {
 	if (kyc?.passbookUpload) docs.push({ name: "Passbook", url: kyc.passbookUpload });
 
 	res.status(200).json({
-		name: user.name, // prefer User model name, fallback to profile
+		name: profile?.name || user.name, // prefer Profile name (full), fallback to User
 		email: user.email,
 		status: user.status || "pending", // Add status field
 		admin_message: user.admin_message || null, // Add admin message
