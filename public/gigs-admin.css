@@ -1,0 +1,249 @@
+/* Main Container */
+.admin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    background-color: #f9fafb;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Header Adjustments */
+.admin-header {
+    background: white;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Form Container */
+.gig-form-container {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
+}
+
+.gig-form-container h2 {
+    margin-bottom: 1.5rem;
+    color: #1f2937;
+    font-size: 1.25rem;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 0.75rem;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-row {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.form-group.half {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #374151;
+    font-size: 0.9rem;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: border-color 0.15s;
+    background-color: #fff;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.btn-draft, .btn-publish {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.btn-draft {
+    background-color: #f3f4f6;
+    color: #4b5563;
+}
+
+.btn-draft:hover {
+    background-color: #e5e7eb;
+}
+
+.btn-publish {
+    background-color: #2563eb;
+    color: white;
+}
+
+.btn-publish:hover {
+    background-color: #1d4ed8;
+}
+
+/* Table Section & Responsiveness */
+.gigs-list-container {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    /* KEY: Makes the table scrollable horizontally on small screens */
+    overflow-x: auto; 
+    -webkit-overflow-scrolling: touch;
+}
+
+.gigs-list-container h2 {
+    margin-bottom: 1.5rem;
+    color: #1f2937;
+    font-size: 1.25rem;
+}
+
+.gigs-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 900px; /* Forces scroll bar if container is smaller than 900px */
+}
+
+.gigs-table th {
+    background-color: #f9fafb;
+    text-align: left;
+    padding: 1rem;
+    font-weight: 600;
+    color: #4b5563;
+    border-bottom: 1px solid #e5e7eb;
+    white-space: nowrap;
+}
+
+.gigs-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    color: #1f2937;
+    vertical-align: middle;
+}
+
+.gigs-table tr:last-child td {
+    border-bottom: none;
+}
+
+.gigs-table tr:hover {
+    background-color: #f9fafb;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.status-badge.published {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.status-badge.draft {
+    background-color: #f3f4f6;
+    color: #374151;
+}
+
+/* Action Buttons in Table */
+.actions-cell {
+    display: flex;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
+.actions-cell button {
+    padding: 0.4rem 0.8rem;
+    border: 1px solid #e5e7eb;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #4b5563;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.actions-cell button:hover {
+    background-color: #f3f4f6;
+    border-color: #d1d5db;
+}
+
+.btn-delete:hover {
+    color: #dc2626;
+    border-color: #fca5a5;
+    background-color: #fef2f2 !important;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .admin-container {
+        padding: 10px;
+    }
+
+    .gig-form-container, .gigs-list-container {
+        padding: 1.25rem;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn-draft, .btn-publish {
+        width: 100%;
+    }
+    
+    /* Ensure table container scrolls */
+    .gigs-list-container {
+        margin: 0 -10px; /* Pull to edges on very small screens */
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+}

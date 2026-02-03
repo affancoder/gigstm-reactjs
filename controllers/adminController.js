@@ -254,8 +254,8 @@ exports.exportUsersToCSV = catchAsync(async (req, res, next) => {
 
 	// Define headers
 	const headers = [
-		"User ID", "Unique ID", "Name", "Email", "Role", "Status", "Joined Date",
-		"Mobile", "Job Role", "Gender", "DOB", "Aadhaar No", "PAN No", 
+		"User ID", "Unique ID", "Name", "Email", "Phone Number", "Role", "Status", "Admin Message", "Joined Date",
+		"Job Role", "Gender", "DOB", "Aadhaar No", "PAN No", 
 		"Address Line 1", "Address Line 2", "City", "State", "Country", "Pincode", "About",
 		"Bank Name", "Account Number", "IFSC Code",
 		"Occupation", "Experience Years", "Experience Months", "Employment Type", "Job Requirement", "Heard About", "Interest Type",
@@ -270,8 +270,8 @@ exports.exportUsersToCSV = catchAsync(async (req, res, next) => {
 		const e = u.experience || {};
 
 		return [
-			u._id, u.uniqueId, u.name, u.email, u.role, u.status, u.createdAt,
-			p.mobile, p.jobRole, p.gender, p.dob, p.aadhaar, p.pan,
+			u._id, u.uniqueId, u.name, u.email, p.mobile, u.role, u.status, u.admin_message, u.createdAt,
+			p.jobRole, p.gender, p.dob, p.aadhaar, p.pan,
 			p.address1, p.address2, p.city, p.state, p.country, p.pincode, p.about,
 			k.bankName, k.accountNumber, k.ifscCode,
 			e.occupation, e.experienceYears, e.experienceMonths, e.employmentType, e.jobRequirement, e.heardAbout, e.interestType,

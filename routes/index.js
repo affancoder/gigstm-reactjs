@@ -3,6 +3,7 @@ const path = require("path");
 const authRoutes = require("./authRoutes");
 const userRoutes = require("./userRoutes");
 const adminAuthController = require("../controllers/adminAuthController");
+const adminController = require("../controllers/adminController");
 const { protect, restrictTo } = require("../middleware/authMiddleware");
 
 const router = express.Router();
@@ -29,33 +30,38 @@ router.get("/", (req, res) => {
 
 // Admin (protected)
 // Explicitly serve /private/admin.html as requested
-router.get(
-  "/private/admin.html",
-  (req, res, next) => {
-    // Basic session check as requested
+const servePrivate = (page) => {
+    return [
+        (req, res, next) => {
+            if (!req.session || !req.session.admin) {
+                return res.redirect("/admin-login.html");
+            }
+            next();
+        },
+        (req, res) => {
+            res.sendFile(path.join(__dirname, "..", "private", page));
+        }
+    ];
+};
+
+router.get("/private/admin.html", ...servePrivate("admin.html"));
+router.get("/private/gigs-admin.html", ...servePrivate("gigs-admin.html"));
+router.get("/private/analytics.html", ...servePrivate("analytics.html"));
+router.get("/private/user-verification.html", ...servePrivate("user-verification.html"));
+router.get("/admin/claims", ...servePrivate("claimform.html"));
+
+router.get("/admin/qna-validation", ...servePrivate("qna-validation.html"));
+
+// Export CSV Route (Session Protected)
+router.get("/admin/export-users-csv", (req, res, next) => {
     if (!req.session || !req.session.admin) {
         return res.redirect("/admin-login.html");
     }
     next();
-  },
-  (req, res) => {
-    res.sendFile(
-      path.join(__dirname, "..", "private", "admin.html")
-    );
-  }
-);
+}, adminController.exportUsersToCSV);
 
 // Alias /admin to the same file (legacy support)
-router.get(
-  "/admin",
-  protect,
-  restrictTo("admin"),
-  (req, res) => {
-    res.sendFile(
-      path.join(__dirname, "..", "private", "admin.html")
-    );
-  }
-);
+router.get("/admin", ...servePrivate("admin.html"));
 
 // 404
 router.use((req, res) => {
