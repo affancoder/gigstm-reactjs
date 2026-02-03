@@ -1084,6 +1084,15 @@ document.addEventListener("DOMContentLoaded", function () {
     ); // Assuming file input has similar ID
 
     const profileImage = document.getElementById("profile-image");
+    
+    // Determine preview container ID
+    let previewId;
+    if (id === "profile-status") {
+        previewId = "profile-image-preview";
+    } else {
+        previewId = id.replace("-status", "-file-preview");
+    }
+    const previewContainer = document.getElementById(previewId);
 
     if (element && path) {
       // Extract filename from path
@@ -1099,6 +1108,45 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       if (profileImage && id === "profile-status") {
         profileImage.removeAttribute("required");
+      }
+      
+      // ✅ Render Preview
+      if (previewContainer) {
+        previewContainer.innerHTML = ""; // Clear existing
+        
+        const fileExt = filename.split('.').pop().toLowerCase();
+        const isImage = ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExt);
+        const isResume = id.includes('resume');
+
+        if (isImage) {
+            const img = document.createElement("img");
+            img.src = path;
+            img.alt = "Preview";
+            previewContainer.appendChild(img);
+        } else {
+            // PDF or Doc (or fallback for non-image Aadhaar/PAN)
+            const wrapper = document.createElement("div");
+            wrapper.className = "pdf-preview";
+            
+            const iconClass = ['doc', 'docx'].includes(fileExt) ? "fa-file-word" : "fa-file-pdf";
+            const iconColor = ['doc', 'docx'].includes(fileExt) ? "#007bff" : "#dc3545";
+            
+            wrapper.innerHTML = `
+                <i class="fas ${iconClass}" style="color: ${iconColor}; font-size: 20px;"></i>
+                <span style="margin: 0 8px; font-weight: 500;">${filename}</span>
+                <a href="${path}" target="_blank" style="color: #007bff; text-decoration: underline; margin-left: auto;">View ${isResume ? 'Resume' : 'Document'}</a>
+            `;
+            // Make wrapper flex
+            wrapper.style.display = "flex";
+            wrapper.style.alignItems = "center";
+            wrapper.style.width = "100%";
+            wrapper.style.padding = "10px";
+            wrapper.style.background = "#f8f9fa";
+            wrapper.style.border = "1px solid #dee2e6";
+            wrapper.style.borderRadius = "4px";
+            
+            previewContainer.appendChild(wrapper);
+        }
       }
     }
   }
