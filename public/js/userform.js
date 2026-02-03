@@ -1122,6 +1122,9 @@ document.addEventListener("DOMContentLoaded", function () {
             const img = document.createElement("img");
             img.src = path;
             img.alt = "Preview";
+            // Make image clickable for modal
+            img.style.cursor = "pointer";
+            img.onclick = function() { if(window.openImageModal) window.openImageModal(path); };
             previewContainer.appendChild(img);
         } else {
             // PDF or Doc (or fallback for non-image Aadhaar/PAN)
@@ -1336,4 +1339,33 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
+
+  // Image Modal Logic
+  window.openImageModal = function(src) {
+    const modal = document.getElementById('image-modal');
+    const modalImg = document.getElementById('image-modal-img');
+    if (modal && modalImg) {
+      modalImg.src = src;
+      modal.classList.add('active');
+    }
+  };
+
+  window.closeImageModal = function() {
+    const modal = document.getElementById('image-modal');
+    if (modal) {
+      modal.classList.remove('active');
+      setTimeout(() => {
+         const modalImg = document.getElementById('image-modal-img');
+         if(modalImg) modalImg.src = "";
+      }, 300);
+    }
+  };
+
+  // Close on outside click
+  window.addEventListener('click', function(event) {
+    const modal = document.getElementById('image-modal');
+    if (event.target === modal) {
+      window.closeImageModal();
+    }
+  });
 });
