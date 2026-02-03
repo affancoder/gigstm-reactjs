@@ -1163,8 +1163,10 @@ body {
 
 .image-modal-content {
   position: relative;
-  max-width: 90%;
-  max-height: 90%;
+  width: auto;
+  height: auto;
+  max-width: 95vw;
+  max-height: 95vh;
   transform: scale(0.9);
   transition: transform 0.3s ease;
   display: flex;
@@ -1177,8 +1179,10 @@ body {
 }
 
 .image-modal-content img {
-  max-width: 100%;
+  max-width: 90vw;
   max-height: 90vh;
+  width: auto;
+  height: auto;
   border-radius: 4px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.5);
   object-fit: contain;

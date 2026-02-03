@@ -14,8 +14,9 @@ router.use(authController.protect);
 router.get('/me', authController.getMe);
 router.get('/users', adminController.getCombinedUsers);
 router.get('/export-users', adminController.exportUsersToCSV);
+router.get('/export-csv', adminController.exportMasterCSV);
 
-router.patch('/users/:uniqueId/status', adminController.updateUserStatus);
+router.patch('/users/:gigId/status', adminController.updateUserStatus);
 
 router.route('/users/:uniqueId')
   .patch(adminController.updateUser)

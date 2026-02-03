@@ -15,6 +15,7 @@ exports.getCombinedUsers = catchAsync(async (req, res, next) => {
 						{ name: { $regex: search, $options: "i" } },
 						{ email: { $regex: search, $options: "i" } },
 						{ uniqueId: { $regex: search, $options: "i" } },
+						{ gigId: { $regex: search, $options: "i" } },
 						{ "profile.mobile": { $regex: search, $options: "i" } },
 						{ "profile.jobRole": { $regex: search, $options: "i" } },
 						{ "experience.occupation": { $regex: search, $options: "i" } },
@@ -88,6 +89,7 @@ exports.getCombinedUsers = catchAsync(async (req, res, next) => {
 			user: {
 				id: u._id,
 				uniqueId: u.uniqueId,
+				gigId: u.gigId,
 				name: u.name,
 				email: u.email,
 				role: u.role,
@@ -198,8 +200,122 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
 	});
 });
 
+
+
+
 // Export Users to CSV
 exports.exportUsersToCSV = catchAsync(async (req, res, next) => {
+	const search = (req.query.search || "").trim();
+
+	const matchStage =
+		search.length > 0
+			? {
+					$or: [
+						{ name: { $regex: search, $options: "i" } },
+						{ email: { $regex: search, $options: "i" } },
+						{ uniqueId: { $regex: search, $options: "i" } },
+						{ gigId: { $regex: search, $options: "i" } },
+						{ "profile.mobile": { $regex: search, $options: "i" } },
+						{ "profile.jobRole": { $regex: search, $options: "i" } },
+						{ "experience.occupation": { $regex: search, $options: "i" } },
+					],
+			  }
+			: {};
+
+	const pipeline = [
+		{
+			$lookup: {
+				from: "profiles",
+				localField: "_id",
+				foreignField: "user",
+				as: "profile",
+			},
+		},
+		{
+			$lookup: {
+				from: "kycs",
+				localField: "_id",
+				foreignField: "user",
+				as: "kyc",
+			},
+		},
+		{
+			$lookup: {
+				from: "userexperiences",
+				localField: "_id",
+				foreignField: "user",
+				as: "experience",
+			},
+		},
+		{
+			$addFields: {
+				profile: { $arrayElemAt: ["$profile", 0] },
+				kyc: { $arrayElemAt: ["$kyc", 0] },
+				experience: { $arrayElemAt: ["$experience", 0] },
+			},
+		},
+	];
+
+	if (Object.keys(matchStage).length > 0) {
+		pipeline.push({ $match: matchStage });
+	}
+
+	pipeline.push({ $sort: { createdAt: -1 } });
+
+	const users = await User.aggregate(pipeline);
+
+	if (!users || users.length === 0) {
+		return next(new AppError("No users found to export", 404));
+	}
+
+	// Helper to escape CSV fields
+	const escapeCsv = (val) => {
+		if (val === null || val === undefined) return "";
+		const str = String(val);
+		// If contains comma, double quote, or newline, wrap in quotes and escape internal quotes
+		if (str.includes(",") || str.includes('"') || str.includes("\n")) {
+			return `"${str.replace(/"/g, '""')}"`;
+		}
+		return str;
+	};
+
+	// Define headers
+	const headers = [
+		"User ID", "Unique ID", "GIG ID", "Name", "Email", "Phone Number", "Role", "Status", "Admin Message", "Joined Date",
+		"Job Role", "Gender", "DOB", "Aadhaar No", "PAN No",  
+		"Address Line 1", "Address Line 2", "City", "State", "Country", "Pincode", "About",
+		"Bank Name", "Account Number", "IFSC Code",
+		"Occupation", "Experience Years", "Experience Months", "Employment Type", "Job Requirement", "Heard About", "Interest Type",
+		"Profile Image URL", "Resume URL", "Aadhaar File URL", "PAN File URL",
+		"Aadhaar Front URL", "Aadhaar Back URL", "PAN Card KYC URL", "Passbook URL", "Resume Step 2 URL"
+	];
+
+	// Map data to rows
+	const rows = users.map(u => {
+		const p = u.profile || {};
+		const k = u.kyc || {};
+		const e = u.experience || {};
+
+		return [
+			u._id, u.uniqueId, u.gigId, u.name, u.email, p.mobile, u.role, u.status, u.admin_message, u.createdAt,
+			p.jobRole, p.gender, p.dob, p.aadhaar, p.pan,
+			p.address1, p.address2, p.city, p.state, p.country, p.pincode, p.about,
+			k.bankName, k.accountNumber, k.ifscCode,
+			e.occupation, e.experienceYears, e.experienceMonths, e.employmentType, e.jobRequirement, e.heardAbout, e.interestType,
+			p.profileImage, p.resumeFile, p.aadhaarFile, p.panFile,
+			k.aadhaarFront, k.aadhaarBack, k.panCardUpload, k.passbookUpload, e.resumeStep2
+		].map(escapeCsv).join(",");
+	});
+
+	const csvContent = headers.join(",") + "\n" + rows.join("\n");
+
+	res.setHeader("Content-Type", "text/csv");
+	res.setHeader("Content-Disposition", "attachment; filename=users-export.csv");
+	res.status(200).send(csvContent);
+});
+
+// Master CSV Export (No filters, GIG ID first)
+exports.exportMasterCSV = catchAsync(async (req, res, next) => {
 	const pipeline = [
 		{
 			$lookup: {
@@ -245,17 +361,16 @@ exports.exportUsersToCSV = catchAsync(async (req, res, next) => {
 	const escapeCsv = (val) => {
 		if (val === null || val === undefined) return "";
 		const str = String(val);
-		// If contains comma, double quote, or newline, wrap in quotes and escape internal quotes
 		if (str.includes(",") || str.includes('"') || str.includes("\n")) {
 			return `"${str.replace(/"/g, '""')}"`;
 		}
 		return str;
 	};
 
-	// Define headers
+	// Define headers (GIG ID first)
 	const headers = [
-		"User ID", "Unique ID", "Name", "Email", "Phone Number", "Role", "Status", "Admin Message", "Joined Date",
-		"Job Role", "Gender", "DOB", "Aadhaar No", "PAN No", 
+		"GIG ID", "User ID", "Unique ID", "Name", "Email", "Phone Number", "Role", "Status", "Admin Message", "Joined Date",
+		"Job Role", "Gender", "DOB", "Aadhaar No", "PAN No",  
 		"Address Line 1", "Address Line 2", "City", "State", "Country", "Pincode", "About",
 		"Bank Name", "Account Number", "IFSC Code",
 		"Occupation", "Experience Years", "Experience Months", "Employment Type", "Job Requirement", "Heard About", "Interest Type",
@@ -270,7 +385,7 @@ exports.exportUsersToCSV = catchAsync(async (req, res, next) => {
 		const e = u.experience || {};
 
 		return [
-			u._id, u.uniqueId, u.name, u.email, p.mobile, u.role, u.status, u.admin_message, u.createdAt,
+			u.gigId, u._id, u.uniqueId, u.name, u.email, p.mobile, u.role, u.status, u.admin_message, u.createdAt,
 			p.jobRole, p.gender, p.dob, p.aadhaar, p.pan,
 			p.address1, p.address2, p.city, p.state, p.country, p.pincode, p.about,
 			k.bankName, k.accountNumber, k.ifscCode,
@@ -280,16 +395,18 @@ exports.exportUsersToCSV = catchAsync(async (req, res, next) => {
 		].map(escapeCsv).join(",");
 	});
 
-	const csvContent = headers.join(",") + "\n" + rows.join("\n");
+	// Combine headers and rows
+	const csvContent = [headers.join(","), ...rows].join("\n");
 
-	res.setHeader("Content-Type", "text/csv");
-	res.setHeader("Content-Disposition", "attachment; filename=users-export.csv");
+	// Send CSV file
+	res.header("Content-Type", "text/csv");
+	res.header("Content-Disposition", 'attachment; filename="gigs_master_data.csv"');
 	res.status(200).send(csvContent);
 });
 
 // Update User Status
 exports.updateUserStatus = catchAsync(async (req, res, next) => {
-	const { uniqueId } = req.params;
+	const { gigId } = req.params;
 	const { status, admin_message } = req.body;
 
 	// Validate status
@@ -298,7 +415,7 @@ exports.updateUserStatus = catchAsync(async (req, res, next) => {
 		return next(new AppError('Invalid status value. Allowed: approved, disapproved', 400));
 	}
 
-	// Prepare update payload
+	// Prepare update payload - ONLY status and admin_message
 	const updateData = { status };
 
 	if (status === 'disapproved') {
@@ -311,25 +428,15 @@ exports.updateUserStatus = catchAsync(async (req, res, next) => {
 		updateData.admin_message = null;
 	}
 
-	let query = { uniqueId: uniqueId };
-	if (mongoose.Types.ObjectId.isValid(uniqueId)) {
-		// If it's a valid ObjectId, try finding by _id if uniqueId lookup fails, 
-		// OR just search by _id.
-		// Since uniqueId format (GIG...) is not a valid ObjectId (hex), 
-		// if it IS a valid ObjectId, it's likely meant to be an _id.
-		query = { _id: uniqueId };
-	}
-
+	// Find by gigId ONLY
 	const user = await User.findOneAndUpdate(
-		query,
+		{ gigId: gigId },
 		updateData,
 		{ new: true, runValidators: true }
 	);
 
 	if (!user) {
-		// Fallback: if we searched by _id and failed, maybe it WAS a uniqueId that happened to be hex? (Unlikely for GIG prefix)
-		// Or if we searched by uniqueId and failed.
-		return next(new AppError('No user found with that ID', 404));
+		return next(new AppError('No user found with that GIG ID', 404));
 	}
 
 	res.status(200).json({

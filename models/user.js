@@ -49,28 +49,38 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: null
   },
+  gigId: {
+    type: String,
+    unique: true,
+    index: true
+  },
   createdAt: {
     type: Date,
     default: Date.now
   }
 });
 
-// Hash password and generate uniqueId before save
+// Hash password and generate gigId before save
 userSchema.pre('save', async function (next) {
-  // Generate uniqueId if not present
-  if (!this.uniqueId) {
-    let isUnique = false;
-    while (!isUnique) {
-      // Generate random number (min 4 digits, max 9 digits for scale)
-      const randomNum = Math.floor(1000 + Math.random() * 9999000); 
-      const candidateId = `GIG${randomNum}`;
-      
-      // Check collision using the model constructor
-      const existingUser = await this.constructor.findOne({ uniqueId: candidateId });
-      
-      if (!existingUser) {
-        this.uniqueId = candidateId;
-        isUnique = true;
+  // Generate gigId if not present
+  if (!this.gigId) {
+    // If uniqueId exists (legacy), use it as gigId
+    if (this.uniqueId) {
+      this.gigId = this.uniqueId;
+    } else {
+      let isUnique = false;
+      while (!isUnique) {
+        // Generate random number (min 4 digits, max 9 digits for scale)
+        const randomNum = Math.floor(1000 + Math.random() * 9999000); 
+        const candidateId = `GIG${randomNum}`;
+        
+        // Check collision using the model constructor
+        const existingUser = await this.constructor.findOne({ gigId: candidateId });
+        
+        if (!existingUser) {
+          this.gigId = candidateId;
+          isUnique = true;
+        }
       }
     }
   }

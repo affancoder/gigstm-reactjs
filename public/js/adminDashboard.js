@@ -10,7 +10,6 @@ const pageInfo = document.getElementById("page-info");
 const logoutBtn = document.getElementById("logout-btn");
 const limitSelect = document.getElementById("limit-select");
 const clearSearchBtn = document.getElementById("clear-search");
-const exportCsvBtn = document.getElementById("export-csv");
 const totalCountEl = document.getElementById("total-count");
 const loadingEl = document.getElementById("loading");
 
@@ -64,19 +63,22 @@ function rowHTML(item) {
   const statusClass = status === 'approved' ? 'status-approved' : 
                       status === 'disapproved' ? 'status-disapproved' : 'status-pending';
   
+  // Use gigId for actions and identification where visible
+  const actionId = item.user?.gigId || item.user?.uniqueId;
+
   return `<tr data-row-id="${item.user?.id}">
-    <td>${formatGigId(item.user?.id)}</td>
+    <td>${actionId || "-"}</td>
     <td>${item.profile?.name || item.user?.name || ""}</td>
     <td>${item.user?.email || ""}</td>
     <td>${p.mobile || ""}</td>
     <td>${p.jobRole || ""}</td>
-    <td><button class="btn-view" data-id="${item.user?.id}">View</button></td>
+    <td><button class="btn-view" data-id="${actionId}">View</button></td>
     <td>
       <div class="status-container">
-        <span class="status-badge ${statusClass}" id="badge-${item.user?.id}">${status.charAt(0).toUpperCase() + status.slice(1)}</span>
+        <span class="status-badge ${statusClass}" id="badge-${actionId}">${status.charAt(0).toUpperCase() + status.slice(1)}</span>
         <div class="status-actions">
-          <button class="btn-approve" data-id="${item.user?.id}" title="Approve"><i class="fas fa-check"></i></button>
-          <button class="btn-disapprove" data-id="${item.user?.id}" title="Disapprove"><i class="fas fa-times"></i></button>
+          <button class="btn-approve" data-id="${actionId}" title="Approve"><i class="fas fa-check"></i></button>
+          <button class="btn-disapprove" data-id="${actionId}" title="Disapprove"><i class="fas fa-times"></i></button>
         </div>
       </div>
     </td>
@@ -147,7 +149,7 @@ function render() {
   tbody.querySelectorAll(".btn-view").forEach(btn=>{
     btn.addEventListener("click",()=>{
       const id = btn.getAttribute("data-id");
-      const item = state.data.find(d=>String(d?.user?.id)===String(id));
+      const item = state.data.find(d=> (d?.user?.gigId === id) || (d?.user?.uniqueId === id));
       if(item) openDetail(item);
     });
   });
@@ -211,48 +213,6 @@ limitSelect.addEventListener("change", (e) => {
     state.limit = parseInt(e.target.value);
     state.page = 1;
     fetchData();
-});
-
-exportCsvBtn.addEventListener("click", () => {
-    // Redirect to backend export route which handles authentication via cookie/header
-    // and returns the CSV file as an attachment
-    const token = localStorage.getItem(ADMIN_TOKEN_KEY);
-    if (!token) {
-        alert("Please login first");
-        return;
-    }
-    
-    // Since we can't easily set headers in window.location, we rely on the cookie 'jwt_admin' 
-    // which should be set upon login. If cookie auth is not enabled/working, we might need a fetch-blob approach.
-    // However, the backend 'protect' middleware checks cookies.jwt_admin.
-    
-    // Fallback using fetch to support Bearer token if cookie is missing
-    fetch(`${API_URL}/export-users`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-    .then(response => {
-        if (response.status === 401 || response.status === 403) {
-            throw new Error("Unauthorized");
-        }
-        if (!response.ok) throw new Error("Export failed");
-        return response.blob();
-    })
-    .then(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = "users-export.csv";
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-    })
-    .catch(err => {
-        console.error(err);
-        alert("Failed to export CSV: " + err.message);
-    });
 });
 
 logoutBtn.addEventListener("click", () => {
@@ -382,21 +342,23 @@ function openDetail(item) {
     }
     
     // Remove old listeners to prevent duplicates (cloning)
+    const actionId = item.user?.gigId || item.user?.uniqueId;
+
     if(approveBtn) {
         const newApprove = approveBtn.cloneNode(true);
         approveBtn.parentNode.replaceChild(newApprove, approveBtn);
-        newApprove.setAttribute("data-id", item.user?.id);
+        newApprove.setAttribute("data-id", actionId);
         newApprove.addEventListener("click", () => {
              // Hide feedback if open
              if (feedbackContainer) feedbackContainer.style.display = "none";
-             updateUserStatus(item.user?.id, "approved");
+             updateUserStatus(actionId, "approved");
         });
     }
     
     if(disapproveBtn) {
         const newDisapprove = disapproveBtn.cloneNode(true);
         disapproveBtn.parentNode.replaceChild(newDisapprove, disapproveBtn);
-        newDisapprove.setAttribute("data-id", item.user?.id);
+        newDisapprove.setAttribute("data-id", actionId);
         
         // Ensure enabled initially
         newDisapprove.disabled = false;
@@ -414,7 +376,7 @@ function openDetail(item) {
                 // Second click: Submit
                 const feedback = feedbackInput ? feedbackInput.value.trim() : "";
                 if (feedback) {
-                    updateUserStatus(item.user?.id, "disapproved", feedback);
+                    updateUserStatus(actionId, "disapproved", feedback);
                 }
             }
         });
@@ -459,7 +421,7 @@ async function updateUserStatus(userId, status, feedback = null) {
         showToast(successMsg, "success");
         
         // Update Local Data
-        const localItem = state.data.find(d => String(d.user?.id) === String(userId));
+        const localItem = state.data.find(d => (d.user?.gigId === userId) || (d.user?.uniqueId === userId));
         if (localItem && localItem.user) {
             localItem.user.status = status;
         }

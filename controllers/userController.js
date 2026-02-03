@@ -272,6 +272,8 @@ exports.getCombinedUsers = catchAsync(async (req, res, next) => {
 					$or: [
 						{ name: { $regex: search, $options: "i" } },
 						{ email: { $regex: search, $options: "i" } },
+						{ uniqueId: { $regex: search, $options: "i" } },
+						{ gigId: { $regex: search, $options: "i" } },
 						{ "profile.mobile": { $regex: search, $options: "i" } },
 						{ "profile.jobRole": { $regex: search, $options: "i" } },
 						{ "experience.occupation": { $regex: search, $options: "i" } },
@@ -489,6 +491,8 @@ exports.getMyCombined = catchAsync(async (req, res, next) => {
 		data: {
 			user: {
 				id: user._id,
+				uniqueId: user.uniqueId,
+				gigId: user.gigId,
 				name: user.name,
 				email: user.email,
 				role: user.role,
