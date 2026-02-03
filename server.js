@@ -63,12 +63,7 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 
-app.use((req, res, next) => {
-  if (req.path === "/admin-signup.html") {
-    return res.status(404).send("Not Found");
-  }
-  next();
-});
+
 
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/user', userRoutes);

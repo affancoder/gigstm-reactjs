@@ -45,6 +45,7 @@ const servePrivate = (page) => {
 };
 
 router.get("/private/admin.html", ...servePrivate("admin.html"));
+router.get("/admin-signup.html", ...servePrivate("admin-signup.html"));
 router.get("/private/gigs-admin.html", ...servePrivate("gigs-admin.html"));
 router.get("/private/analytics.html", ...servePrivate("analytics.html"));
 router.get("/private/user-verification.html", ...servePrivate("user-verification.html"));
