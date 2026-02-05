@@ -39,6 +39,16 @@
     padding-bottom: 0.75rem;
 }
 
+#search-input {
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: border-color 0.15s;
+    background-color: #fff;
+}
+
+
 /* Form Styles */
 .form-group {
     margin-bottom: 1.25rem;

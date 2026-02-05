@@ -81,7 +81,7 @@
   <img src="/GigsTm_files/lgo_project1.png" alt="GigsTM" style="height:36px;vertical-align:middle;margin-right:.5rem;">
 </h1>
 <div class="actions">
-<input id="search-input" type="text" placeholder="Search users, roles, occupation">
+<!-- <input id="search-input" type="text" placeholder="Search users, roles, occupation"> -->
 <button id="logout-btn">Logout</button>
 </div>
 </div>
@@ -286,38 +286,121 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('create-gig-form');
+        const draftBtn = document.querySelector('.btn-draft');
+        const publishBtn = document.querySelector('.btn-publish');
+        const statusSelect = document.getElementById('status');
         
+        // Check for edit mode
+        const urlParams = new URLSearchParams(window.location.search);
+        const editId = urlParams.get('id');
+        
+        if (editId) {
+            document.querySelector('.gig-form-container h2').textContent = 'Edit Gig';
+            if(publishBtn) publishBtn.textContent = 'Update Gig';
+            loadGigData(editId);
+        }
+
+        // Handle "Save as Draft" click
+        if (draftBtn) {
+            draftBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (statusSelect) statusSelect.value = 'Draft';
+                handleFormSubmit();
+            });
+        }
+
+        // Handle "Publish" click (which is also the form submit button)
         if (form) {
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
+                // If the user clicked Publish explicitly, ensure status is Published
+                // But if they just hit enter, respect the current select value?
+                // For simplicity, if this button is clicked, we assume Published unless it was the Draft button
+                // However, the draft button prevents default and calls handleFormSubmit manually.
+                // So this listener is mainly for the Publish button or Enter key.
+                if (statusSelect && statusSelect.value !== 'Draft') {
+                     statusSelect.value = 'Published';
+                }
+                handleFormSubmit();
+            });
+        }
+
+        async function loadGigData(id) {
+            try {
+                const response = await fetch(`/api/admin/gigs/${id}`);
+                const resData = await response.json();
                 
-                const formData = new FormData(form);
-                const payload = {};
-                
-                formData.forEach((value, key) => {
-                    payload[key] = value;
+                if (resData.status === 'success' && resData.data.gig) {
+                    const gig = resData.data.gig;
+                    
+                    // Populate fields
+                    document.getElementById('gig-title').value = gig.gigTitle || '';
+                    document.getElementById('gig-category').value = gig.category || '';
+                    document.getElementById('short-desc').value = gig.shortDescription || '';
+                    document.getElementById('full-desc').value = gig.fullDescription || '';
+                    document.getElementById('location').value = gig.location || '';
+                    document.getElementById('work-type').value = gig.workType || '';
+                    document.getElementById('payment-type').value = gig.paymentType || '';
+                    document.getElementById('payout').value = gig.payout || '';
+                    document.getElementById('openings').value = gig.openings || '';
+                    document.getElementById('status').value = gig.status || 'Draft';
+                    document.getElementById('skills').value = gig.skills || '';
+                    
+                    // Internal fields
+                    // Backend returns scopeOfWork, form uses sop
+                    document.getElementById('sop').value = gig.scopeOfWork || ''; 
+                    document.getElementById('payout-terms').value = gig.payoutTerms || '';
+                }
+            } catch (err) {
+                console.error('Error loading gig:', err);
+                alert('Failed to load gig data');
+            }
+        }
+
+        async function handleFormSubmit() {
+            const formData = new FormData(form);
+            const payload = {};
+            
+            formData.forEach((value, key) => {
+                payload[key] = value;
+            });
+            
+            // Convert numeric fields
+            if (payload.payout) payload.payout = parseFloat(payload.payout);
+            if (payload.openings) payload.openings = parseInt(payload.openings, 10);
+            
+            // Ensure status is set from the select (in case formData missed it due to some reason, though it shouldn't)
+            if (statusSelect) payload.status = statusSelect.value;
+
+            const url = editId ? `/api/admin/gigs/${editId}` : '/api/admin/gigs';
+            const method = editId ? 'PATCH' : 'POST';
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
                 });
                 
-                // Convert numeric fields
-                if (payload.payout) payload.payout = parseFloat(payload.payout);
-                if (payload.openings) payload.openings = parseInt(payload.openings, 10);
+                const data = await response.json();
                 
-                console.log('Form Payload:', payload);
-                
-                // Placeholder API endpoint for creating gigs
-                // const apiEndpoint = '/api/gigs'; 
-                
-                // fetch(apiEndpoint, {
-                //     method: 'POST',
-                //     headers: {
-                //         'Content-Type': 'application/json'
-                //     },
-                //     body: JSON.stringify(payload)
-                // })
-                // .then(response => response.json())
-                // .then(data => console.log('Success:', data))
-                // .catch(error => console.error('Error:', error));
-            });
+                if (response.ok && data.status === 'success') {
+                    alert(editId ? 'Gig updated successfully!' : 'Gig created successfully!');
+                    if (!editId) {
+                        form.reset(); // Clear form on create success
+                        if (statusSelect) statusSelect.value = 'Draft'; // Reset status
+                    }
+                    // Optional: redirect to list or stay
+                    // window.location.href = '/private/gigs-admin.html';
+                } else {
+                    alert('Error: ' + (data.message || 'Something went wrong'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Network error or server unavailable');
+            }
         }
     });
 </script>
