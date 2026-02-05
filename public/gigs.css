@@ -6,7 +6,8 @@
   color: #2b3940;
 }
 .page-header .subtitle {
-  color: #6c757d;
+  color: white;
+  font-weight: 600;
   font-size: 1.1rem;
 }
 
