@@ -171,6 +171,22 @@
             <input type="text" id="skills" name="skills" placeholder="e.g., React, Node.js, Communication (comma separated)" required>
         </div>
 
+        <!-- Internal Project Details (Admin Only) -->
+        <div class="internal-details-section" style="margin-top: 2rem; border-top: 1px solid #eee; padding-top: 1.5rem;">
+            <h3 style="font-size: 1.1rem; font-weight: 600; color: #2c3e50; margin-bottom: 0.25rem;">Internal Project Details (Admin Only)</h3>
+            <p style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 1rem;">Not visible to gig workers</p>
+
+            <div class="form-group">
+                <label for="sop">Scope of Work (SOP) <span style="color:red">*</span></label>
+                <textarea id="sop" name="sop" rows="4" placeholder="Define task scope, deliverables, KPIs, timelines, and exclusions." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="payout-terms">Payout Terms (PT) <span style="color:red">*</span></label>
+                <textarea id="payout-terms" name="payoutTerms" rows="4" placeholder="Define payout per task, milestones, payment cycle, penalties, and conditions." required></textarea>
+            </div>
+        </div>
+
         <div class="form-actions">
             <button type="button" class="btn-draft">Save as Draft</button>
             <button type="submit" class="btn-publish">Publish</button>

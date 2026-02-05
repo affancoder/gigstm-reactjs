@@ -86,6 +86,7 @@ app.use(
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const gigRoutes = require('./routes/gigRoutes');
 
 
 
@@ -93,6 +94,7 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/gigs', gigRoutes);
 
 app.use("/", routes);
 

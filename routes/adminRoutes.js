@@ -1,6 +1,7 @@
 const express = require('express');
 const authController = require('../controllers/adminAuthController');
 const adminController = require('../controllers/adminController');
+const gigController = require('../controllers/gigController');
 
 const router = express.Router();
 
@@ -21,5 +22,11 @@ router.patch('/users/:gigId/status', adminController.updateUserStatus);
 router.route('/users/:uniqueId')
   .patch(adminController.updateUser)
   .delete(adminController.deleteUser);
+
+// Admin Gig Routes (include internal fields)
+router.get('/gigs', gigController.listAdmin);
+router.get('/gigs/:id', gigController.getAdmin);
+router.post('/gigs', gigController.createGig);
+router.patch('/gigs/:id', gigController.updateGig);
 
 module.exports = router;
