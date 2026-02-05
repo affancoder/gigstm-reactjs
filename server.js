@@ -20,6 +20,30 @@ const PORT = process.env.PORT || 3000;
 connectDB().then(() => {
   // Run migration after DB connection
   migrateUniqueIds();
+  // Ensure safe unique index for optional businessId
+  (async () => {
+    try {
+      const db = mongoose.connection.db;
+      const users = db.collection('users');
+      const indexes = await users.indexes();
+      const existing = indexes.find(ix => ix.name === 'businessId_1');
+      if (existing) {
+        try {
+          await users.dropIndex('businessId_1');
+          console.log('Dropped legacy businessId_1 index');
+        } catch (e) {
+          console.warn('Could not drop legacy businessId_1 index:', e.message);
+        }
+      }
+      await users.createIndex(
+        { businessId: 1 },
+        { unique: true, partialFilterExpression: { businessId: { $exists: true, $ne: null } } }
+      );
+      console.log('Ensured partial unique index on users.businessId');
+    } catch (err) {
+      console.warn('Index ensure warning:', err.message);
+    }
+  })();
 });
 
 // ---------------- SESSION SETUP (FIXED) ---------------- //

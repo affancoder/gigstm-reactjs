@@ -305,5 +305,26 @@
         }
     });
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const logoutBtn = document.getElementById("logout-btn");
+        if (logoutBtn) {
+            logoutBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                
+                // 1. Clear Client-Side Auth Data
+                // Use literal key "admin_token" as ADMIN_TOKEN_KEY is not defined in this scope
+                localStorage.removeItem("admin_token"); 
+                localStorage.removeItem("admin_user");
+                sessionStorage.clear(); // Good practice to clear session data
+                
+                // 2. Redirect to Server Logout to clear Session/Cookies
+                // Use replace() to remove current page from history and trigger server-side cleanup
+                // The server will redirect to /admin-login.html
+                window.location.replace("/admin-logout");
+            });
+        }
+    });
+</script>
 </body>
 </html>

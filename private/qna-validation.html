@@ -89,20 +89,32 @@
 <div class="qna-validation-container">
     <div class="qna-header">
         <h2>Gig QnA Validation</h2>
-        <p class="subtitle">Review and validate questions and answers submitted by gig applicants.</p>
+        <p class="subtitle">Review, verify, and approve applicant QnA responses. This process acts as a pre-SOP compliance check to ensure applicants understand the gig's scope, meet eligibility requirements, and are ready to accept SOP & Payout Terms later in the flow.</p>
+    </div>
+
+    <!-- SOP Validation Checklist -->
+    <div class="sop-validation-checklist">
+        <h5><i class="fas fa-tasks"></i> SOP Validation Checklist</h5>
+        <ul>
+            <li>Has the applicant clearly understood the task responsibilities?</li>
+            <li>Do answers align with the expected scope of work?</li>
+            <li>Are skill claims relevant and verifiable?</li>
+            <li>Does the applicant acknowledge performance-based work?</li>
+            <li>Is the applicant suitable to proceed to SOP & Payout acceptance?</li>
+        </ul>
     </div>
 
     <div class="table-responsive">
         <table class="qna-table">
             <thead>
                 <tr>
-                    <th>Gig Title</th>
-                    <th>Applicant Name</th>
-                    <th>Question</th>
-                    <th>Submitted Answer</th>
-                    <th>Submitted Date</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th>Gig Title <div class="th-sub">Role applied for</div></th>
+                    <th>Applicant Name <div class="th-sub">Candidate name</div></th>
+                    <th>Question <div class="th-sub">Validates SOP readiness</div></th>
+                    <th>Submitted Answer <div class="th-sub">Basis for approval/reject</div></th>
+                    <th>Submitted Date <div class="th-sub">Date of entry</div></th>
+                    <th>Status <div class="th-sub">Review outcome</div></th>
+                    <th>Actions <div class="th-sub">Decisions</div></th>
                 </tr>
             </thead>
             <tbody id="qna-table-body">
@@ -146,6 +158,45 @@
                 </tr>
             </tbody>
         </table>
+        
+        <!-- Decision Guidance -->
+        <div class="decision-guidance">
+            <h6><i class="fas fa-info-circle"></i> Decision Guidance</h6>
+            <div class="guidance-items">
+                <div class="guidance-item">
+                    <span class="action-name text-success">Approve:</span> Applicant is SOP-ready and eligible
+                </div>
+                <div class="guidance-item">
+                    <span class="action-name text-danger">Reject:</span> Applicant does not meet SOP or skill requirements
+                </div>
+                <div class="guidance-item">
+                    <span class="action-name text-warning">Needs Review:</span> Clarification required before SOP acceptance
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State (Hidden by default) -->
+        <div class="empty-state" style="display: none;">
+            <div class="empty-icon"><i class="fas fa-clipboard-list"></i></div>
+            <h4>No applicant responses available yet</h4>
+            <p>SOP readiness checks will appear here once users apply.</p>
+        </div>
+    </div>
+
+    <!-- Status Legend -->
+    <div class="status-legend">
+        <div class="legend-item">
+            <span class="status-badge approved">Approved</span>
+            <span>Applicant meets criteria</span>
+        </div>
+        <div class="legend-item">
+            <span class="status-badge rejected">Rejected</span>
+            <span>Unsatisfactory response</span>
+        </div>
+        <div class="legend-item">
+            <span class="status-badge pending">Pending</span>
+            <span>Needs assessment</span>
+        </div>
     </div>
 
     <!-- Rejection Modal (Hidden by default) -->
@@ -243,6 +294,27 @@
                 // UI Simulation Only
                 modal.style.display = 'none';
                 alert('Rejection simulated. No backend call made.');
+            });
+        }
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const logoutBtn = document.getElementById("logout-btn");
+        if (logoutBtn) {
+            logoutBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                
+                // 1. Clear Client-Side Auth Data
+                // Use literal key "admin_token" as ADMIN_TOKEN_KEY is not defined in this scope
+                localStorage.removeItem("admin_token"); 
+                localStorage.removeItem("admin_user");
+                sessionStorage.clear(); // Good practice to clear session data
+                
+                // 2. Redirect to Server Logout to clear Session/Cookies
+                // Use replace() to remove current page from history and trigger server-side cleanup
+                // The server will redirect to /admin-login.html
+                window.location.replace("/admin-logout");
             });
         }
     });

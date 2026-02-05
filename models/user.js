@@ -4,6 +4,11 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
+  // Optional businessId (legacy/optional). Do not store nulls; omit field when empty.
+  businessId: {
+    type: String,
+    set: (v) => (v == null || v === '' ? undefined : v)
+  },
   name: {
     type: String,
     required: [true, 'Please enter your name'],
@@ -59,6 +64,12 @@ const userSchema = new mongoose.Schema({
     default: Date.now
   }
 });
+
+// Ensure uniqueness only for meaningful businessId values (non-null, present)
+userSchema.index(
+  { businessId: 1 },
+  { unique: true, partialFilterExpression: { businessId: { $exists: true, $ne: null } } }
+);
 
 // Hash password and generate gigId before save
 userSchema.pre('save', async function (next) {
