@@ -108,7 +108,7 @@ exports.updateGig = catchAsync(async (req, res, next) => {
 });
 
 exports.listPublic = catchAsync(async (req, res, next) => {
-  const gigs = await Gig.find({}, "-scopeOfWork -payoutTerms").sort({
+  const gigs = await Gig.find({ status: "Published" }, "-scopeOfWork -payoutTerms").sort({
     createdAt: -1,
   });
   res.status(200).json({ status: "success", data: { gigs } });

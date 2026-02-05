@@ -160,86 +160,7 @@
       </div>
     </div>
 
-    <!-- Gig Listing Grid -->
-    <div class="row mb-5">
-      <!-- Gig Card 1 -->
-      <div class="col-md-4 mb-4">
-        <div class="gig-card h-100 bg-white rounded shadow-sm border p-4 d-flex flex-column">
-          <div class="d-flex justify-content-between align-items-start mb-3">
-            <span class="badge badge-light text-primary border border-primary font-weight-bold">New</span>
-            <span class="text-muted small"><i class="fas fa-map-marker-alt mr-1"></i> City / Remote</span>
-          </div>
-          <h5 class="font-weight-bold mb-1">Gig title will appear here</h5>
-          <p class="text-muted small mb-3">Category • Industry</p>
-          <div class="mb-3">
-            <h6 class="font-weight-bold text-success mb-0">Task payout will appear here</h6>
-            <small class="text-muted">Per completed task</small>
-          </div>
-          <p class="text-muted small mb-4 flex-grow-1">Short task description will appear here. It will provide a brief overview of the gig requirements and expectations.</p>
-          <div class="tags mb-4">
-            <span class="badge badge-light mr-1">Training provided</span>
-            <span class="badge badge-light mr-1">Flexible timing</span>
-            <span class="badge badge-light">Task-based</span>
-          </div>
-          <div class="d-flex">
-            <button class="btn btn-outline-primary flex-grow-1 mr-2">View Details</button>
-            <button class="btn btn-primary flex-grow-1">Apply Now</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Gig Card 2 -->
-      <div class="col-md-4 mb-4">
-        <div class="gig-card h-100 bg-white rounded shadow-sm border p-4 d-flex flex-column">
-          <div class="d-flex justify-content-between align-items-start mb-3">
-            <span class="badge badge-light text-warning border border-warning font-weight-bold">Hot</span>
-            <span class="text-muted small"><i class="fas fa-map-marker-alt mr-1"></i> City / Remote</span>
-          </div>
-          <h5 class="font-weight-bold mb-1">Gig title will appear here</h5>
-          <p class="text-muted small mb-3">Category • Industry</p>
-          <div class="mb-3">
-            <h6 class="font-weight-bold text-success mb-0">Task payout will appear here</h6>
-            <small class="text-muted">Per completed task</small>
-          </div>
-          <p class="text-muted small mb-4 flex-grow-1">Short task description will appear here. It will provide a brief overview of the gig requirements and expectations.</p>
-          <div class="tags mb-4">
-            <span class="badge badge-light mr-1">Training provided</span>
-            <span class="badge badge-light mr-1">Flexible timing</span>
-            <span class="badge badge-light">Task-based</span>
-          </div>
-          <div class="d-flex">
-            <button class="btn btn-outline-primary flex-grow-1 mr-2">View Details</button>
-            <button class="btn btn-primary flex-grow-1">Apply Now</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Gig Card 3 -->
-      <div class="col-md-4 mb-4">
-        <div class="gig-card h-100 bg-white rounded shadow-sm border p-4 d-flex flex-column">
-          <div class="d-flex justify-content-between align-items-start mb-3">
-            <span class="badge badge-light text-info border border-info font-weight-bold">Featured</span>
-            <span class="text-muted small"><i class="fas fa-map-marker-alt mr-1"></i> City / Remote</span>
-          </div>
-          <h5 class="font-weight-bold mb-1">Gig title will appear here</h5>
-          <p class="text-muted small mb-3">Category • Industry</p>
-          <div class="mb-3">
-            <h6 class="font-weight-bold text-success mb-0">Task payout will appear here</h6>
-            <small class="text-muted">Per completed task</small>
-          </div>
-          <p class="text-muted small mb-4 flex-grow-1">Short task description will appear here. It will provide a brief overview of the gig requirements and expectations.</p>
-          <div class="tags mb-4">
-            <span class="badge badge-light mr-1">Training provided</span>
-            <span class="badge badge-light mr-1">Flexible timing</span>
-            <span class="badge badge-light">Task-based</span>
-          </div>
-          <div class="d-flex">
-            <button class="btn btn-outline-primary flex-grow-1 mr-2">View Details</button>
-            <button class="btn btn-primary flex-grow-1">Apply Now</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div class="row mb-5" id="gig-list"></div>
 
     <!-- Empty State Section (Hidden by default, shown via logic in real app) -->
     <!-- 
@@ -360,6 +281,89 @@
 <script src="/GigsTm_files/animated.js.download"></script>
 <script src="/GigsTm_files/maps(1).js.download"></script>
 <script src="/js/icon-toggle.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var list = document.getElementById('gig-list');
+  function renderGig(g) {
+    var col = document.createElement('div');
+    col.className = 'col-md-4 mb-4';
+    var card = document.createElement('div');
+    card.className = 'gig-card h-100 bg-white rounded shadow-sm border p-4 d-flex flex-column';
+    var top = document.createElement('div');
+    top.className = 'd-flex justify-content-between align-items-start mb-3';
+    var badge = document.createElement('span');
+    badge.className = 'badge badge-light text-primary border border-primary font-weight-bold';
+    badge.textContent = g.workType || '';
+    var loc = document.createElement('span');
+    loc.className = 'text-muted small';
+    var icon = document.createElement('i');
+    icon.className = 'fas fa-map-marker-alt mr-1';
+    loc.appendChild(icon);
+    loc.appendChild(document.createTextNode(' ' + (g.location || '')));
+    top.appendChild(badge);
+    top.appendChild(loc);
+    var title = document.createElement('h5');
+    title.className = 'font-weight-bold mb-1';
+    title.textContent = g.gigTitle || '';
+    var cat = document.createElement('p');
+    cat.className = 'text-muted small mb-3';
+    cat.textContent = g.category || '';
+    var payWrap = document.createElement('div');
+    payWrap.className = 'mb-3';
+    var payH = document.createElement('h6');
+    payH.className = 'font-weight-bold text-success mb-0';
+    var payoutNum = typeof g.payout === 'number' ? g.payout : parseFloat(g.payout);
+    if (isNaN(payoutNum)) payoutNum = 0;
+    payH.textContent = '₹' + payoutNum.toLocaleString('en-IN');
+    var paySmall = document.createElement('small');
+    paySmall.className = 'text-muted';
+    paySmall.textContent = g.paymentType || '';
+    payWrap.appendChild(payH);
+    payWrap.appendChild(paySmall);
+    var desc = document.createElement('p');
+    desc.className = 'text-muted small mb-4 flex-grow-1';
+    desc.textContent = g.shortDescription || '';
+    var tags = document.createElement('div');
+    tags.className = 'tags mb-4';
+    var skills = (g.skills || '').split(',').map(function(s){return s.trim();}).filter(Boolean).slice(0,5);
+    skills.forEach(function(s){
+      var badgeEl = document.createElement('span');
+      badgeEl.className = 'badge badge-light mr-1';
+      badgeEl.textContent = s;
+      tags.appendChild(badgeEl);
+    });
+    card.appendChild(top);
+    card.appendChild(title);
+    card.appendChild(cat);
+    card.appendChild(payWrap);
+    card.appendChild(desc);
+    card.appendChild(tags);
+    col.appendChild(card);
+    return col;
+  }
+  fetch('/api/gigs').then(function(r){return r.json();}).then(function(data){
+    var gigs = (data && data.status === 'success' && data.data && data.data.gigs) ? data.data.gigs : [];
+    list.innerHTML = '';
+    gigs.forEach(function(g){
+      list.appendChild(renderGig(g));
+    });
+    if (gigs.length === 0) {
+      var empty = document.createElement('div');
+      empty.className = 'col-12';
+      var msg = document.createElement('div');
+      msg.className = 'text-center py-5 mb-5 border rounded bg-white';
+      var h = document.createElement('h5');
+      h.className = 'font-weight-bold text-dark';
+      h.textContent = 'No published gigs available';
+      msg.appendChild(h);
+      empty.appendChild(msg);
+      list.appendChild(empty);
+    }
+  }).catch(function(){
+    list.innerHTML = '';
+  });
+});
+</script>
 
 </body>
 
