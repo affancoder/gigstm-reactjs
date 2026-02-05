@@ -29,6 +29,39 @@
   <link rel="stylesheet" href="/GigsTm_files/find-worker.css">
   <link rel="stylesheet" href="gigs.css">
   <link rel="stylesheet" href="job-categories.css">
+  <style>
+    .hero-intro {
+      min-height: 160px;
+      border-radius: 12px;
+      background-color: #ffffff;
+    }
+    .hero-intro .intro-content {
+      position: relative;
+      z-index: 2;
+      padding: 32px 16px;
+    }
+    .hero-intro .hero-bg {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 50%;
+      background-image: url('/assets/gig-bg.jpg');
+      background-size: cover;
+      background-position: center right;
+      opacity: 0.15;
+      z-index: 1;
+    }
+    @media (max-width: 576px) {
+      .hero-intro .hero-bg {
+        width: 100%;
+        opacity: 0.1;
+      }
+      .hero-intro .intro-content {
+        padding: 24px 12px;
+      }
+    }
+  </style>
 </head>
 
 
@@ -97,9 +130,12 @@
   <div class="container">
     
     <!-- Page Header / Intro Section -->
-    <div class="text-center mb-5 page-header">
-      <h1 class="mb-2">Explore Gigs</h1>
-      <p class="subtitle">Choose tasks that match your skills, time, and location</p>
+    <div class="hero-intro position-relative overflow-hidden mb-5">
+      <div class="hero-bg"></div>
+      <div class="page-header intro-content text-center">
+        <h1 class="mb-2">Explore Gigs</h1>
+        <p class="subtitle">Choose tasks that match your skills, time, and location</p>
+      </div>
     </div>
 
     <!-- Gig Filters Section -->
