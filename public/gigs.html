@@ -126,7 +126,7 @@
 
 
 <!-- Main Content -->
-<main class="bg-light pt-20 pb-20">
+<main class="bg-light pt-1 pb-20">
   <div class="container">
     
     <!-- Page Header / Intro Section -->
@@ -300,6 +300,30 @@
 </footer>
 
 
+<!-- Application Modal -->
+<div class="modal fade" id="applicationModal" tabindex="-1" role="dialog" aria-labelledby="applicationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="applicationModalLabel">Apply for Gig</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>You are applying for Gig ID: <strong id="gig-id-display"></strong></p>
+        <div class="alert alert-info">
+          Application form is under development. No data will be submitted.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" disabled>Submit Application</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Vendor Scripts -->
 <script src="/GigsTm_files/vendor.min.js.download"></script>
 <script src="/GigsTm_files/jquery.fancybox.min.js.download"></script>
@@ -368,15 +392,42 @@ document.addEventListener('DOMContentLoaded', function() {
       badgeEl.textContent = s;
       tags.appendChild(badgeEl);
     });
+
+    // Add Apply Button
+    var btnWrap = document.createElement('div');
+    btnWrap.className = 'mt-3';
+    var applyBtn = document.createElement('button');
+    applyBtn.className = 'btn btn-primary btn-block apply-btn';
+    applyBtn.textContent = 'Apply Now';
+    applyBtn.setAttribute('data-gigid', g.gigId || '');
+    btnWrap.appendChild(applyBtn);
+
     card.appendChild(top);
     card.appendChild(title);
     card.appendChild(cat);
     card.appendChild(payWrap);
     card.appendChild(desc);
     card.appendChild(tags);
+    card.appendChild(btnWrap);
     col.appendChild(card);
     return col;
   }
+  
+  // Event Delegation for Apply Button
+  document.addEventListener('click', function(e) {
+    if (e.target && e.target.classList.contains('apply-btn')) {
+      var gigId = e.target.getAttribute('data-gigid');
+      var display = document.getElementById('gig-id-display');
+      if(display) display.textContent = gigId;
+      if(typeof $ !== 'undefined' && $.fn.modal) {
+        $('#applicationModal').modal('show');
+      } else {
+        console.warn('Bootstrap Modal not available');
+        alert('Apply for Gig ID: ' + gigId);
+      }
+    }
+  });
+
   fetch('/api/gigs').then(function(r){return r.json();}).then(function(data){
     var gigs = (data && data.status === 'success' && data.data && data.data.gigs) ? data.data.gigs : [];
     list.innerHTML = '';
