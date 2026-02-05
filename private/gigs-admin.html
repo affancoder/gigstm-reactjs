@@ -272,6 +272,44 @@
     <p>Copyright 2025 gigstm.com | All Rights Reserved.</p>
   </div>
 </footer>
+
+<!-- Applications Modal -->
+<div class="modal fade" id="applicationsModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Gig Applications</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table class="table table-striped align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Skills</th>
+                <th>Status</th>
+                <th>Applied Date</th>
+              </tr>
+            </thead>
+            <tbody id="applications-table-body">
+              <!-- Dynamic Rows -->
+            </tbody>
+          </table>
+        </div>
+        <div id="no-applications-msg" class="text-center text-muted py-3" style="display:none;">
+            No applications received yet.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -337,8 +375,58 @@
                 } else if (target.classList.contains('btn-edit')) {
                      e.preventDefault();
                      enterEditMode(id);
+                } else if (target.closest('.btn-view-apps')) {
+                    // Handle button with icon click
+                    const btn = target.closest('.btn-view-apps');
+                    const gigId = btn.dataset.id;
+                    viewApplications(gigId);
                 }
             });
+        }
+
+        async function viewApplications(gigId) {
+            try {
+                // Show loading or open modal immediately
+                const modalEl = document.getElementById('applicationsModal');
+                const modal = new bootstrap.Modal(modalEl);
+                modal.show();
+                
+                const tbody = document.getElementById('applications-table-body');
+                const noMsg = document.getElementById('no-applications-msg');
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center">Loading...</td></tr>';
+                noMsg.style.display = 'none';
+
+                const response = await fetch(`/api/admin/gigs/${gigId}/applications`);
+                const data = await response.json();
+
+                tbody.innerHTML = '';
+
+                if (data.status === 'success' && data.data.applications.length > 0) {
+                    data.data.applications.forEach(app => {
+                        const tr = document.createElement('tr');
+                        const date = new Date(app.appliedAt).toLocaleString();
+                        
+                        tr.innerHTML = `
+                            <td>${app.applicantName}</td>
+                            <td>${app.phone}</td>
+                            <td><a href="mailto:${app.email}">${app.email}</a></td>
+                            <td>${app.skills}</td>
+                            <td><span class="badge bg-info text-dark">${app.applicationStatus}</span></td>
+                            <td>${date}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    noMsg.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error fetching applications:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to load applications.',
+                });
+            }
         }
 
         async function enterEditMode(id) {
@@ -472,6 +560,9 @@
                             <td>${createdDate}</td>
                             <td class="actions-cell">
                                 <button class="btn-edit" data-id="${gig._id}"><i class="fas fa-edit"></i> Edit</button>
+                                <button class="btn-view-apps" data-id="${gig._id}" style="background-color: #17a2b8; color: white; border: none; padding: 5px 10px; border-radius: 4px; margin-right: 5px; cursor: pointer;">
+                                    <i class="fas fa-users"></i> Apps
+                                </button>
                                 <button class="btn-delete" data-id="${gig._id}"><i class="fas fa-trash"></i> Delete</button>
                                 <button class="btn-toggle-publish" data-id="${gig._id}" data-status="${gig.status}">
                                     <i class="fas ${gig.status === 'Published' ? 'fa-eye-slash' : 'fa-eye'}"></i> 
