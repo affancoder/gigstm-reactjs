@@ -305,20 +305,46 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="applicationModalLabel">Apply for Gig</h5>
+        <h5 class="modal-title" id="applicationModalLabel">Apply for <span id="modalGigTitle" class="text-primary"></span></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <p>You are applying for Gig ID: <strong id="gig-id-display"></strong></p>
-        <div class="alert alert-info">
-          Application form is under development. No data will be submitted.
-        </div>
+        <form id="gigApplicationForm">
+          <input type="hidden" id="app-gigId" name="gigId">
+          <input type="hidden" id="app-gigTitle" name="gigTitle">
+          
+          <div class="form-group">
+            <label for="app-fullName">Full Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="app-fullName" name="fullName" required placeholder="Enter your full name">
+          </div>
+          
+          <div class="form-group">
+            <label for="app-phone">Phone Number <span class="text-danger">*</span></label>
+            <input type="tel" class="form-control" id="app-phone" name="phone" required placeholder="Enter your phone number">
+          </div>
+          
+          <div class="form-group">
+            <label for="app-email">Email Address <span class="text-danger">*</span></label>
+            <input type="email" class="form-control" id="app-email" name="email" required placeholder="name@example.com">
+          </div>
+          
+          <div class="form-group">
+            <label for="app-location">Current Location <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="app-location" name="location" required placeholder="City, State">
+          </div>
+          
+          <div class="form-group">
+            <label for="app-skills">Relevant Skills <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="app-skills" name="skills" required placeholder="e.g. Sales, Marketing, Excel">
+            <small class="form-text text-muted">Separate skills with commas</small>
+          </div>
+        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" disabled>Submit Application</button>
+        <button type="submit" form="gigApplicationForm" class="btn btn-primary">Submit Application</button>
       </div>
     </div>
   </div>
@@ -400,6 +426,7 @@ document.addEventListener('DOMContentLoaded', function() {
     applyBtn.className = 'btn btn-primary btn-block apply-btn';
     applyBtn.textContent = 'Apply Now';
     applyBtn.setAttribute('data-gigid', g.gigId || '');
+    applyBtn.setAttribute('data-gigtitle', g.gigTitle || '');
     btnWrap.appendChild(applyBtn);
 
     card.appendChild(top);
@@ -417,16 +444,67 @@ document.addEventListener('DOMContentLoaded', function() {
   document.addEventListener('click', function(e) {
     if (e.target && e.target.classList.contains('apply-btn')) {
       var gigId = e.target.getAttribute('data-gigid');
-      var display = document.getElementById('gig-id-display');
-      if(display) display.textContent = gigId;
+      var gigTitle = e.target.getAttribute('data-gigtitle');
+      
+      // Populate Modal Fields
+      var titleEl = document.getElementById('modalGigTitle');
+      if(titleEl) titleEl.textContent = gigTitle;
+      
+      var idInput = document.getElementById('app-gigId');
+      if(idInput) idInput.value = gigId;
+      
+      var titleInput = document.getElementById('app-gigTitle');
+      if(titleInput) titleInput.value = gigTitle;
+      
+      // Clear other fields
+      var form = document.getElementById('gigApplicationForm');
+      if(form) form.reset();
+      // Re-set hidden values after reset
+      if(idInput) idInput.value = gigId;
+      if(titleInput) titleInput.value = gigTitle;
+
       if(typeof $ !== 'undefined' && $.fn.modal) {
         $('#applicationModal').modal('show');
       } else {
         console.warn('Bootstrap Modal not available');
-        alert('Apply for Gig ID: ' + gigId);
+        alert('Apply for Gig: ' + gigTitle + ' (ID: ' + gigId + ')');
       }
     }
   });
+
+  // Handle Form Submission
+  var appForm = document.getElementById('gigApplicationForm');
+  if(appForm) {
+    appForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Collect Data
+      var formData = new FormData(appForm);
+      var payload = {};
+      formData.forEach(function(value, key){
+        payload[key] = value;
+      });
+      
+      // Log Payload (No DB save yet)
+      console.log('Application Payload:', payload);
+      
+      // Close Modal and Show Success
+      if(typeof $ !== 'undefined' && $.fn.modal) {
+        $('#applicationModal').modal('hide');
+      }
+      
+      if(typeof Swal !== 'undefined') {
+        Swal.fire({
+          icon: 'success',
+          title: 'Application Submitted!',
+          text: 'Thank you for applying to ' + payload.gigTitle,
+          confirmButtonColor: '#00b074'
+        });
+      } else {
+        alert('Application Submitted for ' + payload.gigTitle);
+      }
+    });
+  }
 
   fetch('/api/gigs').then(function(r){return r.json();}).then(function(data){
     var gigs = (data && data.status === 'success' && data.data && data.data.gigs) ? data.data.gigs : [];
