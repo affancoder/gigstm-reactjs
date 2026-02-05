@@ -485,24 +485,69 @@ document.addEventListener('DOMContentLoaded', function() {
         payload[key] = value;
       });
       
-      // Log Payload (No DB save yet)
+      // Log Payload
       console.log('Application Payload:', payload);
       
-      // Close Modal and Show Success
-      if(typeof $ !== 'undefined' && $.fn.modal) {
-        $('#applicationModal').modal('hide');
-      }
-      
-      if(typeof Swal !== 'undefined') {
-        Swal.fire({
-          icon: 'success',
-          title: 'Application Submitted!',
-          text: 'Thank you for applying to ' + payload.gigTitle,
-          confirmButtonColor: '#00b074'
-        });
-      } else {
-        alert('Application Submitted for ' + payload.gigTitle);
-      }
+      // Submit to Backend
+      var submitBtn = appForm.querySelector('button[type="submit"]');
+      var originalBtnText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+
+      fetch('/api/gigs/apply', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(data) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+
+        if (data.status === 'success') {
+          // Close Modal
+          if(typeof $ !== 'undefined' && $.fn.modal) {
+            $('#applicationModal').modal('hide');
+          }
+          
+          // Show Success Message
+          if(typeof Swal !== 'undefined') {
+            Swal.fire({
+              icon: 'success',
+              title: 'Application Submitted!',
+              text: 'Thank you for applying to ' + payload.gigTitle,
+              confirmButtonColor: '#00b074'
+            });
+          } else {
+            alert('Application Submitted for ' + payload.gigTitle);
+          }
+          
+          // Reset Form
+          appForm.reset();
+        } else {
+          throw new Error(data.message || 'Submission failed');
+        }
+      })
+      .catch(function(error) {
+        console.error('Error:', error);
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+        
+        if(typeof Swal !== 'undefined') {
+          Swal.fire({
+            icon: 'error',
+            title: 'Submission Failed',
+            text: error.message || 'Something went wrong. Please try again.',
+            confirmButtonColor: '#d33'
+          });
+        } else {
+          alert('Error: ' + (error.message || 'Submission failed'));
+        }
+      });
     });
   }
 

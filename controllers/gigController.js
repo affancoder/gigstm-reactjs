@@ -1,4 +1,5 @@
 const Gig = require("../models/gig");
+const GigApplication = require("../models/gigApplication");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 
@@ -135,4 +136,53 @@ exports.getAdmin = catchAsync(async (req, res, next) => {
   const gig = await Gig.findById(req.params.id);
   if (!gig) return next(new AppError("Gig not found", 404));
   res.status(200).json({ status: "success", data: { gig } });
+});
+
+exports.applyGig = catchAsync(async (req, res, next) => {
+  const {
+    gigId,
+    gigTitle,
+    fullName,
+    phone,
+    email,
+    location,
+    skills,
+  } = req.body;
+
+  if (!gigId || !fullName || !phone || !email || !location || !skills) {
+    return next(new AppError("All fields are required", 400));
+  }
+
+  // Check if gig exists
+  const gig = await Gig.findById(gigId);
+  if (!gig) {
+    return next(new AppError("Gig not found", 404));
+  }
+
+  const application = await GigApplication.create({
+    gigId,
+    gigTitle: gig.gigTitle, // Ensure title matches DB
+    applicantName: fullName,
+    phone,
+    email,
+    location,
+    skills,
+  });
+
+  res.status(201).json({
+    status: "success",
+    data: { application },
+  });
+});
+
+exports.getGigApplications = catchAsync(async (req, res, next) => {
+  const applications = await GigApplication.find({ gigId: req.params.id }).sort({
+    appliedAt: -1,
+  });
+
+  res.status(200).json({
+    status: "success",
+    results: applications.length,
+    data: { applications },
+  });
 });

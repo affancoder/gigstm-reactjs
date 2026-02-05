@@ -26,6 +26,7 @@ router.route('/users/:uniqueId')
 // Admin Gig Routes (include internal fields)
 router.get('/gigs', gigController.listAdmin);
 router.get('/gigs/:id', gigController.getAdmin);
+router.get('/gigs/:id/applications', gigController.getGigApplications);
 router.post('/gigs', gigController.createGig);
 router.patch('/gigs/:id', gigController.updateGig);
 router.delete('/gigs/:id', gigController.deleteGig);
