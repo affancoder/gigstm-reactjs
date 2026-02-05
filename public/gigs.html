@@ -344,7 +344,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" form="gigApplicationForm" class="btn btn-primary">Submit Application</button>
+        <button type="submit" form="gigApplicationForm" id="btn-submit-application" class="btn btn-primary">Submit Application</button>
       </div>
     </div>
   </div>
@@ -425,7 +425,9 @@ document.addEventListener('DOMContentLoaded', function() {
     var applyBtn = document.createElement('button');
     applyBtn.className = 'btn btn-primary btn-block apply-btn';
     applyBtn.textContent = 'Apply Now';
-    applyBtn.setAttribute('data-gigid', g.gigId || '');
+    // Use _id as the primary identifier, fallback to gigId if available
+    var idToUse = g._id || g.gigId || '';
+    applyBtn.setAttribute('data-gigid', idToUse);
     applyBtn.setAttribute('data-gigtitle', g.gigTitle || '');
     btnWrap.appendChild(applyBtn);
 
@@ -485,14 +487,31 @@ document.addEventListener('DOMContentLoaded', function() {
         payload[key] = value;
       });
       
+      // Validate gigId
+      if (!payload.gigId) {
+        if(typeof Swal !== 'undefined') {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Gig ID is missing. Please try refreshing the page.',
+          });
+        } else {
+          alert('Error: Gig ID is missing.');
+        }
+        return;
+      }
+
       // Log Payload
       console.log('Application Payload:', payload);
       
       // Submit to Backend
-      var submitBtn = appForm.querySelector('button[type="submit"]');
-      var originalBtnText = submitBtn.textContent;
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Submitting...';
+      var submitBtn = document.getElementById('btn-submit-application');
+      var originalBtnText = submitBtn ? submitBtn.textContent : 'Submit Application';
+      
+      if(submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+      }
 
       fetch('/api/gigs/apply', {
         method: 'POST',
@@ -505,8 +524,10 @@ document.addEventListener('DOMContentLoaded', function() {
         return response.json();
       })
       .then(function(data) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalBtnText;
+        if(submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalBtnText;
+        }
 
         if (data.status === 'success') {
           // Close Modal
@@ -534,8 +555,10 @@ document.addEventListener('DOMContentLoaded', function() {
       })
       .catch(function(error) {
         console.error('Error:', error);
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalBtnText;
+        if(submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalBtnText;
+        }
         
         if(typeof Swal !== 'undefined') {
           Swal.fire({
