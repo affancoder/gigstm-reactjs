@@ -15,7 +15,10 @@
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
 />
 <!-- Page Specific CSS -->
-<link rel="stylesheet" href="/gigs-admin.css">
+    <link rel="stylesheet" href="/gigs-admin.css">
+    <!-- SweetAlert2 -->
+    <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 <!-- Custom Sidebar (Isolated) -->
@@ -278,15 +281,9 @@
         const statusSelect = document.getElementById('status');
         const tableBody = document.getElementById('gigs-table-body');
         
-        // Check for edit mode
-        const urlParams = new URLSearchParams(window.location.search);
-        const editId = urlParams.get('id');
-        
-        if (editId) {
-            document.querySelector('.gig-form-container h2').textContent = 'Edit Gig';
-            if(publishBtn) publishBtn.textContent = 'Update Gig';
-            loadGigData(editId);
-        }
+        // State variables
+        let isEditMode = false;
+        let currentGigId = null;
 
         // Load gigs table initially
         loadGigsTable();
@@ -320,21 +317,31 @@
                 const id = target.dataset.id;
                 
                 if (target.classList.contains('btn-delete')) {
-                    if (confirm('Are you sure you want to delete this gig?')) {
-                        deleteGig(id);
-                    }
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            deleteGig(id);
+                        }
+                    });
                 } else if (target.classList.contains('btn-toggle-publish')) {
                     const currentStatus = target.dataset.status;
                     const newStatus = currentStatus === 'Published' ? 'Draft' : 'Published';
                     togglePublish(id, newStatus);
                 } else if (target.classList.contains('btn-edit')) {
-                     // Handled via window.location in inline onclick or here
-                     window.location.href = `?id=${id}`;
+                     e.preventDefault();
+                     enterEditMode(id);
                 }
             });
         }
 
-        async function loadGigData(id) {
+        async function enterEditMode(id) {
             try {
                 const response = await fetch(`/api/admin/gigs/${id}`);
                 const resData = await response.json();
@@ -342,6 +349,15 @@
                 if (resData.status === 'success' && resData.data.gig) {
                     const gig = resData.data.gig;
                     
+                    // Set state
+                    isEditMode = true;
+                    currentGigId = id;
+
+                    // Update UI
+                    document.querySelector('.gig-form-container h2').textContent = 'Edit Gig';
+                    if(publishBtn) publishBtn.textContent = 'Update Gig';
+                    
+                    // Populate fields
                     document.getElementById('gig-title').value = gig.gigTitle || '';
                     document.getElementById('gig-category').value = gig.category || '';
                     document.getElementById('short-desc').value = gig.shortDescription || '';
@@ -356,11 +372,27 @@
                     
                     document.getElementById('sop').value = gig.scopeOfWork || ''; 
                     document.getElementById('payout-terms').value = gig.payoutTerms || '';
+
+                    // Scroll to form
+                    document.querySelector('.gig-form-container').scrollIntoView({ behavior: 'smooth' });
                 }
             } catch (err) {
                 console.error('Error loading gig:', err);
-                alert('Failed to load gig data');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Failed to load gig data!',
+                });
             }
+        }
+
+        function resetForm() {
+            isEditMode = false;
+            currentGigId = null;
+            form.reset();
+            document.querySelector('.gig-form-container h2').textContent = 'Create New Gig';
+            if(publishBtn) publishBtn.textContent = 'Publish';
+            if (statusSelect) statusSelect.value = 'Draft';
         }
 
         async function handleFormSubmit() {
@@ -376,8 +408,8 @@
             
             if (statusSelect) payload.status = statusSelect.value;
 
-            const url = editId ? `/api/admin/gigs/${editId}` : '/api/admin/gigs';
-            const method = editId ? 'PATCH' : 'POST';
+            const url = isEditMode ? `/api/admin/gigs/${currentGigId}` : '/api/admin/gigs';
+            const method = isEditMode ? 'PATCH' : 'POST';
 
             try {
                 const response = await fetch(url, {
@@ -389,18 +421,29 @@
                 const data = await response.json();
                 
                 if (response.ok && data.status === 'success') {
-                    alert(editId ? 'Gig updated successfully!' : 'Gig created successfully!');
-                    if (!editId) {
-                        form.reset(); 
-                        if (statusSelect) statusSelect.value = 'Draft';
-                    }
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: isEditMode ? 'Gig updated successfully!' : 'Gig created successfully!',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    resetForm(); // Always reset form after successful save (per requirements)
                     loadGigsTable(); // Refresh table
                 } else {
-                    alert('Error: ' + (data.message || 'Something went wrong'));
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.message || 'Something went wrong',
+                    });
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('Network error or server unavailable');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Network Error',
+                    text: 'Network error or server unavailable',
+                });
             }
         }
 
@@ -418,7 +461,7 @@
                         const createdDate = new Date(gig.createdAt).toLocaleDateString('en-GB', {
                             day: '2-digit', month: 'short', year: 'numeric'
                         });
-                        const statusClass = gig.status === 'Published' ? 'published' : 'draft'; // simple mapping, adjust if needed
+                        const statusClass = gig.status === 'Published' ? 'published' : 'draft'; 
                         
                         tr.innerHTML = `
                             <td>${gig.gigTitle}</td>
@@ -450,14 +493,30 @@
                     method: 'DELETE'
                 });
                 if (response.ok) { // 204 No Content
-                    alert('Gig deleted successfully');
+                    Swal.fire(
+                        'Deleted!',
+                        'Gig has been deleted.',
+                        'success'
+                    );
+                    // If the deleted gig was being edited, reset the form
+                    if (isEditMode && currentGigId === id) {
+                        resetForm();
+                    }
                     loadGigsTable();
                 } else {
-                    alert('Failed to delete gig');
+                    Swal.fire(
+                        'Error!',
+                        'Failed to delete gig.',
+                        'error'
+                    );
                 }
             } catch (error) {
                 console.error('Error deleting gig:', error);
-                alert('Error deleting gig');
+                Swal.fire(
+                    'Error!',
+                    'Error deleting gig.',
+                    'error'
+                );
             }
         }
 
@@ -470,14 +529,37 @@
                 });
                 const data = await response.json();
                 if (response.ok && data.status === 'success') {
-                    // alert('Gig status updated'); // Optional
+                    const toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+
+                    toast.fire({
+                        icon: 'success',
+                        title: `Gig ${newStatus === 'Published' ? 'Published' : 'Unpublished'} successfully`
+                    })
                     loadGigsTable();
                 } else {
-                    alert('Failed to update status');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Failed to update status',
+                    });
                 }
             } catch (error) {
                 console.error('Error updating status:', error);
-                alert('Error updating status');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error updating status',
+                });
             }
         }
     });
