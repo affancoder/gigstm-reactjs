@@ -209,20 +209,7 @@
             </tr>
         </thead>
         <tbody id="gigs-table-body">
-            <!-- Sample Static Row -->
-            <tr>
-                <td>Senior React Developer</td>
-                <td>EdTech</td>
-                <td>Remote</td>
-                <td>₹5,000 / Task</td>
-                <td><span class="status-badge published">Published</span></td>
-                <td>02 Feb 2026</td>
-                <td class="actions-cell">
-                    <button class="btn-edit"><i class="fas fa-edit"></i> Edit</button>
-                    <button class="btn-delete"><i class="fas fa-trash"></i> Delete</button>
-                    <button class="btn-toggle-publish"><i class="fas fa-eye-slash"></i> Unpublish</button>
-                </td>
-            </tr>
+            <!-- Rows will be populated dynamically -->
         </tbody>
     </table>
 </div>
@@ -289,6 +276,7 @@
         const draftBtn = document.querySelector('.btn-draft');
         const publishBtn = document.querySelector('.btn-publish');
         const statusSelect = document.getElementById('status');
+        const tableBody = document.getElementById('gigs-table-body');
         
         // Check for edit mode
         const urlParams = new URLSearchParams(window.location.search);
@@ -299,6 +287,9 @@
             if(publishBtn) publishBtn.textContent = 'Update Gig';
             loadGigData(editId);
         }
+
+        // Load gigs table initially
+        loadGigsTable();
 
         // Handle "Save as Draft" click
         if (draftBtn) {
@@ -313,15 +304,33 @@
         if (form) {
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
-                // If the user clicked Publish explicitly, ensure status is Published
-                // But if they just hit enter, respect the current select value?
-                // For simplicity, if this button is clicked, we assume Published unless it was the Draft button
-                // However, the draft button prevents default and calls handleFormSubmit manually.
-                // So this listener is mainly for the Publish button or Enter key.
                 if (statusSelect && statusSelect.value !== 'Draft') {
                      statusSelect.value = 'Published';
                 }
                 handleFormSubmit();
+            });
+        }
+
+        // Handle Table Actions (Edit, Delete, Publish/Unpublish)
+        if (tableBody) {
+            tableBody.addEventListener('click', function(e) {
+                const target = e.target.closest('button');
+                if (!target) return;
+
+                const id = target.dataset.id;
+                
+                if (target.classList.contains('btn-delete')) {
+                    if (confirm('Are you sure you want to delete this gig?')) {
+                        deleteGig(id);
+                    }
+                } else if (target.classList.contains('btn-toggle-publish')) {
+                    const currentStatus = target.dataset.status;
+                    const newStatus = currentStatus === 'Published' ? 'Draft' : 'Published';
+                    togglePublish(id, newStatus);
+                } else if (target.classList.contains('btn-edit')) {
+                     // Handled via window.location in inline onclick or here
+                     window.location.href = `?id=${id}`;
+                }
             });
         }
 
@@ -333,7 +342,6 @@
                 if (resData.status === 'success' && resData.data.gig) {
                     const gig = resData.data.gig;
                     
-                    // Populate fields
                     document.getElementById('gig-title').value = gig.gigTitle || '';
                     document.getElementById('gig-category').value = gig.category || '';
                     document.getElementById('short-desc').value = gig.shortDescription || '';
@@ -346,8 +354,6 @@
                     document.getElementById('status').value = gig.status || 'Draft';
                     document.getElementById('skills').value = gig.skills || '';
                     
-                    // Internal fields
-                    // Backend returns scopeOfWork, form uses sop
                     document.getElementById('sop').value = gig.scopeOfWork || ''; 
                     document.getElementById('payout-terms').value = gig.payoutTerms || '';
                 }
@@ -365,11 +371,9 @@
                 payload[key] = value;
             });
             
-            // Convert numeric fields
             if (payload.payout) payload.payout = parseFloat(payload.payout);
             if (payload.openings) payload.openings = parseInt(payload.openings, 10);
             
-            // Ensure status is set from the select (in case formData missed it due to some reason, though it shouldn't)
             if (statusSelect) payload.status = statusSelect.value;
 
             const url = editId ? `/api/admin/gigs/${editId}` : '/api/admin/gigs';
@@ -378,9 +382,7 @@
             try {
                 const response = await fetch(url, {
                     method: method,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
                 
@@ -389,17 +391,93 @@
                 if (response.ok && data.status === 'success') {
                     alert(editId ? 'Gig updated successfully!' : 'Gig created successfully!');
                     if (!editId) {
-                        form.reset(); // Clear form on create success
-                        if (statusSelect) statusSelect.value = 'Draft'; // Reset status
+                        form.reset(); 
+                        if (statusSelect) statusSelect.value = 'Draft';
                     }
-                    // Optional: redirect to list or stay
-                    // window.location.href = '/private/gigs-admin.html';
+                    loadGigsTable(); // Refresh table
                 } else {
                     alert('Error: ' + (data.message || 'Something went wrong'));
                 }
             } catch (error) {
                 console.error('Error:', error);
                 alert('Network error or server unavailable');
+            }
+        }
+
+        async function loadGigsTable() {
+            try {
+                const response = await fetch('/api/admin/gigs');
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    const gigs = data.data.gigs;
+                    tableBody.innerHTML = ''; // Clear existing rows
+
+                    gigs.forEach(gig => {
+                        const tr = document.createElement('tr');
+                        const createdDate = new Date(gig.createdAt).toLocaleDateString('en-GB', {
+                            day: '2-digit', month: 'short', year: 'numeric'
+                        });
+                        const statusClass = gig.status === 'Published' ? 'published' : 'draft'; // simple mapping, adjust if needed
+                        
+                        tr.innerHTML = `
+                            <td>${gig.gigTitle}</td>
+                            <td>${gig.category}</td>
+                            <td>${gig.location}</td>
+                            <td>₹${gig.payout} / ${gig.paymentType}</td>
+                            <td><span class="status-badge ${statusClass}">${gig.status}</span></td>
+                            <td>${createdDate}</td>
+                            <td class="actions-cell">
+                                <button class="btn-edit" data-id="${gig._id}"><i class="fas fa-edit"></i> Edit</button>
+                                <button class="btn-delete" data-id="${gig._id}"><i class="fas fa-trash"></i> Delete</button>
+                                <button class="btn-toggle-publish" data-id="${gig._id}" data-status="${gig.status}">
+                                    <i class="fas ${gig.status === 'Published' ? 'fa-eye-slash' : 'fa-eye'}"></i> 
+                                    ${gig.status === 'Published' ? 'Unpublish' : 'Publish'}
+                                </button>
+                            </td>
+                        `;
+                        tableBody.appendChild(tr);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading gigs:', error);
+            }
+        }
+
+        async function deleteGig(id) {
+            try {
+                const response = await fetch(`/api/admin/gigs/${id}`, {
+                    method: 'DELETE'
+                });
+                if (response.ok) { // 204 No Content
+                    alert('Gig deleted successfully');
+                    loadGigsTable();
+                } else {
+                    alert('Failed to delete gig');
+                }
+            } catch (error) {
+                console.error('Error deleting gig:', error);
+                alert('Error deleting gig');
+            }
+        }
+
+        async function togglePublish(id, newStatus) {
+            try {
+                const response = await fetch(`/api/admin/gigs/${id}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                const data = await response.json();
+                if (response.ok && data.status === 'success') {
+                    // alert('Gig status updated'); // Optional
+                    loadGigsTable();
+                } else {
+                    alert('Failed to update status');
+                }
+            } catch (error) {
+                console.error('Error updating status:', error);
+                alert('Error updating status');
             }
         }
     });

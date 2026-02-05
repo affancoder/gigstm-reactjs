@@ -120,6 +120,12 @@ exports.getPublic = catchAsync(async (req, res, next) => {
   res.status(200).json({ status: "success", data: { gig } });
 });
 
+exports.deleteGig = catchAsync(async (req, res, next) => {
+  const gig = await Gig.findByIdAndDelete(req.params.id);
+  if (!gig) return next(new AppError("Gig not found", 404));
+  res.status(204).json({ status: "success", data: null });
+});
+
 exports.listAdmin = catchAsync(async (req, res, next) => {
   const gigs = await Gig.find({}).sort({ createdAt: -1 });
   res.status(200).json({ status: "success", data: { gigs } });
